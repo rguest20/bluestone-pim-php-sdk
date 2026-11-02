@@ -24,12 +24,8 @@ final readonly class ProductMutationRunner
             $response = $this->pim->executeTyped('createProduct', [], [
                 'query' => ['validation' => 'NUMBER'], 'headers' => ['context' => $context], 'json' => $request,
             ]);
-            $resourceId = $response->getHeaders(false)['resource-id'][0] ?? '';
-            if (!is_string($resourceId) || $resourceId === '') {
-                throw new \UnexpectedValueException('Bluestone did not return a product resource ID.');
-            }
 
-            return ['product_id' => $resourceId, 'product_number' => $request['number']];
+            return ['product_id' => PimConnector::createdResourceId($response, 'a product'), 'product_number' => $request['number']];
         });
 
         return $result['product_id'];

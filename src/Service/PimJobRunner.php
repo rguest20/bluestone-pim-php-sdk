@@ -10,6 +10,10 @@ use Youwe\BluestonePim\Migration\MigrationContext;
 /** Poll PIM asynchronous operations before marking their migration applied. */
 final readonly class PimJobRunner
 {
+    use PollsAsyncJobs;
+
+    private const SUBJECT = 'Bluestone PIM task';
+
     public function __construct(private PimConnector $pim, private ?PollingClock $clock = null)
     {
     }
@@ -29,56 +33,17 @@ final readonly class PimJobRunner
     public function submitAndWait(MigrationContext $context, string $submissionStep, callable $submit,
         int $timeoutSeconds = 300, int $pollIntervalMilliseconds = 1000): array
     {
-        if ($timeoutSeconds < 1 || $pollIntervalMilliseconds < 1 || $pollIntervalMilliseconds > 60000 || strlen($submissionStep.'-completion') > 190) {
-            throw new \InvalidArgumentException('Provide valid polling settings and a shorter submission checkpoint name.');
-        }
-        $taskId = $context->step($submissionStep, static function () use ($submit): string {
-            $taskId = $submit();
-            if (!is_string($taskId) || $taskId === '') {
-                throw new \UnexpectedValueException('PIM submission callback must return a non-empty task ID.');
-            }
-
-            return $taskId;
-        });
-        if (!is_string($taskId) || $taskId === '') {
-            throw new \UnexpectedValueException('Stored PIM submission checkpoint does not contain a task ID.');
-        }
-
-        return $context->step($submissionStep.'-completion', fn (): array => $this->waitForCompletionTyped($taskId, $timeoutSeconds, $pollIntervalMilliseconds, $context));
+        return $this->submitJobAndWait($context, $submissionStep, $submit,
+            fn (string $taskId): array => $this->waitForCompletionTyped($taskId, $timeoutSeconds, $pollIntervalMilliseconds, $context),
+            self::SUBJECT, 'task', $timeoutSeconds, $pollIntervalMilliseconds);
     }
 
     private function poll(string $taskId, int $timeoutSeconds, int $pollIntervalMilliseconds, ?MigrationContext $context, bool $typed): array
     {
-        if ($taskId === '' || $timeoutSeconds < 1 || $pollIntervalMilliseconds < 1 || $pollIntervalMilliseconds > 60000) {
-            throw new \InvalidArgumentException('Provide a task ID, positive timeout and polling interval of 1–60000 ms.');
-        }
-        $clock = $this->clock ?? new SystemPollingClock();
-        $deadline = $clock->now() + $timeoutSeconds;
-        do {
-            $context?->heartbeat();
-            $response = $typed
-                ? $this->pim->executeTyped('getJobStatus', ['taskId' => $taskId])
-                : $this->pim->execute('getJobStatus', ['taskId' => $taskId]);
-            $result = $response->toArray();
-            if ($clock->now() >= $deadline) {
-                break;
-            }
-            $status = $result['status'] ?? '';
-            if ($status === 'COMPLETED') {
-                return $result;
-            }
-            if (!in_array($status, ['WAITING', 'EXECUTING'], true)) {
-                // Do not include the remote errorMessage, which can contain PIM data.
-                throw new \RuntimeException('Bluestone PIM task did not complete successfully.');
-            }
-            $remaining = $deadline - $clock->now();
-            if ($remaining <= 0) {
-                break;
-            }
-            $clock->sleep(max(1, (int) min($pollIntervalMilliseconds, ceil($remaining * 1000))));
-            $context?->heartbeat();
-        } while ($clock->now() < $deadline);
+        $fetch = fn (): array => ($typed
+            ? $this->pim->executeTyped('getJobStatus', ['taskId' => $taskId])
+            : $this->pim->execute('getJobStatus', ['taskId' => $taskId]))->toArray();
 
-        throw new \RuntimeException('Timed out waiting for the Bluestone PIM task. Resume using the saved task ID; do not resubmit it.');
+        return $this->pollJob($fetch, $taskId, self::SUBJECT, 'task', ['COMPLETED'], $timeoutSeconds, $pollIntervalMilliseconds, $context, $this->clock);
     }
 }

@@ -101,6 +101,17 @@ abstract class AbstractConnector
         return $response;
     }
 
+    /** @param string $resource Article and noun used in the error message, e.g. "a product". */
+    final public static function createdResourceId(ResponseInterface $response, string $resource): string
+    {
+        $resourceId = $response->getHeaders(false)['resource-id'][0] ?? null;
+        if (!is_string($resourceId) || $resourceId === '') {
+            throw new \UnexpectedValueException(sprintf('Bluestone did not return %s resource ID.', $resource));
+        }
+
+        return $resourceId;
+    }
+
     private function headerNames(array $headers): array
     {
         $names = [];

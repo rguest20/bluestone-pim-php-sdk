@@ -26,12 +26,8 @@ abstract class AbstractPimMigration implements MigrationInterface
                 'headers' => ['context' => $languageContext],
                 'json' => $request,
             ]);
-            $nodeId = $response->getHeaders(false)['resource-id'][0] ?? null;
-            if (!is_string($nodeId) || $nodeId === '') {
-                throw new \UnexpectedValueException('Bluestone did not return a catalog/category resource ID.');
-            }
 
-            return ['node_id' => $nodeId];
+            return ['node_id' => PimConnector::createdResourceId($response, 'a catalog/category')];
         });
 
         return $result['node_id'];

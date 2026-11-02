@@ -22,12 +22,8 @@ final readonly class AttributeDefinitionMutationRunner
 
         $result = $migration->mutation($mutationName, 'pim', 'createAttributeDefinition', $request, function () use ($request, $context): array {
             $response = $this->pim->executeTyped('createAttributeDefinition', [], ['headers' => ['context' => $context], 'json' => $request]);
-            $resourceId = $response->getHeaders(false)['resource-id'][0] ?? '';
-            if (!is_string($resourceId) || $resourceId === '') {
-                throw new \UnexpectedValueException('Bluestone did not return an attribute definition resource ID.');
-            }
 
-            return ['definition_id' => $resourceId, 'number' => $request['number']];
+            return ['definition_id' => PimConnector::createdResourceId($response, 'an attribute definition'), 'number' => $request['number']];
         });
 
         return $result['definition_id'];

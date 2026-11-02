@@ -9,6 +9,8 @@ use Symfony\Contracts\HttpClient\ResponseInterface;
 
 final class BluestoneClient
 {
+    private const REQUEST_LIMITS = ['max_redirects' => 0, 'timeout' => 30, 'max_duration' => 60];
+
     private ?string $accessToken = null;
     private float $expiresAt = 0;
     private int $dispatchedRequests = 0;
@@ -48,25 +50,19 @@ final class BluestoneClient
         } elseif ($authentication === ApiAuthentication::ApiKey) {
             $options['headers'][] = 'X-Api-Key: '.$this->publicApiKey;
         }
-        ++$this->dispatchedRequests;
-        $response = $this->httpClient->request(strtoupper($method), rtrim($this->baseUrl, '/').$path, array_replace($options, [
-            'max_redirects' => 0,
-            'timeout' => 30,
-            'max_duration' => 60,
-        ]));
 
-        $status = $response->getStatusCode();
-        $retryAfter = $response->getHeaders(false)['retry-after'][0] ?? null;
-        // Consume the response now: a migration must not be marked applied before I/O finishes.
-        $response->getContent(false);
-        if ($status < 200 || $status >= 300) {
-            if ($status === 429) {
+        ++$this->dispatchedRequests;
+        $response = $this->httpClient->request(strtoupper($method), rtrim($this->baseUrl, '/').$path, array_replace($options, self::REQUEST_LIMITS));
+        try {
+            $this->assertSuccessful($response, 'Bluestone API request');
+        } catch (BluestoneApiException $error) {
+            if ($error->statusCode === 429) {
                 // A rate-limited request was rejected without being processed.
                 --$this->dispatchedRequests;
-            } elseif ($status === 401) {
+            } elseif ($error->statusCode === 401) {
                 $this->accessToken = null;
             }
-            throw new BluestoneApiException('Bluestone API request', $status, is_string($retryAfter) ? $retryAfter : null);
+            throw $error;
         }
 
         return $response;
@@ -89,15 +85,8 @@ final class BluestoneClient
                 'client_id' => $this->clientId,
                 'client_secret' => $this->clientSecret,
             ],
-            'max_redirects' => 0,
-            'timeout' => 30,
-            'max_duration' => 60,
-        ]);
-        if ($response->getStatusCode() !== 200) {
-            $retryAfter = $response->getHeaders(false)['retry-after'][0] ?? null;
-            $response->getContent(false);
-            throw new BluestoneApiException('Bluestone authentication', $response->getStatusCode(), is_string($retryAfter) ? $retryAfter : null);
-        }
+        ] + self::REQUEST_LIMITS);
+        $this->assertSuccessful($response, 'Bluestone authentication');
         $data = $response->toArray();
         if (!is_string($data['access_token'] ?? null) || $data['access_token'] === '') {
             throw new \RuntimeException('Bluestone authentication did not return an access token.');
@@ -106,6 +95,17 @@ final class BluestoneClient
         $this->expiresAt = microtime(true) + max(0, (int) ($data['expires_in'] ?? 60) - 30);
 
         return $this->accessToken;
+    }
+
+    private function assertSuccessful(ResponseInterface $response, string $operation): void
+    {
+        $status = $response->getStatusCode();
+        $retryAfter = $response->getHeaders(false)['retry-after'][0] ?? null;
+        // Consume the response now: a migration must not be marked applied before I/O finishes.
+        $response->getContent(false);
+        if ($status < 200 || $status >= 300) {
+            throw new BluestoneApiException($operation, $status, is_string($retryAfter) ? $retryAfter : null);
+        }
     }
 
     private function validateConfiguration(ApiAuthentication $authentication): void

@@ -78,7 +78,7 @@ final class MigrationStorage
         if (trim($this->target) === '') {
             throw new \RuntimeException('BLUESTONE_TARGET must identify the tenant and environment.');
         }
-        if (!$this->connection->createSchemaManager()->tablesExist(['pim_migration_target'])) {
+        if (!$this->tablesExist('pim_migration_target')) {
             return;
         }
         $fingerprint = hash('sha256', $this->target.'|'.rtrim($this->baseUrl, '/'));
@@ -93,11 +93,11 @@ final class MigrationStorage
 
     public function history(): array
     {
-        if (!$this->connection->createSchemaManager()->tablesExist(['pim_migration'])) {
+        if (!$this->tablesExist('pim_migration')) {
             return [];
         }
 
-        if (!$this->connection->createSchemaManager()->tablesExist(['pim_migration_contract'])) {
+        if (!$this->tablesExist('pim_migration_contract')) {
             return $this->connection->fetchAllAssociativeIndexed('SELECT migration.*, NULL AS contract_revision FROM pim_migration migration ORDER BY migration.version');
         }
 
@@ -234,7 +234,7 @@ final class MigrationStorage
 
     public function operationsInUnfinishedMigrations(): array
     {
-        if (!$this->connection->createSchemaManager()->tablesExist(['pim_migration_operation', 'pim_migration'])) {
+        if (!$this->tablesExist('pim_migration_operation', 'pim_migration')) {
             return [];
         }
 
@@ -243,7 +243,12 @@ final class MigrationStorage
 
     public function operationTrackingAvailable(): bool
     {
-        return $this->connection->createSchemaManager()->tablesExist(['pim_migration_operation']);
+        return $this->tablesExist('pim_migration_operation');
+    }
+
+    private function tablesExist(string ...$tables): bool
+    {
+        return $this->connection->createSchemaManager()->tablesExist($tables);
     }
 
     private function now(): string
