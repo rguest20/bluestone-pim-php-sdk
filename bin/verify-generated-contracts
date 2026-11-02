@@ -52,6 +52,20 @@ foreach (array_keys(OperationCatalog::COMPONENTS) as $component) {
     $expected = array_keys($catalog->component($component, $revision)['operations']);
     sort($actual); sort($expected);
     if ($actual !== $expected || count($actual) !== ($entry['operation_count'] ?? null)) throw new RuntimeException('Generated operation IDs do not reconcile for '.$component.'.');
+    if ($revision === $catalog->activeRevision()) {
+        $connectorMethods = $root.'/generated/ConnectorOperations/'.$name.'Operations.php';
+        if (!is_file($connectorMethods)) throw new RuntimeException('Generated connector methods are missing: '.$component);
+        try {
+            $parser->parse(file_get_contents($connectorMethods));
+        } catch (Throwable $error) {
+            throw new RuntimeException('Generated connector methods do not parse as PHP 8.2: '.$component, 0, $error);
+        }
+        ++$files;
+        preg_match_all('/^    public function ([A-Za-z_][A-Za-z0-9_]*)\(/m', file_get_contents($connectorMethods), $connectorMethodMatches);
+        $connectorMethodNames = $connectorMethodMatches[1];
+        sort($connectorMethodNames);
+        if ($connectorMethodNames !== $expected) throw new RuntimeException('Generated connector methods do not reconcile for '.$component.'.');
+    }
     $methods += count($actual);
 }
 printf("Verified %d generated PHP files against PHP 8.2 syntax and %d named operations across %d components (revision %s).\n", $files, $methods, count(OperationCatalog::COMPONENTS), $revision);

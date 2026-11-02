@@ -16,7 +16,7 @@ composer build:contracts
 cp .env.local.example .env.local
 ```
 
-The checked-in `resources/bluestone/revisions/` directory contains the pinned OpenAPI inputs and compiled routing catalogs. `composer build:contracts` uses those local snapshots to regenerate the revision-specific PHP DTOs, normalizers and operation facades under `generated/`. The build does not fetch API documentation. `generated/` is committed so the package works when installed directly from Git; rebuild and commit it whenever the pinned revision changes.
+The checked-in `resources/bluestone/revisions/` directory contains the pinned OpenAPI inputs and compiled routing catalogs. `composer build:contracts` uses those local snapshots to regenerate the revision-specific PHP DTOs, normalizers and operation facades under `generated/`, plus declared operation-named connector methods under `generated/ConnectorOperations/`. The build does not fetch API documentation. `generated/` is committed so the package works when installed directly from Git; rebuild and commit it whenever the pinned revision changes.
 
 ### Bootstrap or refresh the API contracts
 
@@ -26,7 +26,7 @@ If you are starting without a pinned snapshot, or intentionally refreshing the p
 php bin/update-api-catalog
 ```
 
-This command downloads the public OpenAPI documents from Bluestone's documentation site, compiles the routing catalogs, stores both under a content-addressed `resources/bluestone/revisions/<revision>/` directory, generates the matching PHP contracts, and updates `resources/bluestone/current.json` only after the complete candidate set is ready. No tenant credentials or tenant API calls are used. To compile an already downloaded set of OpenAPI JSON files instead, pass its directory:
+This command downloads the public OpenAPI documents from Bluestone's documentation site, compiles the routing catalogs, stores both under a content-addressed `resources/bluestone/revisions/<revision>/` directory, generates the matching PHP contracts and refreshes connector methods for the new active revision. No tenant credentials or tenant API calls are used. To compile an already downloaded set of OpenAPI JSON files instead, pass its directory:
 
 ```sh
 php bin/update-api-catalog --source-dir=/path/to/openapi-json
@@ -49,6 +49,7 @@ The files have different roles:
 | `resources/bluestone/revisions/<revision>/catalog/` | Compiled by `bin/update-api-catalog` from those schemas | Runtime operation paths, methods and parameter metadata. |
 | `resources/bluestone/current.json` | Updated by the snapshot activation step | Selects the default revision for new migrations. |
 | `generated/R<revision>/` | Rebuilt by `composer build:contracts` | Generated DTOs, normalizers and named operation facades. |
+| `generated/ConnectorOperations/` | Rebuilt for the active revision by `composer build:contracts` | Declared operation-named methods mixed into all component connectors. |
 | `resources/bluestone/fixtures/<revision>/` | Reviewed and maintained as fixture examples | Offline request/response and invalid-case examples. These are not produced by the contract generator. |
 | `resources/bluestone/contract-evidence.json` | Updated alongside fixture evidence | Links fixture test results to exact revisions and file checksums. |
 
@@ -220,7 +221,7 @@ composer check
 
 This validates Composer metadata, lints Symfony's service container, verifies generated contracts against PHP 8.2 syntax and the pinned specifications, and runs PHPUnit tests with mocked HTTP and real SQLite persistence. No credentials or live Bluestone instance are required for those checks.
 
-Use `php bin/console bluestone:api:list` to browse API components, or `php bin/console bluestone:api:list pim --tag="Catalog nodes"` to list operations in one area. Discovery reads local files and makes no API calls. To refresh from Bluestone's public specifications, run `php bin/update-api-catalog`. It builds the candidate snapshot and matching DTOs/facades before switching the active revision pointer. Review the changes, then run `composer check`. Run `php bin/generate-api-models` separately to reproduce generated files from the currently active offline snapshot.
+Use `php bin/console bluestone:api:list` to browse API components, or `php bin/console bluestone:api:list pim --tag="Catalog nodes"` to list operations in one area. Discovery reads local files and makes no API calls. To refresh from Bluestone's public specifications, run `php bin/update-api-catalog`. It prepares and verifies the candidate snapshot and matching DTOs/facades before switching the active revision pointer, then regenerates the direct connector methods. Review the changes, then run `composer check`. Run `php bin/generate-api-models` separately to reproduce the generated files from the active offline snapshot.
 
 `php bin/console bluestone:api:coverage` reports routing, typed contracts, fixtures, workflows and live verification separately. Add `--json` for the per-operation inventory. `php bin/console bluestone:api:async-inventory` finds operations with response signals that may indicate asynchronous work. After importing a new specification revision, compare it with `php bin/diff-api-specifications --before=OLD_REV --after=NEW_REV --component=pim`.
 

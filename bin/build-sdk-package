@@ -41,7 +41,7 @@ $copy = static function (string $source, string $target) use (&$copy): void {
         if (!copy($source, $target)) throw new RuntimeException('Could not stage SDK package file: '.$source);
     }
 };
-foreach (['composer.json', 'bin/bluestone', 'src', 'resources/bluestone', 'generated/R'.$revision] as $relative) {
+foreach (['composer.json', 'bin/bluestone', 'src', 'resources/bluestone', 'generated/R'.$revision, 'generated/ConnectorOperations'] as $relative) {
     $copy($root.'/'.$relative, $destination.'/'.$relative);
 }
 fwrite(STDOUT, "Staged youwe/bluestone-pim-sdk with matching OpenAPI and generated revision {$revision} at build/sdk/package.\n");

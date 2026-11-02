@@ -46,10 +46,7 @@ final readonly class MediaUploadRunner
             'file_sha256' => $fileHash,
             'context' => $context,
         ], function () use ($request, $fileHash, $context, $key): array {
-            $response = $this->mediaBank->executeTyped('createAsset', [], [
-                'headers' => ['context' => $context],
-                'json' => $request,
-            ]);
+            $response = $this->mediaBank->createAsset($request, $context);
             $data = $response->toArray(false);
             $assetId = $data['id'] ?? null;
             $actionUrl = $data['actionUrl'] ?? null;
@@ -147,9 +144,7 @@ final readonly class MediaUploadRunner
             'id' => $submitted['asset_id'],
             'context' => $context,
         ], function () use ($submitted, $context): array {
-            $this->mediaBank->executeTyped('completeAsset', ['id' => $submitted['asset_id']], [
-                'headers' => ['context' => $context],
-            ]);
+            $this->mediaBank->completeAsset($submitted['asset_id'], $context);
 
             return ['asset_id' => $submitted['asset_id']];
         });

@@ -29,6 +29,40 @@ All destinations use `BLUESTONE_API_BASE_URL`, which defaults to the test enviro
 
 The shared runner retries HTTP 429 responses up to three total attempts, honoring `Retry-After` up to 30 seconds and using short exponential delays when the header is absent. If a longer server delay is requested, it stops and leaves a mutation safely retryable. It retries 502, 503 and 504 only for idempotent `GET` and `PUT` requests. Other methods receive the original error without an automatic retry. If retries are exhausted for a mutation, treat a 429 as not sent; a 5xx write may have been applied and still requires reconciliation before resubmission.
 
+## Convenience methods for common PIM changes
+
+`PimConnector` provides named methods for the operations used most often in the cookbook. They accept the resource IDs and request arrays directly, fill in the documented path, JSON body, language context and common validation mode, then call `executeTyped()` internally. This keeps the same OpenAPI request/response validation and shared transport without repeating operation IDs or HttpClient option arrays.
+
+```php
+use Youwe\BluestonePim\Api\Connector\PimConnector;
+
+$categoryResponse = $this->pim->createCategory([
+    'name' => 'Boots',
+    'number' => 'EXAMPLE-CATEGORY-BOOTS',
+    'parentId' => $catalogId,
+]);
+$categoryId = PimConnector::createdResourceId($categoryResponse, 'a category');
+
+$this->pim->updateCatalogNode($categoryId, [
+    'name' => ['value' => 'Boots and wellies'],
+]);
+
+$this->pim->addProductAttribute($productId, [
+    'definitionId' => $definitionId,
+    'values' => ['2 years'],
+]);
+```
+
+Convenience methods cover category/product creation and updates, attribute definitions/groups/select values, catalog node attributes, product attributes/categories, and variant operations shown in [Making PIM changes](making-pim-changes.md). They return the same `ResponseInterface` as `executeTyped()`. Wrap writes in `MigrationContext::mutation()` when used in migrations so completed results are checkpointed and uncertain outcomes are not repeated. All documented operations have a generated named method; use `executeTyped()` when you prefer the generic operation-ID interface.
+
+Every component connector has declared, generated operation-named methods, so operation calls are available directly instead of requiring an operation-ID string. Their IDE-visible signatures use the generated request DTOs and parameter groups for the active or migration-pinned revision. `MediaBankConnector::createAsset($request, $context)` and `completeAsset($assetId, $context)` and `BulkOperationsConnector::getJobStatus($jobId)` also provide smaller array/scalar helpers for the SDK's upload and polling workflows. The same operations remain available through `executeTyped()`.
+
+```php
+$response = $this->mediaBank->createAsset(['fileName' => 'product-image.jpg']);
+$this->mediaBank->completeAsset($assetId);
+$status = $this->bulkOperations->getJobStatus($jobId)->toArray();
+```
+
 ## Discover operations
 
 ```sh
@@ -55,7 +89,7 @@ final class CatalogReader
 
     public function find(string $nodeId): array
     {
-        return $this->pim->executeTyped('getNode', ['id' => $nodeId])->toArray();
+        return $this->pim->getNode($nodeId)->toArray();
     }
 }
 ```
@@ -89,10 +123,7 @@ final class Version20261028140000 implements MigrationInterface
     public function up(MigrationContext $context): void
     {
         $context->step('rename-node', function (): void {
-            $this->pim->execute('partialUpdateCatalogNode', ['id' => 'existing-node-id'], [
-                'headers' => ['context' => 'en'],
-                'json' => ['name' => ['value' => 'Hardware']],
-            ]);
+            $this->pim->updateCatalogNode('existing-node-id', ['name' => ['value' => 'Hardware']]);
         });
     }
 }
@@ -107,15 +138,12 @@ $response = $connector->execute($operationId, $pathParameters, $options);
 New migrations can opt into offline request and response validation against the revision pinned to that migration:
 
 ```php
-$this->pim->executeTyped('partialUpdateCatalogNode', ['id' => 'existing-node-id'], [
-    'headers' => ['context' => 'en'],
-    'json' => ['name' => ['value' => 'Hardware']],
-]);
+$this->pim->updateCatalogNode('existing-node-id', ['name' => ['value' => 'Hardware']]);
 ```
 
 `executeTyped()` validates with the checked-in OpenAPI document before HTTP dispatch and validates the returned response before returning. It uses the shared connector, authentication and transport; when called during migration execution it also refreshes the lock. Validation errors name the operation and schema-defined field without including rejected values, response content or the underlying validator exception. Typed validation requires a pinned full OpenAPI revision; legacy migrations that predate revision tracking must continue to use `execute()` until explicitly transitioned. Typed requests currently support JSON and string or scalar bodies; streaming and form/multipart request bodies should use `execute()` while their serializers are implemented.
 
-The repository also contains revision-specific Jane DTOs, normalizers and named methods for every operation ID. Generate them from the active offline snapshots with `php bin/generate-api-models`; the command pins them under `generated/R<revision>/`, removes Jane's independent HTTP clients, and atomically publishes the full component set. Inject `TypedApiAdapterFactory` into a migration and call `forComponent('pim')` (or another component key) to get the facade for that migration's pinned revision. Each named method accepts path values, grouped query/header values and generated request DTOs. Composed Query builder request bodies use unions of their generated models; IDP array bodies normalize each generated item. All 547 operations have mapped signatures, with no unresolved request-model references in this revision. Every request uses the shared connector and auth/transport path, with a migration lock heartbeat when inside a migration. Fixture verification remains separate from generation.
+The repository also contains revision-specific Jane DTOs, normalizers and named methods for every operation ID. Generate them from the active offline snapshots with `php bin/generate-api-models`; the command pins them under `generated/R<revision>/`, removes Jane's independent HTTP clients, and regenerates the declared connector methods under `generated/ConnectorOperations/`. Inject a component connector and call its operation-named method directly. Each method accepts path values, grouped query/header values and generated request DTOs; common cookbook operations also have array/scalar wrappers. `TypedApiAdapterFactory::forComponent()` remains available when you want to work with the generated facade explicitly. Composed Query builder request bodies use unions of their generated models; IDP array bodies normalize each generated item. All 547 operations have mapped signatures, with no unresolved request-model references in this revision. Every request uses the shared connector and auth/transport path, with a migration lock heartbeat when inside a migration. Fixture verification remains separate from generation.
 
 ```php
 use Youwe\BluestonePim\Api\TypedApiAdapterFactory;
@@ -227,9 +255,9 @@ php bin/diff-api-specifications --before=OLD_REV --after=NEW_REV --component=pim
 php bin/update-api-catalog --source-dir=/path/to/openapi-json
 ```
 
-The updater reads and validates all components before staging a new revision, verifies the staged checksums and catalog counts, generates the matching revision-specific models and operation facades, then atomically changes the active revision pointer. If generation fails, the previous active revision remains selected. Older revisions remain available. Unknown authentication, query serialization, unexpected server hosts and duplicate operation IDs fail regeneration. The route compiler is stable for the same source inputs; Jane and its template version are pinned for DTO generation and byte-for-byte reproducibility is checked offline. Review catalog changes before using them with existing migrations, particularly changes to paths, operation IDs and required inputs. Use `bin/diff-api-specifications` to compare saved revisions. Clear Symfony's production cache after changing connector service classes.
+The updater reads and validates all components before staging a new revision, verifies the staged checksums and catalog counts, generates the matching revision-specific models and operation facades, then switches the active revision pointer. It refreshes the generated connector methods immediately afterward. If contract generation fails before activation, the previous active revision remains selected. Older revisions remain available. Unknown authentication, query serialization, unexpected server hosts and duplicate operation IDs fail regeneration. The route compiler is stable for the same source inputs; Jane and its template version are pinned for DTO generation and byte-for-byte reproducibility is checked offline. Review catalog changes before using them with existing migrations, particularly changes to paths, operation IDs and required inputs. Use `bin/diff-api-specifications` to compare saved revisions. Clear Symfony's production cache after changing connector service classes.
 
-`bin/generate-api-models` uses the pinned Jane 7.14.4 OpenAPI 3.0 generator against the stored inputs and publishes models under the matching revision namespace. Generated HTTP clients and endpoint code are discarded, so API execution continues through the shared runner.
+`bin/generate-api-models` uses the pinned Jane 7.14.4 OpenAPI 3.0 generator against the stored inputs and publishes models under the matching revision namespace. When it builds the active revision, it also refreshes the operation-named connector methods from those generated facades. Generated HTTP clients and endpoint code are discarded, so API execution continues through the shared runner.
 
 The coverage inventory counts generated methods separately from fixture and workflow evidence. `resources/bluestone/contract-evidence.json` records test cases against the component, operation ID, revision and OpenAPI checksum. Evidence becomes stale when either revision or checksum differs. Partial, missing, stale, skipped, blocked and verified outcomes remain distinct; each incomplete row includes an action needed to close its gap. The current evidence contains complete fixture sets for eleven components and verifies 351 individual operations, including all 224 PIM operations, plus workflow evidence for five operations. Other tested cases remain partial where request or response fixtures are missing, and every live operation remains unverified. `executeTyped()` validation alone does not count as fixture verification. `bluestone:api:async-inventory` lists operations whose specs contain asynchronous signals for review; an HTTP 202 response alone does not prove that polling is needed. Deprecated routes retain their published flag.
 

@@ -21,7 +21,7 @@ final readonly class AttributeDefinitionMutationRunner
         }
 
         $result = $migration->mutation($mutationName, 'pim', 'createAttributeDefinition', $request, function () use ($request, $context): array {
-            $response = $this->pim->executeTyped('createAttributeDefinition', [], ['headers' => ['context' => $context], 'json' => $request]);
+            $response = $this->pim->createAttributeDefinition($request, $context);
 
             return ['definition_id' => PimConnector::createdResourceId($response, 'an attribute definition'), 'number' => $request['number']];
         });

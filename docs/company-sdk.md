@@ -59,7 +59,7 @@ See [initial PIM setup examples](initial-pim-setup.md) for complete migrations a
 
 ## Build and publish a release
 
-Generated PHP classes are committed so direct Composer installs from Git include the typed models and operation facades. After changing the pinned OpenAPI revision, regenerate and commit them, then build and verify the package:
+Generated PHP classes are committed so direct Composer installs from Git include the typed models, operation facades and declared operation-named connector methods. After changing the pinned OpenAPI revision, regenerate and commit them, then build and verify the package:
 
 ```sh
 composer install
@@ -67,7 +67,7 @@ composer build:contracts
 php bin/build-sdk-package
 ```
 
-The offline build regenerates and checks the typed artifacts, then stages `composer.json`, `bin/bluestone`, SDK source, pinned Bluestone resources and the matching `generated/R<revision>` tree in `build/sdk/package`. Publish that staged package through the company-controlled Composer distribution process. Never publish only the source tree without its matching generated contracts.
+The offline build regenerates and checks the typed artifacts, then stages `composer.json`, `bin/bluestone`, SDK source, pinned Bluestone resources, the matching `generated/R<revision>` tree and `generated/ConnectorOperations` in `build/sdk/package`. Publish that staged package through the company-controlled Composer distribution process. Never publish only the source tree without its matching generated contracts and connector methods.
 
 For a contract refresh, run `php bin/update-api-catalog`, review the new revision and provenance, regenerate offline contracts, resolve any generated schema gaps, update fixtures and evidence, run `composer check`, then build a new SDK release. Keep previous revisions in published SDK versions while applications may still have migrations pinned to them.
 

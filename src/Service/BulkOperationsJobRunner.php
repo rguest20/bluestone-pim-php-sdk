@@ -24,7 +24,7 @@ final readonly class BulkOperationsJobRunner
     public function waitForCompletion(string $jobId, int $timeoutSeconds = 300, int $pollIntervalMilliseconds = 1000, ?MigrationContext $context = null): array
     {
         return $this->pollJob(
-            fn (): array => $this->bulkOperations->executeTyped('getJobStatus', ['jobId' => $jobId])->toArray(),
+            fn (): array => $this->bulkOperations->getJobStatus($jobId)->toArray(),
             $jobId, self::SUBJECT, 'job', ['COMPLETED', 'COMPLETED_WITH_ISSUES'], $timeoutSeconds, $pollIntervalMilliseconds, $context, $this->clock,
         );
     }

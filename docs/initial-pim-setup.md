@@ -103,11 +103,11 @@ If a migration fails, inspect its completed steps and the tenant state before us
 
 - Keep migration versions immutable after application. Add a later migration for every change.
 - Use stable, unique product, category and definition numbers. Do not generate new numbers during each retry.
-- Use `executeTyped()` or a typed domain runner for requests with a pinned contract. Confirm the current `bluestone:api:coverage` report; generated methods and fixture verification are separate evidence.
+- Use a `PimConnector` convenience method for common catalog, product, attribute and variant changes, a generated operation-named connector method for other single calls, or a typed domain runner for multi-step work. `executeTyped()` remains available as the generic interface. Confirm the current `bluestone:api:coverage` report; generated methods and fixture verification are separate evidence.
 - Use one named step or mutation for each independently recoverable action. Persist only small IDs or other non-sensitive values.
 - Split asynchronous submission from polling and retain the returned task ID before waiting.
 - Reconcile uncertain creates/updates by a documented stable identifier before any manual retry.
 - Add schema-specific offline fixtures when introducing a new operation. Current fixture coverage is not proof of live tenant behavior.
 - Keep destructive, broad-effect, policy, permission and tenant-wide changes in separately reviewed migrations with their own explicit prerequisites and recovery plan.
 
-The full set of operation IDs and generated signatures is available through `php bin/console bluestone:api:list pim`; use the pinned OpenAPI JSON and the official endpoint documentation to confirm each request's actual semantics. The examples here have not been executed against a live Bluestone tenant.
+Use `php bin/console bluestone:api:list pim` to browse operation IDs and routes. The generated connector methods use those operation names and expose the matching PHP signatures under `generated/ConnectorOperations/`; use the pinned OpenAPI JSON and official endpoint documentation to confirm each request's actual semantics. The examples here have not been executed against a live Bluestone tenant.

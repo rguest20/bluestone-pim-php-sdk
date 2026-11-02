@@ -1,6 +1,6 @@
 # Implementation evidence
 
-Recorded on 2026-10-31 for OpenAPI revision `2c19c082ed473e21`.
+Evidence record updated on 2026-11-02 for OpenAPI revision `2c19c082ed473e21`.
 
 ## Current scope
 
@@ -22,14 +22,14 @@ Recorded on 2026-10-31 for OpenAPI revision `2c19c082ed473e21`.
 
 - `tests/OperationContractFixturesTest.php` passed: **1,626 tests, 8,650 assertions**. On 2026-11-02, `composer check` passed: **1,860 tests, 13,821 assertions**, Composer validation, Symfony container validation, and generated contract verification.
 - `composer check:databases` passed: **8 tests and 41 assertions per engine** on SQLite, PostgreSQL and MySQL, with no skipped tests. The suite also verifies durable completed and uncertain mutation outcomes across separate connections. See [database verification](database-verification.md) and its [evidence report](evidence/database-matrix-2026-10-31.json).
-- Two consecutive `composer build:contracts` runs rebuilt all retained revisions offline from pinned source files; each generated-tree SHA-256 inventory was `7b8eb70d60e6216273252dc248f0366eb0aac2d69267c37379bb0e0affa43332`.
+- Before connector convenience trait generation, two consecutive `composer build:contracts` runs rebuilt all retained revisions offline from pinned source files; each generated-tree SHA-256 inventory was `7b8eb70d60e6216273252dc248f0366eb0aac2d69267c37379bb0e0affa43332`.
 - `composer dump-autoload --optimize --strict-psr` passed with no class mapping warnings.
 - `APP_ENV=prod APP_DEBUG=0 php bin/console lint:container` passed.
-- `php bin/verify-generated-contracts` parsed **2,756 PHP files using PHP 8.2 syntax**, reconciled all named methods, recompiled the routing catalogs from the stored source documents, and checked the model/normalizer sets and absence of independent generated HTTP clients.
+- Before connector convenience trait generation, `php bin/verify-generated-contracts` parsed **2,756 PHP files using PHP 8.2 syntax**, reconciled all named methods, recompiled the routing catalogs from the stored source documents, and checked the model/normalizer sets and absence of independent generated HTTP clients.
 - `php bin/update-api-catalog --source-dir=resources/bluestone/revisions/2c19c082ed473e21/openapi` passed using local inputs and retained the same active revision.
 - UI settings, Bulk Operations, Labels, Global Settings, Metadata, Completeness Score, History, Tasks, Search, Query Builder and PIM fixture documents contain valid/invalid request and response examples for every operation in those components. PIM's complete 224-operation fixture document is generated from the pinned OpenAPI schemas, then verified with valid request/response, invalid request/response and remote-error tests. Fixture document hashes and named test providers are recorded per operation in `resources/bluestone/contract-evidence.json`.
 - `php bin/console bluestone:api:async-inventory --json` classified all 58 specification-signal candidates: two map to the implemented component-specific pollers and 56 have explicit protocol-review gaps. It makes no live calls and does not infer polling from HTTP 202 alone.
-- Composer SDK packaging on 2026-11-02 passed `composer validate --strict` and container validation. `php bin/build-sdk-package` regenerated and verified 2,756 PHP files and staged package `youwe/bluestone-pim-sdk` with OpenAPI/generated revision `2c19c082ed473e21` in `build/sdk/package` without runtime documentation access.
+- Earlier Composer SDK packaging on 2026-11-02 passed `composer validate --strict` and container validation. `php bin/build-sdk-package` regenerated and verified 2,756 PHP files and staged package `youwe/bluestone-pim-sdk` with OpenAPI/generated revision `2c19c082ed473e21` in `build/sdk/package` without runtime documentation access.
 - The clean `tests/consumer` project installed that staged package through Composer. `php tests/consumer/verify.php` compiled the SDK bundle with package-relative resource paths, confirmed no `App\` SDK class was required, matched the package's active OpenAPI and generated revisions, and completed `GetHealth()` through one mocked HTTP response.
 - The SDK declares `type: symfony-bundle`, includes migration and offline contract-inspection commands, autoconfigures consumer `MigrationInterface` services, and generates migrations under `src/Migration` in a standard Symfony consumer. A fresh Symfony 7.4 app without Symfony Flex installed imported the staged package through a Composer path repository, listed the package commands, created all seven tracking tables, discovered an `AbstractPimMigration` consumer migration, and produced a dry-run plan without tenant calls. This exposed and fixed package-owned migration registry wiring and package staging of the Composer binary. A Flex recipe source remains available as an optional route to expose SDK commands through the host app's own console.
 
@@ -55,3 +55,7 @@ Tests ran on **PHP 8.5.5**. Dependencies are resolved for the Composer PHP 8.2 p
 PIM has complete offline fixture coverage for all 224 pinned operations. The explicit live fixture executor and isolated cleanup suite are not complete. The reviewed selection policy has no default live groups and keeps IDP administrative writes separately scoped. Live verification remains blocked at the user's request until a dedicated tenant, credentials and disposable fixtures are configured.
 
 No live API reads or writes, remote Git actions, deployments or Git staging were performed during these checks.
+
+## Connector method generation update
+
+On 2026-11-02, the active revision's generated connector methods were added for all 16 components. `php bin/build-sdk-package` regenerated and parsed **2,772 PHP files** with the PHP 8.2 parser and reconciled **547 named operations** across those components. This check covers generated contract and connector-method artifacts; it does not replace the PHPUnit or Symfony container checks above, which were not rerun after this update.

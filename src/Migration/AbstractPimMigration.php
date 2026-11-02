@@ -21,11 +21,7 @@ abstract class AbstractPimMigration implements MigrationInterface
     protected function createCategory(MigrationContext $context, string $mutationName, array $request, string $languageContext = 'en'): string
     {
         $result = $context->mutation($mutationName, 'pim', 'createCategory', $request, function () use ($request, $languageContext): array {
-            $response = $this->pim->executeTyped('createCategory', [], [
-                'query' => ['validation' => 'NAME'],
-                'headers' => ['context' => $languageContext],
-                'json' => $request,
-            ]);
+            $response = $this->pim->createCategory($request, $languageContext);
 
             return ['node_id' => PimConnector::createdResourceId($response, 'a catalog/category')];
         });

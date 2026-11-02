@@ -160,6 +160,12 @@ $verificationOutput = stream_get_contents($pipes[1]); fclose($pipes[1]);
 $verificationError = stream_get_contents($pipes[2]); fclose($pipes[2]);
 if (proc_close($verification) !== 0) throw new RuntimeException('Candidate contract verification failed; the active revision remains unchanged: '.trim($verificationError ?: $verificationOutput));
 });
+$connectorMethods = proc_open([PHP_BINARY, dirname(__DIR__).'/bin/generate-connector-methods', '--revision='.$revision],
+    [0 => ['file', '/dev/null', 'r'], 1 => ['pipe', 'w'], 2 => ['pipe', 'w']], $pipes, dirname(__DIR__));
+if (!is_resource($connectorMethods)) throw new RuntimeException('The API revision is active, but connector convenience methods could not be generated.');
+$connectorMethodsOutput = stream_get_contents($pipes[1]); fclose($pipes[1]);
+$connectorMethodsError = stream_get_contents($pipes[2]); fclose($pipes[2]);
+if (proc_close($connectorMethods) !== 0) throw new RuntimeException('The API revision is active, but connector convenience methods could not be generated: '.trim($connectorMethodsError ?: $connectorMethodsOutput));
 foreach ($catalogs as $component => $catalog) {
     printf("%s: %d operations\n", $component, count($catalog['operations']));
 }

@@ -6,11 +6,12 @@ namespace Youwe\BluestonePim\Api;
 
 use Youwe\BluestonePim\Api\Connector\AbstractConnector;
 
-/** Resolves the generated operation facade for the migration's pinned specification revision. */
+/** Resolves generated named-operation facades for the active or migration-pinned specification revision. */
 final class TypedApiAdapterFactory
 {
-    /** @var array<string, AbstractConnector> */
-    private array $connectors = [];
+    private readonly iterable $connectors;
+    /** @var array<string, AbstractConnector>|null */
+    private ?array $connectorsByComponent = null;
 
     public function __construct(
         iterable $connectors,
@@ -19,13 +20,34 @@ final class TypedApiAdapterFactory
         private readonly OperationCatalog $catalog,
         private readonly string $sdkRoot,
     ) {
-        foreach ($connectors as $connector) {
-            $this->connectors[$connector::COMPONENT] = $connector;
-        }
+        // Keep the tagged iterator lazy so connectors can use this factory for
+        // direct named-operation forwarding without a container cycle.
+        $this->connectors = $connectors;
     }
 
     public function forComponent(string $component): GeneratedOperationAdapter
     {
+        $connector = $this->connectorMap()[$component] ?? throw new \InvalidArgumentException('No connector is registered for '.$component.'.');
+
+        return $this->forConnector($connector);
+    }
+
+    /** @return array<string, AbstractConnector> */
+    private function connectorMap(): array
+    {
+        if ($this->connectorsByComponent === null) {
+            $this->connectorsByComponent = [];
+            foreach ($this->connectors as $connector) {
+                $this->connectorsByComponent[$connector::COMPONENT] = $connector;
+            }
+        }
+
+        return $this->connectorsByComponent;
+    }
+
+    public function forConnector(AbstractConnector $connector): GeneratedOperationAdapter
+    {
+        $component = $connector::COMPONENT;
         $revision = $this->revisionContext->current();
         if ($revision === '') {
             throw new \LogicException('Generated operation adapters are unavailable for legacy migrations.');
@@ -34,7 +56,6 @@ final class TypedApiAdapterFactory
         if ($revision === null) {
             throw new \LogicException('No active OpenAPI revision is available.');
         }
-        $connector = $this->connectors[$component] ?? throw new \InvalidArgumentException('No connector is registered for '.$component.'.');
         $manifestPath = $this->sdkRoot.'/generated/R'.$revision.'/manifest.json';
         if (!is_file($manifestPath)) {
             throw new \RuntimeException('Generated API models are missing for revision '.$revision.'. Run php bin/generate-api-models.');

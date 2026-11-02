@@ -23,10 +23,11 @@ final readonly class ProductCursorRunner
         $source = ['operation' => 'pim:getProductsWithCursorAndViews', 'count' => $pageSize, 'views' => $views,
             'context' => $languageContext, 'archive_state' => $archiveState];
         return $this->paginator->traverse($context, $checkpointPrefix, function (?string $cursor, array $source): array {
-            $response = $this->pim->executeTyped('getProductsWithCursorAndViews', [], [
-                'headers' => ['context' => $source['context']], 'query' => ['archiveState' => $source['archive_state']],
-                'json' => ['count' => $source['count'], 'cursor' => $cursor, 'views' => $source['views']],
-            ])->toArray();
+            $response = $this->pim->getProductsWithCursorAndViews(
+                ['count' => $source['count'], 'cursor' => $cursor, 'views' => $source['views']],
+                ['archiveState' => $source['archive_state']],
+                $source['context'],
+            )->toArray();
             if (!array_key_exists('data', $response) || !array_key_exists('nextCursor', $response)) {
                 throw new \UnexpectedValueException('PIM product cursor response omitted data or nextCursor; progress was not advanced.');
             }

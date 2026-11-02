@@ -17,7 +17,7 @@ If you have not written a migration before, read [Initial PIM setup](initial-pim
 | Use | When | Example |
 | --- | --- | --- |
 | A ready-made runner method | A runner exists for the change | `$this->definitions->create(...)` |
-| `$context->mutation()` + `executeTyped()` | Any other single write | Adding a select value |
+| `$context->mutation()` + a `PimConnector` convenience method | Any other single write | Adding a select value |
 | `PimJobRunner::submitAndWait()` | Writes that Bluestone finishes in the background (returns HTTP 202 or a task ID) | Bulk variant settings |
 
 Inject what you need into the migration constructor; Symfony autowires it:
@@ -55,7 +55,7 @@ $result = $context->mutation(
 
 The fourth argument is fingerprinted. Reusing a name with different input stops the migration instead of silently doing something else. Return only small JSON values (IDs, numbers); they are saved in the tracking database.
 
-`executeTyped()` checks the request against the API schema **before** sending it, so mistakes such as a misspelled field fail locally. A failure before anything is sent leaves the write safe to retry. Use `PimConnector::createdResourceId($response, 'a ...')` to read the ID Bluestone returns for something it created.
+`PimConnector` convenience methods such as `createCategory()`, `addProductAttribute()` and `updateProductVariantAttribute()` call `executeTyped()` internally, so requests are checked against the API schema **before** sending. A failure before anything is sent leaves the write safe to retry. Use `PimConnector::createdResourceId($response, 'a ...')` to read the ID Bluestone returns for something it created. Other operations have generated operation-named methods on their component connectors; those accept generated request DTOs. Use `executeTyped()` when you prefer its generic operation-ID and options-array interface.
 
 ## Attributes
 
@@ -82,10 +82,7 @@ Create the definition with `'dataType' => 'single_select'` (or `multi_select`), 
 $redId = $context->mutation('colour-option-red', 'pim', 'createSelectValue',
     ['definitionId' => $definitionId, 'value' => 'Red', 'number' => 'RED'],
     function () use ($definitionId): string {
-        $response = $this->pim->executeTyped('createSelectValue', ['id' => $definitionId], [
-            'headers' => ['context' => 'en'],
-            'json' => ['value' => 'Red', 'number' => 'RED'],
-        ]);
+        $response = $this->pim->createSelectValue($definitionId, ['value' => 'Red', 'number' => 'RED']);
 
         return PimConnector::createdResourceId($response, 'a select value');
     });
@@ -99,10 +96,7 @@ Use `updateSelectValue` to rename an option and `reorderSelectValue` to change i
 $changes = ['name' => ['value' => 'Warranty period'], 'description' => ['value' => 'How long the warranty lasts.']];
 $context->mutation('rename-warranty', 'pim', 'updateMetadata', ['definitionId' => $definitionId, 'json' => $changes],
     function () use ($definitionId, $changes): string {
-        $this->pim->executeTyped('updateMetadata', ['id' => $definitionId], [
-            'headers' => ['context' => 'en'],
-            'json' => $changes,
-        ]);
+        $this->pim->updateMetadata($definitionId, $changes);
 
         return $definitionId;
     });
@@ -115,7 +109,7 @@ Only the fields you send are changed. To change the data type, unit or restricti
 ```php
 $group = ['name' => 'Logistics', 'number' => 'EXAMPLE-GROUP-LOGISTICS'];
 $groupId = $context->mutation('logistics-group', 'pim', 'createAttributeGroup', $group, function () use ($group): string {
-    $response = $this->pim->executeTyped('createAttributeGroup', [], ['headers' => ['context' => 'en'], 'json' => $group]);
+    $response = $this->pim->createAttributeGroup($group);
 
     return PimConnector::createdResourceId($response, 'an attribute group');
 });
@@ -151,20 +145,14 @@ A *Category Level Attribute* (CLA) puts an attribute on every product in a categ
 ```php
 // 1. Add the attribute, with a value, to the products in the category.
 $this->jobs->submitAndWait($context, 'warranty-on-boots', function () use ($categoryId, $definitionId): string {
-    $response = $this->pim->executeTyped('createCatalogNodeAttribute', [
-        'id' => $categoryId,
-        'attributeDefinitionId' => $definitionId,
-    ], ['headers' => ['context' => 'en'], 'json' => ['value' => '2 years']]);
+    $response = $this->pim->createCatalogNodeAttribute($categoryId, $definitionId, ['value' => '2 years']);
 
     return PimConnector::createdResourceId($response, 'a task');
 });
 
 // 2. Also apply it to sub-categories (copyAttribute) and require a value on every product (mandatory).
 $this->jobs->submitAndWait($context, 'warranty-on-boots-rules', function () use ($categoryId, $definitionId): string {
-    $response = $this->pim->executeTyped('updateNodeAttributeValue', [
-        'id' => $categoryId,
-        'attributeDefinitionId' => $definitionId,
-    ], ['json' => ['copyAttribute' => true, 'mandatory' => true]]);
+    $response = $this->pim->updateNodeAttributeValue($categoryId, $definitionId, ['copyAttribute' => true, 'mandatory' => true]);
 
     return PimConnector::createdResourceId($response, 'a task');
 });
@@ -206,7 +194,7 @@ $this->products->update($context, 'rename-walking-boot', $productId, ['name' => 
 $request = ['definitionId' => $definitionId, 'values' => ['2 years']];
 $context->mutation('boot-warranty', 'pim', 'addProductAttribute', ['productId' => $productId, 'json' => $request],
     function () use ($productId, $request): string {
-        $this->pim->executeTyped('addProductAttribute', ['id' => $productId], ['headers' => ['context' => 'en'], 'json' => $request]);
+        $this->pim->addProductAttribute($productId, $request);
 
         return $productId;
     });
@@ -221,10 +209,7 @@ $values = ['values' => ['3 years']];
 $context->mutation('boot-warranty-3-years', 'pim', 'updateProductAttribute',
     ['productId' => $productId, 'definitionId' => $definitionId, 'json' => $values],
     function () use ($productId, $definitionId, $values): string {
-        $this->pim->executeTyped('updateProductAttribute', ['id' => $productId, 'definitionId' => $definitionId], [
-            'headers' => ['context' => 'en'],
-            'json' => $values,
-        ]);
+        $this->pim->updateProductAttribute($productId, $definitionId, $values);
 
         return $productId;
     });
@@ -238,7 +223,7 @@ To change the value on many products at once, see `updateAttributesByIds` and `u
 $request = ['categoryIds' => [$categoryId]];
 $context->mutation('boot-in-boots-category', 'pim', 'addProductToCategories', ['productId' => $productId, 'json' => $request],
     function () use ($productId, $request): string {
-        $this->pim->executeTyped('addProductToCategories', ['id' => $productId], ['json' => $request]);
+        $this->pim->addProductToCategories($productId, $request['categoryIds']);
 
         return $productId;
     });
@@ -263,14 +248,14 @@ Attributes on the group can be set as *Variant Level Attributes* (VLA). A VLA is
 ```php
 $context->mutation('walking-boot-becomes-group', 'pim', 'setProductGroup', ['productId' => $groupId],
     function () use ($groupId): string {
-        $this->pim->executeTyped('setProductGroup', ['id' => $groupId]);
+        $this->pim->setProductGroup($groupId);
 
         return $groupId;
     });
 
 $context->mutation('walking-boot-size-42', 'pim', 'addProductVariant', ['groupId' => $groupId, 'variantId' => $size42Id],
     function () use ($groupId, $size42Id): string {
-        $this->pim->executeTyped('addProductVariant', ['id' => $groupId, 'variantProductId' => $size42Id]);
+        $this->pim->addProductVariant($groupId, $size42Id);
 
         return $size42Id;
     });
@@ -287,9 +272,7 @@ $settings = ['copy' => true, 'mandatory' => true];
 $context->mutation('warranty-vla-settings', 'pim', 'updateProductVariantAttribute',
     ['productId' => $groupId, 'definitionId' => $definitionId, 'json' => $settings],
     function () use ($groupId, $definitionId, $settings): string {
-        $this->pim->executeTyped('updateProductVariantAttribute', ['id' => $groupId, 'definitionId' => $definitionId], [
-            'json' => $settings,
-        ]);
+        $this->pim->updateProductVariantAttribute($groupId, $definitionId, $settings);
 
         return $definitionId;
     });
@@ -311,7 +294,7 @@ Variants that already have a value keep it. Add `'query' => ['forceVla' => true]
 ```php
 $request = ['attributeDefinitionId' => $definitionId, 'productIds' => $groupIds, 'copy' => true, 'mandatory' => true];
 $this->jobs->submitAndWait($context, 'warranty-vla-all-groups', function () use ($request): string {
-    $response = $this->pim->executeTyped('updateProductVariantsAttributeVlaSettings', [], ['json' => $request]);
+    $response = $this->pim->updateProductVariantsAttributeVlaSettings($request);
 
     return PimConnector::createdResourceId($response, 'a task');
 });
@@ -379,10 +362,7 @@ final class Version20261102110000 implements MigrationInterface
         $context->mutation('warranty-on-variant-group', 'pim', 'addProductAttribute',
             ['productId' => self::VARIANT_GROUP_ID, 'json' => $addRequest],
             function () use ($addRequest): string {
-                $this->pim->executeTyped('addProductAttribute', ['id' => self::VARIANT_GROUP_ID], [
-                    'headers' => ['context' => 'en'],
-                    'json' => $addRequest,
-                ]);
+                $this->pim->addProductAttribute(self::VARIANT_GROUP_ID, $addRequest);
 
                 return self::VARIANT_GROUP_ID;
             });
@@ -392,10 +372,7 @@ final class Version20261102110000 implements MigrationInterface
         $context->mutation('warranty-vla-settings', 'pim', 'updateProductVariantAttribute',
             ['productId' => self::VARIANT_GROUP_ID, 'definitionId' => $definitionId, 'json' => $vlaSettings],
             function () use ($definitionId, $vlaSettings): string {
-                $this->pim->executeTyped('updateProductVariantAttribute', [
-                    'id' => self::VARIANT_GROUP_ID,
-                    'definitionId' => $definitionId,
-                ], ['json' => $vlaSettings]);
+                $this->pim->updateProductVariantAttribute(self::VARIANT_GROUP_ID, $definitionId, $vlaSettings);
 
                 return $definitionId;
             });

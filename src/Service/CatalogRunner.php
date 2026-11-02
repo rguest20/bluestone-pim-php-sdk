@@ -37,9 +37,7 @@ final readonly class CatalogRunner
             throw new \InvalidArgumentException('Provide a catalog node ID and generated PIM model serializer.');
         }
         $payload = $this->modelSerializer->toArray($details, 'pim', $this->revisionContext?->current());
-        $this->pim->executeTyped('partialUpdateCatalogNode', ['id' => $nodeId], [
-            'headers' => ['context' => $context], 'json' => $payload,
-        ]);
+        $this->pim->updateCatalogNode($nodeId, $payload, $context);
     }
 
     /** Apply and checkpoint a catalog update so retries cannot repeat an uncertain write. */
@@ -63,7 +61,7 @@ final readonly class CatalogRunner
         }
         $options = ['headers' => ['context' => $context], 'json' => $details];
         if ($typed) {
-            $this->pim->executeTyped('partialUpdateCatalogNode', ['id' => $nodeId], $options);
+            $this->pim->updateCatalogNode($nodeId, $details, $context);
 
             return;
         }

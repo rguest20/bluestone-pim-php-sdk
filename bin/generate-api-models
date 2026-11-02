@@ -158,3 +158,11 @@ $remove($backup);
         }
     }
 }
+
+if ($revision === $catalog->activeRevision()) {
+    $process = proc_open([PHP_BINARY, $root.'/bin/generate-connector-methods', '--revision='.$revision],
+        [0 => ['file', '/dev/null', 'r'], 1 => STDOUT, 2 => STDERR], $pipes, $root);
+    if (!is_resource($process) || proc_close($process) !== 0) {
+        throw new RuntimeException('Could not publish connector convenience methods for the active API revision.');
+    }
+}

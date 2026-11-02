@@ -21,9 +21,7 @@ final readonly class ProductMutationRunner
         }
 
         $result = $migration->mutation($mutationName, 'pim', 'createProduct', $request, function () use ($request, $context): array {
-            $response = $this->pim->executeTyped('createProduct', [], [
-                'query' => ['validation' => 'NUMBER'], 'headers' => ['context' => $context], 'json' => $request,
-            ]);
+            $response = $this->pim->createProduct($request, $context);
 
             return ['product_id' => PimConnector::createdResourceId($response, 'a product'), 'product_number' => $request['number']];
         });
@@ -35,7 +33,7 @@ final readonly class ProductMutationRunner
     {
         if ($productId === '' || $request === []) throw new \InvalidArgumentException('Product updates require a stable product ID and at least one field.');
         $result = $migration->mutation($mutationName, 'pim', 'updateProduct', ['id' => $productId, 'request' => $request], function () use ($productId, $request, $context): array {
-            $this->pim->executeTyped('updateProduct', ['id' => $productId], ['headers' => ['context' => $context], 'json' => $request]);
+            $this->pim->updateProduct($productId, $request, $context);
 
             return ['product_id' => $productId];
         });

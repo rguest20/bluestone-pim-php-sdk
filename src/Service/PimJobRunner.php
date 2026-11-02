@@ -41,7 +41,7 @@ final readonly class PimJobRunner
     private function poll(string $taskId, int $timeoutSeconds, int $pollIntervalMilliseconds, ?MigrationContext $context, bool $typed): array
     {
         $fetch = fn (): array => ($typed
-            ? $this->pim->executeTyped('getJobStatus', ['taskId' => $taskId])
+            ? $this->pim->getJobStatus($taskId)
             : $this->pim->execute('getJobStatus', ['taskId' => $taskId]))->toArray();
 
         return $this->pollJob($fetch, $taskId, self::SUBJECT, 'task', ['COMPLETED'], $timeoutSeconds, $pollIntervalMilliseconds, $context, $this->clock);

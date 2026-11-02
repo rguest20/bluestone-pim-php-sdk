@@ -6,6 +6,7 @@ namespace Youwe\BluestonePim\Api\Connector;
 
 use Youwe\BluestonePim\Api\ApiAuthentication;
 use Youwe\BluestonePim\Api\OperationCatalog;
+use Youwe\BluestonePim\Api\TypedApiAdapterFactory;
 use Youwe\BluestonePim\Service\ApiOperationRunner;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
@@ -18,7 +19,29 @@ abstract class AbstractConnector
         private readonly OperationCatalog $catalog,
         private readonly ?\Youwe\BluestonePim\Api\ApiRevisionContext $revisionContext = null,
         private readonly ?\Youwe\BluestonePim\Api\OpenApiContractValidator $contractValidator = null,
+        private readonly ?TypedApiAdapterFactory $namedOperations = null,
     ) {
+    }
+
+    /** Forward generated operation-ID methods directly from this component connector. */
+    public function __call(string $name, array $arguments): mixed
+    {
+        return $this->invokeGeneratedOperation($name, $arguments);
+    }
+
+    /** @param list<mixed> $arguments */
+    final protected function invokeGeneratedOperation(string $name, array $arguments): ResponseInterface
+    {
+        if ($this->namedOperations === null) {
+            throw new \BadMethodCallException(sprintf('Unknown %s connector method %s().', static::COMPONENT, $name));
+        }
+
+        $operations = $this->namedOperations->forConnector($this);
+        if (!method_exists($operations, $name)) {
+            throw new \BadMethodCallException(sprintf('Unknown %s API operation method %s().', static::COMPONENT, $name));
+        }
+
+        return $operations->$name(...$arguments);
     }
 
     /** @return array<string, array> Operation IDs mapped to their documented routing contracts. */

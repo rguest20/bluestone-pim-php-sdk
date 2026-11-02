@@ -1,0 +1,97 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+use Youwe\BluestonePim\Api\OperationCatalog;
+
+require dirname(__DIR__).'/vendor/autoload.php';
+
+$root = dirname(__DIR__);
+$catalog = new OperationCatalog($root.'/resources/bluestone');
+$arguments = getopt('', ['revision:']);
+$revision = $arguments['revision'] ?? $catalog->activeRevision() ?? throw new RuntimeException('No active API revision is available.');
+if (!preg_match('/^[a-f0-9]{16}$/', $revision)) {
+    throw new InvalidArgumentException('Invalid API revision.');
+}
+if ($revision !== $catalog->activeRevision()) {
+    throw new InvalidArgumentException('Connector methods can only be generated for the active API revision.');
+}
+
+$stage = $root.'/generated/.connector-operations-'.bin2hex(random_bytes(4));
+$destination = $root.'/generated/ConnectorOperations';
+$backup = $root.'/generated/.connector-operations-backup-'.bin2hex(random_bytes(4));
+if (!mkdir($stage, 0775, true)) {
+    throw new RuntimeException('Cannot create the generated connector-method staging directory.');
+}
+$remove = static function (string $path) use (&$remove): void {
+    if (!file_exists($path)) {
+        return;
+    }
+    if (is_dir($path)) {
+        foreach (scandir($path) ?: [] as $entry) {
+            if ($entry !== '.' && $entry !== '..') {
+                $remove($path.'/'.$entry);
+            }
+        }
+        rmdir($path);
+        return;
+    }
+    unlink($path);
+};
+
+try {
+    foreach (array_keys(OperationCatalog::COMPONENTS) as $component) {
+        $componentClass = str_replace(' ', '', ucwords(str_replace(['-', '_', '/'], ' ', $component)));
+        $facadePath = $root.'/generated/R'.$revision.'/'.$componentClass.'/Operations/'.$componentClass.'Operations.php';
+        $facade = is_file($facadePath) ? file_get_contents($facadePath) : false;
+        if (!is_string($facade)) {
+            throw new RuntimeException('Generated operation facade is missing for '.$component.' revision '.$revision.'.');
+        }
+        $manifestPath = $root.'/generated/R'.$revision.'/manifest.json';
+        $manifest = is_file($manifestPath) ? json_decode(file_get_contents($manifestPath), true, 512, JSON_THROW_ON_ERROR) : [];
+        $expectedCount = $manifest['components'][$component]['operation_count'] ?? null;
+        preg_match_all('/^    public function ([A-Za-z_][A-Za-z0-9_]*)\(([^\r\n]*)\): ResponseInterface\R    \{\R.*?^    \}/ms', $facade, $matches, PREG_SET_ORDER);
+        if (!is_int($expectedCount) || count($matches) !== $expectedCount) {
+            throw new RuntimeException(sprintf('Generated operation facade for %s has %d methods; expected %s.', $component, count($matches), (string) $expectedCount));
+        }
+
+        $code = "<?php\n\ndeclare(strict_types=1);\n\nnamespace Youwe\\BluestonePim\\Generated\\ConnectorOperations;\n\n"
+            ."use Symfony\\Contracts\\HttpClient\\ResponseInterface;\n\n"
+            ."/** Operation-named connector methods generated from API revision {$revision}. */\n"
+            ."trait {$componentClass}Operations\n{\n";
+        foreach ($matches as $match) {
+            $method = $match[1];
+            $parameters = $match[2];
+            $code .= '    public function '.$method.'('.$parameters."): ResponseInterface\n    {\n"
+                .'        return $this->invokeGeneratedOperation('.var_export($method, true).", func_get_args());\n"
+                ."    }\n\n";
+        }
+        $code .= "}\n";
+        if (file_put_contents($stage.'/'.$componentClass.'Operations.php', $code) !== strlen($code)) {
+            throw new RuntimeException('Could not write generated connector methods for '.$component.'.');
+        }
+    }
+
+    if (is_dir($destination) && !rename($destination, $backup)) {
+        throw new RuntimeException('Could not preserve the previous generated connector methods.');
+    }
+    if (!rename($stage, $destination)) {
+        if (is_dir($backup)) {
+            rename($backup, $destination);
+        }
+        throw new RuntimeException('Could not publish generated connector methods.');
+    }
+    $remove($backup);
+} finally {
+    $remove($stage);
+    if (is_dir($backup)) {
+        if (!is_dir($destination)) {
+            rename($backup, $destination);
+        } else {
+            $remove($backup);
+        }
+    }
+}
+
+fwrite(STDOUT, sprintf("Generated operation-named methods for %d connectors from revision %s.\n", count(OperationCatalog::COMPONENTS), $revision));
