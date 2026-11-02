@@ -1,0 +1,11 @@
+name: bluestone-migration-experiment
+type: php
+docroot: .
+php_version: "8.3"
+webserver_type: generic
+database:
+  type: mysql
+  version: "8.0"
+web_environment:
+  - DATABASE_URL=mysql://db:db@db:3306/db?serverVersion=8.0
+  - BLUESTONE_TARGET=ddev-test

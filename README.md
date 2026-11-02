@@ -67,6 +67,21 @@ SQLite's file and directory are created automatically. PostgreSQL and MySQL conn
 
 Use a **separate persistent database for each Bluestone tenant/environment**. Keep its data between releases and back it up. The first run binds the ledger to `BLUESTONE_TARGET` and the API base URL; later runs reject a different configuration. This is a configuration guard, not validation of the organization associated with your credentials. Ensure those credentials belong to the configured target. Credential rotation does not reset the ledger.
 
+### Run the console and MySQL with DDEV
+
+This project currently provides a Symfony **console application**, not a browser-facing web UI. The checked-in DDEV config starts a PHP 8.3 container and MySQL 8.0, with the database URL pointed at DDEV's internal `db` service. `webserver_type: generic` keeps the repository root from being served as a website.
+
+```sh
+ddev start
+ddev composer install
+ddev composer build:contracts
+ddev exec php bin/console list
+ddev exec php bin/console app:migrations:status
+ddev exec php bin/console app:migrations:migrate --dry-run
+```
+
+`ddev start` launches the local PHP and MySQL services. The dry run lists pending migrations without executing migration code or contacting Bluestone. To use the DDEV database from a host-side PHP process, set `DATABASE_URL` to the host connection shown by `ddev describe`; inside DDEV use the configured `db` hostname. DDEV's local database is for development only; keep production credentials and tracking databases separate. See the [DDEV configuration](https://ddev.readthedocs.io/en/stable/users/configuration/config/) and [database type reference](https://ddev.readthedocs.io/en/stable/users/extend/database-types/).
+
 ## Commands
 
 ```sh
