@@ -1,0 +1,103 @@
+{
+    "schema_version": 1,
+    "revision": "2c19c082ed473e21",
+    "generator": "jane-php/open-api-3 7.14.4",
+    "components": {
+        "pim": {
+            "openapi_sha256": "16a144e96ff14532e0896f1bb5f83bf0937bbc18feb0b7bdc91a9e9f421cfdaa",
+            "model_count": 201,
+            "operation_count": 224,
+            "missing_request_models": []
+        },
+        "media-bank": {
+            "openapi_sha256": "a8f6a952383a5ba1407fae2fff6a549832773506098d5f16b5cff802b3932269",
+            "model_count": 62,
+            "operation_count": 58,
+            "missing_request_models": []
+        },
+        "search": {
+            "openapi_sha256": "2362edaccca3b85e18e11963ad8b830a50dcc572e7e0313f46fcd3b3cb4e5f36",
+            "model_count": 108,
+            "operation_count": 8,
+            "missing_request_models": []
+        },
+        "labels": {
+            "openapi_sha256": "0ec4854f554655b1e46dd04012c6cbf5b211fb7b3490e631064d1f91b91b9724",
+            "model_count": 8,
+            "operation_count": 6,
+            "missing_request_models": []
+        },
+        "global-settings": {
+            "openapi_sha256": "81e240cf49a1847308143fc0c220ff863fdddc369b4dc77276d7b1870c04bfc1",
+            "model_count": 16,
+            "operation_count": 17,
+            "missing_request_models": []
+        },
+        "history": {
+            "openapi_sha256": "b08c510446d8d74923691cb71b17483c2e41bcc904b8199459293693a882ec26",
+            "model_count": 10,
+            "operation_count": 7,
+            "missing_request_models": []
+        },
+        "tasks": {
+            "openapi_sha256": "970d3e28f79dd721f96da658dcef9748d8f4e6e0ce725e4859be4218657207a8",
+            "model_count": 23,
+            "operation_count": 28,
+            "missing_request_models": []
+        },
+        "query-builder": {
+            "openapi_sha256": "641242e9596d85b4f25ba7ca684c5efc1f36d0cdc51ce469816cba08da00d361",
+            "model_count": 171,
+            "operation_count": 10,
+            "missing_request_models": []
+        },
+        "public-api-sync": {
+            "openapi_sha256": "fcbabc1a160ab89ce35d0682e9e83077654d69f9dc8c4bf2f4f7471ea07e535f",
+            "model_count": 33,
+            "operation_count": 20,
+            "missing_request_models": []
+        },
+        "public-api": {
+            "openapi_sha256": "44b71b4e22c3a3a7971eafd960fd811358c569295e37a5b809b62a0be28313fa",
+            "model_count": 43,
+            "operation_count": 27,
+            "missing_request_models": []
+        },
+        "idp": {
+            "openapi_sha256": "8623b55cb5ffb178e95d904a2eb7662c1369d2eadc76587f41cc73a878d0e472",
+            "model_count": 59,
+            "operation_count": 72,
+            "missing_request_models": []
+        },
+        "external-notifications": {
+            "openapi_sha256": "bf10b0946719903ee6a7448d181fb6d9493a51cf14b1e3213e6520a60fa09b59",
+            "model_count": 37,
+            "operation_count": 32,
+            "missing_request_models": []
+        },
+        "completeness-score": {
+            "openapi_sha256": "65e2c5cd0b2f70817e0e5c792596862057a68e60e3fa71054d32e00ed5d7b05b",
+            "model_count": 56,
+            "operation_count": 24,
+            "missing_request_models": []
+        },
+        "metadata": {
+            "openapi_sha256": "bed114a345aa17a11b4079b78cd504902322f9bbd04011538c28a312c5b8f82f",
+            "model_count": 19,
+            "operation_count": 7,
+            "missing_request_models": []
+        },
+        "ui-settings": {
+            "openapi_sha256": "a1455a2a4527d26754f2b9ecaec1ddbc5284a77fcce8461dd31d9445561a42f3",
+            "model_count": 11,
+            "operation_count": 5,
+            "missing_request_models": []
+        },
+        "bulk-operations": {
+            "openapi_sha256": "4ae1cca7a033c7382ac2c076e6a80595b066ada0f0c84ced077aac4920020959",
+            "model_count": 8,
+            "operation_count": 2,
+            "missing_request_models": []
+        }
+    }
+}
