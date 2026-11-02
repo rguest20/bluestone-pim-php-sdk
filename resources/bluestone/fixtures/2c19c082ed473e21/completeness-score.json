@@ -1,0 +1,846 @@
+{
+    "schema_version": 1,
+    "component": "completeness-score",
+    "revision": "2c19c082ed473e21",
+    "openapi_sha256": "65e2c5cd0b2f70817e0e5c792596862057a68e60e3fa71054d32e00ed5d7b05b",
+    "complete_component": true,
+    "payloads": {
+        "requirement": {
+            "requirementType": "ATTRIBUTE_HAS_VALUE",
+            "weight": 1.0
+        },
+        "attribute_validation": {
+            "productId": "product-1",
+            "context": "en",
+            "attribute": {
+                "definitionId": "color",
+                "value": "blue"
+            }
+        },
+        "definition_validation": {
+            "context": "en",
+            "attribute": {
+                "definitionId": "color",
+                "value": "blue"
+            }
+        },
+        "bulk_validation": {
+            "context": "en",
+            "entityIds": [
+                "product-1"
+            ]
+        },
+        "scores": {
+            "contexts": [
+                "en"
+            ],
+            "entityIds": [
+                "product-1"
+            ],
+            "pageSize": 10,
+            "page": 0
+        },
+        "category_scores": {
+            "contexts": [
+                "en"
+            ],
+            "categoryIds": [
+                "category-1"
+            ],
+            "includeUnassigned": false,
+            "pageSize": 10,
+            "page": 0
+        },
+        "recalculate": {
+            "context": "en"
+        },
+        "recalculate_entity": {
+            "context": "en",
+            "entityIds": [
+                "product-1"
+            ]
+        },
+        "invalidate": {
+            "context": "en"
+        },
+        "requirement_list": {
+            "types": [
+                "ATTRIBUTE_HAS_VALUE"
+            ],
+            "pageSize": 10,
+            "page": 0
+        },
+        "requirement_count": {
+            "types": [
+                "ATTRIBUTE_HAS_VALUE"
+            ]
+        },
+        "validation_issues": {
+            "data": []
+        },
+        "score_list": {
+            "data": []
+        },
+        "category_score_list": {
+            "data": []
+        },
+        "calculation": {
+            "message": "Calculation accepted."
+        },
+        "detailed_score": {
+            "entityId": "entity-1",
+            "score": 95.5,
+            "context": "en",
+            "date": 1710000000000,
+            "sourceEventId": "event-1",
+            "requirementsResults": [],
+            "pimLastUpdate": 1710000000000
+        },
+        "calculation_status": {
+            "calculationStatus": "IDLE",
+            "recalculationRequired": false
+        },
+        "requirement_response": {
+            "data": [
+                {
+                    "id": "req-1",
+                    "requirementType": "ATTRIBUTE_HAS_VALUE",
+                    "weight": 1.0,
+                    "includedCategoryIds": [],
+                    "excludedCategoryIds": [],
+                    "includedProductTypes": [
+                        "SINGLE"
+                    ]
+                }
+            ]
+        },
+        "count_response": {
+            "count": 1
+        }
+    },
+    "operations": {
+        "update": {
+            "method": "PUT",
+            "request": {
+                "expected_path": "/completeness-score/requirements/req-1",
+                "path_parameters": {
+                    "requirementId": "req-1"
+                },
+                "json_ref": "requirement"
+            },
+            "response": {
+                "status": 200,
+                "body": ""
+            },
+            "invalid_requests": [
+                {
+                    "at": "/json/requirementType",
+                    "replace": "UNKNOWN",
+                    "reason": "Requirement type must use the documented enum."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/status",
+                    "replace": 201,
+                    "reason": "The operation documents HTTP 200 as its successful response."
+                }
+            ],
+            "remote_errors": [
+                400,
+                404
+            ]
+        },
+        "delete": {
+            "method": "DELETE",
+            "request": {
+                "expected_path": "/completeness-score/requirements/req-1",
+                "path_parameters": {
+                    "requirementId": "req-1"
+                }
+            },
+            "response": {
+                "status": 204,
+                "body": ""
+            },
+            "invalid_requests": [
+                {
+                    "at": "/path_parameters/requirementId",
+                    "replace": "",
+                    "reason": "requirementId is required."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/status",
+                    "replace": 200,
+                    "reason": "Requirement deletion documents HTTP 204."
+                }
+            ],
+            "remote_errors": [
+                400,
+                404
+            ]
+        },
+        "addIncludedProductType": {
+            "method": "PUT",
+            "request": {
+                "expected_path": "/completeness-score/requirements/req-1/productType/SINGLE/included",
+                "path_parameters": {
+                    "requirementId": "req-1",
+                    "productType": "SINGLE"
+                }
+            },
+            "response": {
+                "status": 200,
+                "body": ""
+            },
+            "invalid_requests": [
+                {
+                    "at": "/path_parameters/productType",
+                    "replace": "",
+                    "reason": "productType is a required path value."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/status",
+                    "replace": 201,
+                    "reason": "The operation documents HTTP 200 as its successful response."
+                }
+            ],
+            "remote_errors": [
+                400,
+                404
+            ]
+        },
+        "removeIncludedProductType": {
+            "method": "DELETE",
+            "request": {
+                "expected_path": "/completeness-score/requirements/req-1/productType/SINGLE/included",
+                "path_parameters": {
+                    "requirementId": "req-1",
+                    "productType": "SINGLE"
+                }
+            },
+            "response": {
+                "status": 200,
+                "body": ""
+            },
+            "invalid_requests": [
+                {
+                    "at": "/path_parameters/productType",
+                    "replace": "",
+                    "reason": "productType is a required path value."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/status",
+                    "replace": 201,
+                    "reason": "The operation documents HTTP 200 as its successful response."
+                }
+            ],
+            "remote_errors": [
+                400,
+                404
+            ]
+        },
+        "addIncludedCategory": {
+            "method": "PUT",
+            "request": {
+                "expected_path": "/completeness-score/requirements/req-1/categories/cat-1/included",
+                "path_parameters": {
+                    "requirementId": "req-1",
+                    "categoryId": "cat-1"
+                }
+            },
+            "response": {
+                "status": 200,
+                "body": ""
+            },
+            "invalid_requests": [
+                {
+                    "at": "/path_parameters/categoryId",
+                    "replace": "",
+                    "reason": "categoryId is a required path value."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/status",
+                    "replace": 201,
+                    "reason": "The operation documents HTTP 200 as its successful response."
+                }
+            ],
+            "remote_errors": [
+                400,
+                404
+            ]
+        },
+        "removeIncludedCategory": {
+            "method": "DELETE",
+            "request": {
+                "expected_path": "/completeness-score/requirements/req-1/categories/cat-1/included",
+                "path_parameters": {
+                    "requirementId": "req-1",
+                    "categoryId": "cat-1"
+                }
+            },
+            "response": {
+                "status": 200,
+                "body": ""
+            },
+            "invalid_requests": [
+                {
+                    "at": "/path_parameters/categoryId",
+                    "replace": "",
+                    "reason": "categoryId is a required path value."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/status",
+                    "replace": 201,
+                    "reason": "The operation documents HTTP 200 as its successful response."
+                }
+            ],
+            "remote_errors": [
+                400,
+                404
+            ]
+        },
+        "addExcludedCategory": {
+            "method": "PUT",
+            "request": {
+                "expected_path": "/completeness-score/requirements/req-1/categories/cat-1/excluded",
+                "path_parameters": {
+                    "requirementId": "req-1",
+                    "categoryId": "cat-1"
+                }
+            },
+            "response": {
+                "status": 200,
+                "body": ""
+            },
+            "invalid_requests": [
+                {
+                    "at": "/path_parameters/categoryId",
+                    "replace": "",
+                    "reason": "categoryId is a required path value."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/status",
+                    "replace": 201,
+                    "reason": "The operation documents HTTP 200 as its successful response."
+                }
+            ],
+            "remote_errors": [
+                400,
+                404
+            ]
+        },
+        "removeExcludedCategory": {
+            "method": "DELETE",
+            "request": {
+                "expected_path": "/completeness-score/requirements/req-1/categories/cat-1/excluded",
+                "path_parameters": {
+                    "requirementId": "req-1",
+                    "categoryId": "cat-1"
+                }
+            },
+            "response": {
+                "status": 200,
+                "body": ""
+            },
+            "invalid_requests": [
+                {
+                    "at": "/path_parameters/categoryId",
+                    "replace": "",
+                    "reason": "categoryId is a required path value."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/status",
+                    "replace": 201,
+                    "reason": "The operation documents HTTP 200 as its successful response."
+                }
+            ],
+            "remote_errors": [
+                400,
+                404
+            ]
+        },
+        "validateProductAttribute": {
+            "method": "POST",
+            "request": {
+                "expected_path": "/completeness-score/validations/product/attribute",
+                "json_ref": "attribute_validation"
+            },
+            "response": {
+                "status": 200,
+                "json_ref": "validation_issues"
+            },
+            "invalid_requests": [
+                {
+                    "at": "/json/productId",
+                    "replace": 42,
+                    "reason": "productId is a string when supplied."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/json/data",
+                    "replace": "not-an-array",
+                    "reason": "Validation issues data is an array."
+                }
+            ],
+            "remote_errors": [
+                400
+            ]
+        },
+        "validateDefinitionValue": {
+            "method": "POST",
+            "request": {
+                "expected_path": "/completeness-score/validations/definition/value",
+                "json_ref": "definition_validation"
+            },
+            "response": {
+                "status": 200,
+                "json_ref": "validation_issues"
+            },
+            "invalid_requests": [
+                {
+                    "at": "/json/context",
+                    "replace": 42,
+                    "reason": "context is a string when supplied."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/json/data",
+                    "replace": "not-an-array",
+                    "reason": "Definition validation data is an array."
+                }
+            ],
+            "remote_errors": [
+                400
+            ]
+        },
+        "getBulkValidationIssues": {
+            "method": "POST",
+            "request": {
+                "expected_path": "/completeness-score/validations/by-ids",
+                "json_ref": "bulk_validation"
+            },
+            "response": {
+                "status": 200,
+                "json_ref": "validation_issues"
+            },
+            "invalid_requests": [
+                {
+                    "at": "/json/context",
+                    "remove": true,
+                    "reason": "Bulk validation requires context."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/json/data",
+                    "replace": "not-an-array",
+                    "reason": "Bulk validation data is an array."
+                }
+            ],
+            "remote_errors": [
+                400
+            ]
+        },
+        "getScores": {
+            "method": "POST",
+            "request": {
+                "expected_path": "/completeness-score/scores/list",
+                "json_ref": "scores"
+            },
+            "response": {
+                "status": 200,
+                "json_ref": "score_list"
+            },
+            "invalid_requests": [
+                {
+                    "at": "/json/pageSize",
+                    "replace": 0,
+                    "reason": "pageSize has a minimum value of one."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/json/data",
+                    "replace": "not-an-array",
+                    "reason": "Score list data is an array."
+                }
+            ],
+            "remote_errors": [
+                400
+            ]
+        },
+        "getCategoryScores": {
+            "method": "POST",
+            "request": {
+                "expected_path": "/completeness-score/scores/category/list",
+                "json_ref": "category_scores"
+            },
+            "response": {
+                "status": 200,
+                "json_ref": "category_score_list"
+            },
+            "invalid_requests": [
+                {
+                    "at": "/json/includeUnassigned",
+                    "replace": "false",
+                    "reason": "includeUnassigned is boolean."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/json/data",
+                    "replace": "not-an-array",
+                    "reason": "Category score list data is an array."
+                }
+            ],
+            "remote_errors": [
+                400
+            ]
+        },
+        "stopCalculation": {
+            "method": "POST",
+            "request": {
+                "expected_path": "/completeness-score/scores/calculation/stop",
+                "json_ref": "recalculate"
+            },
+            "response": {
+                "status": 202,
+                "json_ref": "calculation"
+            },
+            "invalid_requests": [
+                {
+                    "at": "/json/context",
+                    "replace": 42,
+                    "reason": "Calculation context is a string when supplied."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/json/message",
+                    "replace": 200,
+                    "reason": "The operation documents HTTP 202 with a CalculationResponse body."
+                }
+            ],
+            "remote_errors": [
+                400
+            ]
+        },
+        "startCalculation": {
+            "method": "POST",
+            "request": {
+                "expected_path": "/completeness-score/scores/calculation/start",
+                "json_ref": "recalculate"
+            },
+            "response": {
+                "status": 202,
+                "json_ref": "calculation"
+            },
+            "invalid_requests": [
+                {
+                    "at": "/json/context",
+                    "replace": 42,
+                    "reason": "Calculation context is a string when supplied."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/json/message",
+                    "replace": 200,
+                    "reason": "The operation documents HTTP 202 with a CalculationResponse body."
+                }
+            ],
+            "remote_errors": [
+                400
+            ]
+        },
+        "recalculateForEntity": {
+            "method": "POST",
+            "request": {
+                "expected_path": "/completeness-score/scores/calculation/recalculate/entity",
+                "json_ref": "recalculate_entity"
+            },
+            "response": {
+                "status": 200,
+                "body": ""
+            },
+            "invalid_requests": [
+                {
+                    "at": "/json/entityIds",
+                    "replace": [],
+                    "reason": "entityIds has minimum size one when supplied."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/status",
+                    "replace": 201,
+                    "reason": "The operation documents HTTP 200 as its successful response."
+                }
+            ],
+            "remote_errors": [
+                400
+            ]
+        },
+        "scoresInvalidation": {
+            "method": "POST",
+            "request": {
+                "expected_path": "/completeness-score/scores/calculation/admin/invalidate",
+                "json_ref": "invalidate"
+            },
+            "response": {
+                "status": 202,
+                "body": ""
+            },
+            "invalid_requests": [
+                {
+                    "at": "/json/context",
+                    "replace": 42,
+                    "reason": "Invalidation context is a string when supplied."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/status",
+                    "replace": 200,
+                    "reason": "The operation documents HTTP 202 as its accepted response."
+                }
+            ],
+            "remote_errors": [
+                400
+            ]
+        },
+        "create": {
+            "method": "POST",
+            "request": {
+                "expected_path": "/completeness-score/requirements",
+                "json_ref": "requirement"
+            },
+            "response": {
+                "status": 201,
+                "body": ""
+            },
+            "invalid_requests": [
+                {
+                    "at": "/json/requirementType",
+                    "replace": "UNKNOWN",
+                    "reason": "Requirement type must use the documented enum."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/status",
+                    "replace": 200,
+                    "reason": "Requirement creation documents HTTP 201."
+                }
+            ],
+            "remote_errors": [
+                400,
+                409
+            ]
+        },
+        "list": {
+            "method": "POST",
+            "request": {
+                "expected_path": "/completeness-score/requirements/list",
+                "json_ref": "requirement_list"
+            },
+            "response": {
+                "status": 200,
+                "json_ref": "requirement_response"
+            },
+            "invalid_requests": [
+                {
+                    "at": "/json/types",
+                    "replace": [
+                        "UNKNOWN"
+                    ],
+                    "reason": "Requirement type filters use the documented enum."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/json/data",
+                    "replace": "not-an-array",
+                    "reason": "Requirement list data is an array."
+                }
+            ],
+            "remote_errors": [
+                400
+            ]
+        },
+        "count": {
+            "method": "POST",
+            "request": {
+                "expected_path": "/completeness-score/requirements/count",
+                "json_ref": "requirement_count"
+            },
+            "response": {
+                "status": 200,
+                "json_ref": "count_response"
+            },
+            "invalid_requests": [
+                {
+                    "at": "/json/types",
+                    "replace": [
+                        "UNKNOWN"
+                    ],
+                    "reason": "Requirement type filters use the documented enum."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/json/count",
+                    "replace": "one",
+                    "reason": "Requirement count is an integer."
+                }
+            ],
+            "remote_errors": [
+                400
+            ]
+        },
+        "getValidationIssues": {
+            "method": "GET",
+            "request": {
+                "expected_path": "/completeness-score/validations/entity-1/en",
+                "path_parameters": {
+                    "entityId": "entity-1",
+                    "context": "en"
+                }
+            },
+            "response": {
+                "status": 200,
+                "json_ref": "validation_issues"
+            },
+            "invalid_requests": [
+                {
+                    "at": "/path_parameters/context",
+                    "replace": "",
+                    "reason": "context is a required path value."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/json/data",
+                    "replace": "not-an-array",
+                    "reason": "Validation issues data is an array."
+                }
+            ],
+            "remote_errors": [
+                400,
+                404
+            ]
+        },
+        "getDetailedScoresForSingleEntity": {
+            "method": "GET",
+            "request": {
+                "expected_path": "/completeness-score/scores/entity-1/en",
+                "path_parameters": {
+                    "entityId": "entity-1",
+                    "context": "en"
+                }
+            },
+            "response": {
+                "status": 200,
+                "json_ref": "detailed_score"
+            },
+            "invalid_requests": [
+                {
+                    "at": "/path_parameters/entityId",
+                    "replace": "",
+                    "reason": "entityId is a required path value."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/json/score",
+                    "replace": "high",
+                    "reason": "Score is numeric when supplied."
+                }
+            ],
+            "remote_errors": [
+                400,
+                404
+            ]
+        },
+        "getCalculationStatus": {
+            "method": "GET",
+            "request": {
+                "expected_path": "/completeness-score/scores/status/en",
+                "path_parameters": {
+                    "context": "en"
+                }
+            },
+            "response": {
+                "status": 200,
+                "json_ref": "calculation_status"
+            },
+            "invalid_requests": [
+                {
+                    "at": "/path_parameters/context",
+                    "replace": "",
+                    "reason": "context is a required path value."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/json/calculationStatus",
+                    "replace": "UNKNOWN",
+                    "reason": "Calculation status must use the documented enum."
+                }
+            ],
+            "remote_errors": [
+                400,
+                404
+            ]
+        },
+        "getRequirementsForSingleEntity": {
+            "method": "GET",
+            "request": {
+                "expected_path": "/completeness-score/requirements/entity/entity-1/en",
+                "path_parameters": {
+                    "entityId": "entity-1",
+                    "context": "en"
+                }
+            },
+            "response": {
+                "status": 200,
+                "json_ref": "detailed_score"
+            },
+            "invalid_requests": [
+                {
+                    "at": "/path_parameters/entityId",
+                    "replace": "",
+                    "reason": "entityId is a required path value."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/json/score",
+                    "replace": "high",
+                    "reason": "Score is numeric when supplied."
+                }
+            ],
+            "remote_errors": [
+                400,
+                404
+            ]
+        }
+    }
+}

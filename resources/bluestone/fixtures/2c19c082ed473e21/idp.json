@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "component": "idp",
+  "revision": "2c19c082ed473e21",
+  "openapi_sha256": "8623b55cb5ffb178e95d904a2eb7662c1369d2eadc76587f41cc73a878d0e472",
+  "operations": {
+    "CreatePolicy": {
+      "method": "POST",
+      "request": {
+        "expected_path": "/idp/policies",
+        "json": {
+          "name": "Offline policy fixture"
+        }
+      },
+      "response": {
+        "status": 204,
+        "body": ""
+      },
+      "invalid_requests": [
+        {
+          "at": "/json/name",
+          "remove": true,
+          "reason": "PolicyRequest requires a name."
+        }
+      ],
+      "invalid_responses": [
+        {
+          "at": "/status",
+          "replace": 200,
+          "reason": "Policy creation documents an empty HTTP 204 response."
+        }
+      ],
+      "remote_errors": []
+    },
+    "CreateRole": {
+      "method": "POST",
+      "request": {
+        "expected_path": "/idp/roles",
+        "json": {
+          "name": "Offline role fixture",
+          "permissions": []
+        }
+      },
+      "response": {
+        "status": 204,
+        "body": ""
+      },
+      "invalid_requests": [
+        {
+          "at": "/json/permissions",
+          "remove": true,
+          "reason": "NewRoleRequest requires a permissions array."
+        }
+      ],
+      "invalid_responses": [
+        {
+          "at": "/status",
+          "replace": 200,
+          "reason": "Role creation documents an empty HTTP 204 response."
+        }
+      ],
+      "remote_errors": []
+    }
+  }
+}

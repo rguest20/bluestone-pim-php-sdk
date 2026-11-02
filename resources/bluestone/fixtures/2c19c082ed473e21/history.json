@@ -1,0 +1,268 @@
+{
+    "schema_version": 1,
+    "component": "history",
+    "revision": "2c19c082ed473e21",
+    "openapi_sha256": "b08c510446d8d74923691cb71b17483c2e41bcc904b8199459293693a882ec26",
+    "complete_component": true,
+    "payloads": {
+        "entries": {
+            "data": [
+                {
+                    "id": "event-1",
+                    "date": 1710000000000,
+                    "userId": "user-1",
+                    "origin": "api",
+                    "eventId": "PRODUCT_UPDATED",
+                    "entityType": "PRODUCT",
+                    "eventType": "UPDATE",
+                    "entityIds": [
+                        "product-1"
+                    ]
+                }
+            ]
+        },
+        "cursor": {
+            "data": [
+                {
+                    "id": "event-1",
+                    "eventType": "UPDATE",
+                    "entityType": "PRODUCT"
+                }
+            ],
+            "nextCursor": null
+        },
+        "count": {
+            "count": 3
+        }
+    },
+    "operations": {
+        "list": {
+            "method": "GET",
+            "request": {
+                "expected_path": "/history/history?pageSize=20",
+                "query": {
+                    "pageSize": 20
+                }
+            },
+            "response": {
+                "status": 200,
+                "json_ref": "entries"
+            },
+            "invalid_requests": [
+                {
+                    "at": "/query/pageSize",
+                    "replace": 0,
+                    "reason": "pageSize has a minimum value of one."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/json/data",
+                    "replace": "not-an-array",
+                    "reason": "History entries data is an array."
+                }
+            ],
+            "remote_errors": [
+                400
+            ]
+        },
+        "list_1": {
+            "method": "GET",
+            "request": {
+                "expected_path": "/history/history/PRODUCT?pageSize=20",
+                "path_parameters": {
+                    "entityType": "PRODUCT"
+                },
+                "query": {
+                    "pageSize": 20
+                }
+            },
+            "response": {
+                "status": 200,
+                "json_ref": "entries"
+            },
+            "invalid_requests": [
+                {
+                    "at": "/path_parameters/entityType",
+                    "replace": "",
+                    "reason": "entityType must not be empty."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/json/data",
+                    "replace": "not-an-array",
+                    "reason": "History entries data is an array."
+                }
+            ],
+            "remote_errors": [
+                400
+            ]
+        },
+        "list_2": {
+            "method": "GET",
+            "request": {
+                "expected_path": "/history/history/PRODUCT/product-1?pageSize=20",
+                "path_parameters": {
+                    "entityType": "PRODUCT",
+                    "id": "product-1"
+                },
+                "query": {
+                    "pageSize": 20
+                }
+            },
+            "response": {
+                "status": 200,
+                "json_ref": "entries"
+            },
+            "invalid_requests": [
+                {
+                    "at": "/path_parameters/id",
+                    "replace": "",
+                    "reason": "id must not be empty."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/json/data",
+                    "replace": "not-an-array",
+                    "reason": "History entries data is an array."
+                }
+            ],
+            "remote_errors": [
+                400
+            ]
+        },
+        "count": {
+            "method": "GET",
+            "request": {
+                "expected_path": "/history/history/PRODUCT/product-1/count",
+                "path_parameters": {
+                    "entityType": "PRODUCT",
+                    "id": "product-1"
+                }
+            },
+            "response": {
+                "status": 200,
+                "json_ref": "count"
+            },
+            "invalid_requests": [
+                {
+                    "at": "/path_parameters/entityType",
+                    "replace": "",
+                    "reason": "entityType must not be empty."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/json/count",
+                    "replace": "three",
+                    "reason": "History entry count is an integer."
+                }
+            ],
+            "remote_errors": [
+                400
+            ]
+        },
+        "scrollList": {
+            "method": "GET",
+            "request": {
+                "expected_path": "/history/history/PRODUCT/scroll?count=10",
+                "path_parameters": {
+                    "entityType": "PRODUCT"
+                },
+                "query": {
+                    "count": 10
+                }
+            },
+            "response": {
+                "status": 200,
+                "json_ref": "cursor"
+            },
+            "invalid_requests": [
+                {
+                    "at": "/query/count",
+                    "replace": 101,
+                    "reason": "History scroll count has a maximum of 100."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/json/nextCursor",
+                    "replace": 42,
+                    "reason": "nextCursor is a string or null."
+                }
+            ],
+            "remote_errors": [
+                400
+            ]
+        },
+        "search": {
+            "method": "GET",
+            "request": {
+                "expected_path": "/history/history/search/PRODUCT?query=color",
+                "path_parameters": {
+                    "entityType": "PRODUCT"
+                },
+                "query": {
+                    "query": "color"
+                }
+            },
+            "response": {
+                "status": 200,
+                "json_ref": "entries"
+            },
+            "invalid_requests": [
+                {
+                    "at": "/query/query",
+                    "replace": "x",
+                    "reason": "History search query has a minimum length of two."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/json/data",
+                    "replace": "not-an-array",
+                    "reason": "History search data is an array."
+                }
+            ],
+            "remote_errors": [
+                400
+            ]
+        },
+        "search_1": {
+            "method": "GET",
+            "request": {
+                "expected_path": "/history/history/search/PRODUCT/product-1?query=color",
+                "path_parameters": {
+                    "entityType": "PRODUCT",
+                    "id": "product-1"
+                },
+                "query": {
+                    "query": "color"
+                }
+            },
+            "response": {
+                "status": 200,
+                "json_ref": "entries"
+            },
+            "invalid_requests": [
+                {
+                    "at": "/path_parameters/id",
+                    "replace": "",
+                    "reason": "id must not be empty."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/json/data",
+                    "replace": "not-an-array",
+                    "reason": "History search data is an array."
+                }
+            ],
+            "remote_errors": [
+                400
+            ]
+        }
+    }
+}

@@ -1,0 +1,107 @@
+{
+    "schema_version": 1,
+    "component": "bulk-operations",
+    "revision": "2c19c082ed473e21",
+    "openapi_sha256": "4ae1cca7a033c7382ac2c076e6a80595b066ada0f0c84ced077aac4920020959",
+    "complete_component": true,
+    "payloads": {
+        "upsert": {
+            "operations": [
+                {
+                    "productNumber": "SKU-001",
+                    "definitionNumber": "colour",
+                    "contextId": "en",
+                    "selectValueNumbers": [
+                        "red"
+                    ]
+                },
+                {
+                    "productNumber": "SKU-002",
+                    "definitionNumber": "description",
+                    "contextId": "en",
+                    "value": null
+                }
+            ]
+        },
+        "job": {
+            "status": "COMPLETED_WITH_ISSUES",
+            "issues": [
+                {
+                    "index": 1,
+                    "error": {
+                        "status": 400,
+                        "error": "Unknown product number"
+                    }
+                }
+            ],
+            "createdDate": 1710000000000,
+            "startedDate": null,
+            "finishedDate": 1710000001000
+        }
+    },
+    "operations": {
+        "upsertAttributesByNumbers": {
+            "method": "POST",
+            "request": {
+                "expected_path": "/bulk-operations/products/attributes/update/by-numbers",
+                "json_ref": "upsert"
+            },
+            "response": {
+                "status": 200,
+                "body": ""
+            },
+            "invalid_requests": [
+                {
+                    "at": "/json/operations/0/productNumber",
+                    "replace": "",
+                    "reason": "Product numbers have minLength 1."
+                },
+                {
+                    "at": "/json/operations/0/definitionNumber",
+                    "remove": true,
+                    "reason": "Each operation requires definitionNumber."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/status",
+                    "replace": 201,
+                    "reason": "Only HTTP 200 is a documented successful acknowledgement; it declares no body schema or job ID."
+                }
+            ],
+            "remote_errors": [
+                400
+            ]
+        },
+        "getJobStatus": {
+            "method": "GET",
+            "request": {
+                "expected_path": "/bulk-operations/products/attributes/update/by-numbers/job-1",
+                "path_parameters": {
+                    "jobId": "job-1"
+                }
+            },
+            "response": {
+                "status": 200,
+                "json_ref": "job"
+            },
+            "invalid_requests": [
+                {
+                    "at": "/path_parameters/jobId",
+                    "remove": true,
+                    "reason": "Bulk Operations uses a required jobId path parameter."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/json/status",
+                    "replace": "PRIVATE_FIXTURE_VALUE",
+                    "reason": "Only the Bulk Operations job status enum is accepted."
+                }
+            ],
+            "remote_errors": [
+                400
+            ]
+        }
+    }
+}

@@ -1,0 +1,961 @@
+{
+    "schema_version": 1,
+    "component": "tasks",
+    "revision": "2c19c082ed473e21",
+    "openapi_sha256": "970d3e28f79dd721f96da658dcef9748d8f4e6e0ce725e4859be4218657207a8",
+    "complete_component": true,
+    "payloads": {
+        "comment_request": {
+            "message": "Fixture comment"
+        },
+        "reply_request": {
+            "message": "Fixture reply"
+        },
+        "comment": {
+            "id": "comment-1",
+            "message": "Fixture comment",
+            "userId": "user-1",
+            "createdAt": 1710000000000,
+            "updatedAt": 1710000000000,
+            "replies": []
+        },
+        "comment_created": {
+            "id": "comment-1",
+            "message": "Fixture comment",
+            "userId": "user-1",
+            "createdAt": 1710000000000
+        },
+        "reply_created": {
+            "id": "reply-1",
+            "parentId": "comment-1",
+            "message": "Fixture reply",
+            "userId": "user-1",
+            "createdAt": 1710000000000
+        },
+        "reminder_request": {
+            "remindBeforeTime": 2
+        },
+        "reminders": {
+            "data": [
+                {
+                    "id": "reminder-1",
+                    "taskId": "task-1",
+                    "reminderTime": 2
+                }
+            ]
+        },
+        "products_request": {
+            "productIds": [
+                "product-1"
+            ]
+        },
+        "assign_request": {
+            "assignee": "user-1",
+            "assigneeType": "user"
+        },
+        "create_task": {
+            "title": "Fixture task",
+            "description": "Offline contract example",
+            "assignee": "user-1",
+            "assigneeType": "user",
+            "dueDate": "2026-12-01T12:00:00Z",
+            "context": "en",
+            "isPrivate": false
+        },
+        "update_task": {
+            "title": "Updated fixture task",
+            "description": "Updated offline example",
+            "dueDate": "2026-12-02T12:00:00Z",
+            "context": "en"
+        },
+        "task_grid": {
+            "data": []
+        },
+        "task": {
+            "id": "task-1",
+            "title": "Fixture task",
+            "description": "Offline example",
+            "status": "OPEN",
+            "assignee": "user-1",
+            "assigneeType": "user",
+            "context": "en",
+            "productsList": [],
+            "isPrivate": false,
+            "numberOfProducts": 1,
+            "numberOfDoneProducts": 0,
+            "importantForCurrentUser": false
+        },
+        "task_response": {
+            "data": {
+                "id": "task-1",
+                "title": "Fixture task",
+                "status": "OPEN",
+                "assignee": "user-1",
+                "assigneeType": "user",
+                "productsList": [],
+                "isPrivate": false
+            },
+            "errors": [],
+            "code": 200
+        },
+        "folders": {
+            "numberOfAllTasks": 3,
+            "numberOfUserTasks": 1
+        },
+        "version": "1.0.0"
+    },
+    "operations": {
+        "presentVersion": {
+            "method": "GET",
+            "request": {
+                "expected_path": "/tasks/technical/version"
+            },
+            "response": {
+                "status": 200,
+                "body": "1.0.0"
+            },
+            "invalid_requests": [],
+            "invalid_responses": [
+                {
+                    "at": "/status",
+                    "replace": 201,
+                    "reason": "The version endpoint documents HTTP 200."
+                }
+            ],
+            "remote_errors": [
+                400
+            ],
+            "invalid_request_not_applicable": "The operation declares no request parameters or body."
+        },
+        "listAllTaskComments": {
+            "method": "GET",
+            "request": {
+                "expected_path": "/tasks/comments/task-1",
+                "path_parameters": {
+                    "taskId": "task-1"
+                }
+            },
+            "response": {
+                "status": 200,
+                "json_ref": "comment"
+            },
+            "invalid_requests": [
+                {
+                    "at": "/path_parameters/taskId",
+                    "replace": "",
+                    "reason": "taskId is a required path value."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/json/message",
+                    "replace": 42,
+                    "reason": "Task comment message is a string."
+                }
+            ],
+            "remote_errors": [
+                400
+            ]
+        },
+        "addTaskComment": {
+            "method": "POST",
+            "request": {
+                "expected_path": "/tasks/comments/task-1",
+                "path_parameters": {
+                    "taskId": "task-1"
+                },
+                "json_ref": "comment_request"
+            },
+            "response": {
+                "status": 201,
+                "json_ref": "comment_created"
+            },
+            "invalid_requests": [
+                {
+                    "at": "/json/message",
+                    "replace": 42,
+                    "reason": "Comment message is a string."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/json/id",
+                    "replace": 42,
+                    "reason": "Created comment ID is a string."
+                }
+            ],
+            "remote_errors": [
+                400
+            ]
+        },
+        "addTaskCommentReply": {
+            "method": "POST",
+            "request": {
+                "expected_path": "/tasks/comments/task-1/comment-1",
+                "path_parameters": {
+                    "taskId": "task-1",
+                    "commentId": "comment-1"
+                },
+                "json_ref": "reply_request"
+            },
+            "response": {
+                "status": 201,
+                "json_ref": "reply_created"
+            },
+            "invalid_requests": [
+                {
+                    "at": "/json/message",
+                    "replace": 42,
+                    "reason": "Reply message is a string."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/json/id",
+                    "replace": 42,
+                    "reason": "Created reply ID is a string."
+                }
+            ],
+            "remote_errors": [
+                400
+            ]
+        },
+        "getReminderConfig": {
+            "method": "GET",
+            "request": {
+                "expected_path": "/tasks/tasks/reminders/task/task-1",
+                "path_parameters": {
+                    "taskId": "task-1"
+                }
+            },
+            "response": {
+                "status": 200,
+                "json_ref": "reminders"
+            },
+            "invalid_requests": [
+                {
+                    "at": "/path_parameters/taskId",
+                    "replace": "",
+                    "reason": "taskId is a required path value."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/json/data",
+                    "replace": "not-an-array",
+                    "reason": "Reminder list data is an array."
+                }
+            ],
+            "remote_errors": [
+                400
+            ]
+        },
+        "createTasksReminderConfig": {
+            "method": "POST",
+            "request": {
+                "expected_path": "/tasks/tasks/reminders/task/task-1",
+                "path_parameters": {
+                    "taskId": "task-1"
+                },
+                "json_ref": "reminder_request"
+            },
+            "response": {
+                "status": 201,
+                "body": ""
+            },
+            "invalid_requests": [
+                {
+                    "at": "/json/remindBeforeTime",
+                    "replace": 0,
+                    "reason": "Reminder lead time has a minimum of one hour."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/status",
+                    "replace": 200,
+                    "reason": "Reminder creation documents HTTP 201."
+                }
+            ],
+            "remote_errors": [
+                400
+            ]
+        },
+        "updateReminderConfig": {
+            "method": "PUT",
+            "request": {
+                "expected_path": "/tasks/tasks/reminders/reminder-1",
+                "path_parameters": {
+                    "reminderId": "reminder-1"
+                },
+                "json_ref": "reminder_request"
+            },
+            "response": {
+                "status": 202,
+                "body": ""
+            },
+            "invalid_requests": [
+                {
+                    "at": "/json/remindBeforeTime",
+                    "replace": 0,
+                    "reason": "Reminder lead time has a minimum of one hour."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/status",
+                    "replace": 200,
+                    "reason": "Reminder update documents HTTP 202."
+                }
+            ],
+            "remote_errors": [
+                400
+            ]
+        },
+        "deleteReminderConfig": {
+            "method": "DELETE",
+            "request": {
+                "expected_path": "/tasks/tasks/reminders/reminder-1",
+                "path_parameters": {
+                    "reminderId": "reminder-1"
+                }
+            },
+            "response": {
+                "status": 204,
+                "body": ""
+            },
+            "invalid_requests": [
+                {
+                    "at": "/path_parameters/reminderId",
+                    "replace": "",
+                    "reason": "reminderId is a required path value."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/status",
+                    "replace": 200,
+                    "reason": "Reminder deletion documents HTTP 204."
+                }
+            ],
+            "remote_errors": [
+                400
+            ]
+        },
+        "assignProducts": {
+            "method": "POST",
+            "request": {
+                "expected_path": "/tasks/tasks/task-1/products",
+                "path_parameters": {
+                    "taskId": "task-1"
+                },
+                "json_ref": "products_request"
+            },
+            "response": {
+                "status": 202,
+                "body": ""
+            },
+            "invalid_requests": [
+                {
+                    "at": "/json/productIds",
+                    "remove": true,
+                    "reason": "Product assignment requires productIds."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/status",
+                    "replace": 200,
+                    "reason": "Product assignment documents HTTP 202."
+                }
+            ],
+            "remote_errors": [
+                400
+            ]
+        },
+        "assignTask": {
+            "method": "PUT",
+            "request": {
+                "expected_path": "/tasks/tasks/task-1/assign",
+                "path_parameters": {
+                    "taskId": "task-1"
+                },
+                "json_ref": "assign_request"
+            },
+            "response": {
+                "status": 202,
+                "body": ""
+            },
+            "invalid_requests": [
+                {
+                    "at": "/json/assigneeType",
+                    "replace": "department",
+                    "reason": "Assignee type is user or userGroup."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/status",
+                    "replace": 200,
+                    "reason": "Task assignment documents HTTP 202."
+                }
+            ],
+            "remote_errors": [
+                400
+            ]
+        },
+        "completeTaskProduct": {
+            "method": "PUT",
+            "request": {
+                "expected_path": "/tasks/tasks/task-1/products/product-1/complete",
+                "path_parameters": {
+                    "taskId": "task-1",
+                    "productId": "product-1"
+                }
+            },
+            "response": {
+                "status": 202,
+                "body": ""
+            },
+            "invalid_requests": [
+                {
+                    "at": "/path_parameters/productId",
+                    "replace": "",
+                    "reason": "productId is a required path value."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/status",
+                    "replace": 200,
+                    "reason": "Task product completion documents HTTP 202."
+                }
+            ],
+            "remote_errors": [
+                400
+            ]
+        },
+        "listTasks": {
+            "method": "GET",
+            "request": {
+                "expected_path": "/tasks/tasks?page=0&pageSize=20&sortField=TITLE&sortDirection=ASC",
+                "query": {
+                    "page": 0,
+                    "pageSize": 20,
+                    "sortField": "TITLE",
+                    "sortDirection": "ASC"
+                }
+            },
+            "response": {
+                "status": 200,
+                "json_ref": "task_grid"
+            },
+            "invalid_requests": [
+                {
+                    "at": "/query/sortDirection",
+                    "replace": "DOWN",
+                    "reason": "sortDirection is ASC or DESC."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/json/data",
+                    "replace": "not-an-array",
+                    "reason": "Task grid data is an array."
+                }
+            ],
+            "remote_errors": [
+                400,
+                404
+            ],
+            "invalid_request_not_applicable": null
+        },
+        "createTask": {
+            "method": "POST",
+            "request": {
+                "expected_path": "/tasks/tasks",
+                "json_ref": "create_task"
+            },
+            "response": {
+                "status": 201,
+                "body": ""
+            },
+            "invalid_requests": [
+                {
+                    "at": "/json/title",
+                    "remove": true,
+                    "reason": "Task creation requires a title."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/status",
+                    "replace": 200,
+                    "reason": "Task creation documents HTTP 201."
+                }
+            ],
+            "remote_errors": [
+                400,
+                404
+            ]
+        },
+        "deleteTaskProduct": {
+            "method": "DELETE",
+            "request": {
+                "expected_path": "/tasks/tasks/task-1/products/product-1",
+                "path_parameters": {
+                    "taskId": "task-1",
+                    "productId": "product-1"
+                }
+            },
+            "response": {
+                "status": 201,
+                "body": ""
+            },
+            "invalid_requests": [
+                {
+                    "at": "/path_parameters/taskId",
+                    "replace": "",
+                    "reason": "taskId is a required path value."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/status",
+                    "replace": 200,
+                    "reason": "Task product deletion documents HTTP 201."
+                }
+            ],
+            "remote_errors": [
+                400
+            ]
+        },
+        "fetchTasks": {
+            "method": "GET",
+            "request": {
+                "expected_path": "/tasks/tasks/users/user-1/assigned?page=0&pageSize=20",
+                "path_parameters": {
+                    "userId": "user-1",
+                    "taskType": "assigned"
+                },
+                "query": {
+                    "page": 0,
+                    "pageSize": 20
+                }
+            },
+            "response": {
+                "status": 200,
+                "json_ref": "task_grid"
+            },
+            "invalid_requests": [
+                {
+                    "at": "/path_parameters/taskType",
+                    "replace": "unknown",
+                    "reason": "taskType must use a documented enum value."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/json/data",
+                    "replace": "not-an-array",
+                    "reason": "Task grid data is an array."
+                }
+            ],
+            "remote_errors": [
+                400
+            ]
+        },
+        "fetchTasksForUserGroup": {
+            "method": "GET",
+            "request": {
+                "expected_path": "/tasks/tasks/userGroups/group-1/all?page=0&pageSize=20",
+                "path_parameters": {
+                    "userGroupId": "group-1",
+                    "taskType": "all"
+                },
+                "query": {
+                    "page": 0,
+                    "pageSize": 20
+                }
+            },
+            "response": {
+                "status": 200,
+                "json_ref": "task_grid"
+            },
+            "invalid_requests": [
+                {
+                    "at": "/path_parameters/taskType",
+                    "replace": "unknown",
+                    "reason": "taskType must use a documented enum value."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/json/data",
+                    "replace": "not-an-array",
+                    "reason": "Task grid data is an array."
+                }
+            ],
+            "remote_errors": [
+                400
+            ]
+        },
+        "getSingleTask": {
+            "method": "GET",
+            "request": {
+                "expected_path": "/tasks/tasks/task-1",
+                "path_parameters": {
+                    "taskId": "task-1"
+                }
+            },
+            "response": {
+                "status": 200,
+                "json_ref": "task_response"
+            },
+            "invalid_requests": [
+                {
+                    "at": "/path_parameters/taskId",
+                    "replace": "",
+                    "reason": "taskId is a required path value."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/json/code",
+                    "replace": "200",
+                    "reason": "Task response code is an integer."
+                }
+            ],
+            "remote_errors": [
+                400
+            ]
+        },
+        "updateTask": {
+            "method": "PUT",
+            "request": {
+                "expected_path": "/tasks/tasks/task-1",
+                "path_parameters": {
+                    "taskId": "task-1"
+                },
+                "json_ref": "update_task"
+            },
+            "response": {
+                "status": 202,
+                "body": ""
+            },
+            "invalid_requests": [
+                {
+                    "at": "/json/title",
+                    "replace": 42,
+                    "reason": "Task title is a string when supplied."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/status",
+                    "replace": 200,
+                    "reason": "Task update documents HTTP 202."
+                }
+            ],
+            "remote_errors": [
+                400
+            ]
+        },
+        "listArchivedTasksV2": {
+            "method": "GET",
+            "request": {
+                "expected_path": "/tasks/tasks/archived?page=0&pageSize=20",
+                "query": {
+                    "page": 0,
+                    "pageSize": 20
+                }
+            },
+            "response": {
+                "status": 200,
+                "json_ref": "task_grid"
+            },
+            "invalid_requests": [
+                {
+                    "at": "/query/page",
+                    "replace": "zero",
+                    "reason": "page is an integer."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/json/data",
+                    "replace": "not-an-array",
+                    "reason": "Task grid data is an array."
+                }
+            ],
+            "remote_errors": [
+                400
+            ]
+        },
+        "listFolders": {
+            "method": "GET",
+            "request": {
+                "expected_path": "/tasks/tasks/folders"
+            },
+            "response": {
+                "status": 200,
+                "json_ref": "folders"
+            },
+            "invalid_requests": [],
+            "invalid_responses": [
+                {
+                    "at": "/json/numberOfAllTasks",
+                    "replace": "three",
+                    "reason": "numberOfAllTasks is an integer."
+                }
+            ],
+            "remote_errors": [
+                400
+            ],
+            "invalid_request_not_applicable": "The operation declares no request parameters or body."
+        },
+        "revokeTaskProduct": {
+            "method": "PUT",
+            "request": {
+                "expected_path": "/tasks/tasks/task-1/products/product-1/revoke",
+                "path_parameters": {
+                    "taskId": "task-1",
+                    "productId": "product-1"
+                }
+            },
+            "response": {
+                "status": 201,
+                "body": ""
+            },
+            "invalid_requests": [
+                {
+                    "at": "/path_parameters/productId",
+                    "replace": "",
+                    "reason": "productId is a required path value."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/status",
+                    "replace": 200,
+                    "reason": "Task product revocation documents HTTP 201."
+                }
+            ],
+            "remote_errors": [
+                400
+            ]
+        },
+        "completeUserTask": {
+            "method": "PUT",
+            "request": {
+                "expected_path": "/tasks/userTasks/task-1/complete",
+                "path_parameters": {
+                    "taskId": "task-1"
+                }
+            },
+            "response": {
+                "status": 200,
+                "body": ""
+            },
+            "invalid_requests": [
+                {
+                    "at": "/path_parameters/taskId",
+                    "replace": "",
+                    "reason": "taskId is a required path value."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/status",
+                    "replace": 201,
+                    "reason": "User task completion documents HTTP 200."
+                }
+            ],
+            "remote_errors": [
+                400
+            ]
+        },
+        "getAllUserTasks": {
+            "method": "GET",
+            "request": {
+                "expected_path": "/tasks/userTasks?page=0&pageSize=20",
+                "query": {
+                    "page": 0,
+                    "pageSize": 20
+                }
+            },
+            "response": {
+                "status": 200,
+                "json_ref": "task_grid"
+            },
+            "invalid_requests": [
+                {
+                    "at": "/query/pageSize",
+                    "replace": "twenty",
+                    "reason": "pageSize is an integer."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/json/data",
+                    "replace": "not-an-array",
+                    "reason": "Task grid data is an array."
+                }
+            ],
+            "remote_errors": [
+                400
+            ]
+        },
+        "getAssignedUserTasks": {
+            "method": "GET",
+            "request": {
+                "expected_path": "/tasks/userTasks/assigned?page=0&pageSize=20",
+                "query": {
+                    "page": 0,
+                    "pageSize": 20
+                }
+            },
+            "response": {
+                "status": 200,
+                "json_ref": "task_grid"
+            },
+            "invalid_requests": [
+                {
+                    "at": "/query/page",
+                    "replace": "zero",
+                    "reason": "page is an integer."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/json/data",
+                    "replace": "not-an-array",
+                    "reason": "Task grid data is an array."
+                }
+            ],
+            "remote_errors": [
+                400
+            ]
+        },
+        "getUserTask": {
+            "method": "GET",
+            "request": {
+                "expected_path": "/tasks/userTasks/task-1",
+                "path_parameters": {
+                    "taskId": "task-1"
+                }
+            },
+            "response": {
+                "status": 200,
+                "json_ref": "task"
+            },
+            "invalid_requests": [
+                {
+                    "at": "/path_parameters/taskId",
+                    "replace": "",
+                    "reason": "taskId is a required path value."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/json/id",
+                    "replace": 42,
+                    "reason": "User task ID is a string."
+                }
+            ],
+            "remote_errors": [
+                400
+            ]
+        },
+        "setImportantUserTask": {
+            "method": "PUT",
+            "request": {
+                "expected_path": "/tasks/userTasks/task-1/important",
+                "path_parameters": {
+                    "taskId": "task-1"
+                }
+            },
+            "response": {
+                "status": 200,
+                "body": ""
+            },
+            "invalid_requests": [
+                {
+                    "at": "/path_parameters/taskId",
+                    "replace": "",
+                    "reason": "taskId is a required path value."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/status",
+                    "replace": 201,
+                    "reason": "Importance update documents HTTP 200."
+                }
+            ],
+            "remote_errors": [
+                400
+            ]
+        },
+        "setUnimportantUserTask": {
+            "method": "PUT",
+            "request": {
+                "expected_path": "/tasks/userTasks/task-1/unimportant",
+                "path_parameters": {
+                    "taskId": "task-1"
+                }
+            },
+            "response": {
+                "status": 200,
+                "body": ""
+            },
+            "invalid_requests": [
+                {
+                    "at": "/path_parameters/taskId",
+                    "replace": "",
+                    "reason": "taskId is a required path value."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/status",
+                    "replace": 201,
+                    "reason": "Importance update documents HTTP 200."
+                }
+            ],
+            "remote_errors": [
+                400
+            ]
+        },
+        "uncompleteUserTask": {
+            "method": "PUT",
+            "request": {
+                "expected_path": "/tasks/userTasks/task-1/revoke",
+                "path_parameters": {
+                    "taskId": "task-1"
+                }
+            },
+            "response": {
+                "status": 202,
+                "body": ""
+            },
+            "invalid_requests": [
+                {
+                    "at": "/path_parameters/taskId",
+                    "replace": "",
+                    "reason": "taskId is a required path value."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/status",
+                    "replace": 200,
+                    "reason": "User task revocation documents HTTP 202."
+                }
+            ],
+            "remote_errors": [
+                400
+            ]
+        }
+    }
+}

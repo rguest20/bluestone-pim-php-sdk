@@ -1,0 +1,86 @@
+{
+  "schema_version": 1,
+  "component": "media-bank",
+  "revision": "2c19c082ed473e21",
+  "openapi_sha256": "a8f6a952383a5ba1407fae2fff6a549832773506098d5f16b5cff802b3932269",
+  "payloads": {
+    "upload_acknowledgement": {
+      "id": "asset-1",
+      "actionUrl": "https://uploads.example.test/signed-form",
+      "parameters": [
+        {
+          "key": "policy",
+          "value": "fixture-policy"
+        }
+      ]
+    }
+  },
+  "operations": {
+    "createAsset": {
+      "method": "POST",
+      "request": {
+        "expected_path": "/media-bank/upload",
+        "json": {
+          "fileName": "example.png",
+          "contentType": "image/png"
+        }
+      },
+      "response": {
+        "status": 201,
+        "json_ref": "upload_acknowledgement",
+        "headers": {
+          "Resource-Id": "asset-1",
+          "Location": "/media-bank/upload/asset-1"
+        }
+      },
+      "invalid_requests": [
+        {
+          "at": "/json/fileName",
+          "remove": true,
+          "reason": "fileName is required by CreateUploadAssetRequest."
+        }
+      ],
+      "invalid_responses": [
+        {
+          "at": "/json/id",
+          "remove": true,
+          "reason": "UploadAssetResponse requires an asset ID."
+        }
+      ],
+      "remote_errors": [
+        400
+      ]
+    },
+    "deleteAssetUpload": {
+      "method": "DELETE",
+      "request": {
+        "expected_path": "/media-bank/upload/asset-1",
+        "path_parameters": {
+          "id": "asset-1"
+        }
+      },
+      "response": {
+        "status": 204,
+        "body": ""
+      },
+      "invalid_requests": [
+        {
+          "at": "/path_parameters/id",
+          "replace": "",
+          "reason": "id is a required path value."
+        }
+      ],
+      "invalid_responses": [
+        {
+          "at": "/status",
+          "replace": 200,
+          "reason": "Upload deletion documents an empty HTTP 204 response."
+        }
+      ],
+      "remote_errors": [
+        400,
+        404
+      ]
+    }
+  }
+}

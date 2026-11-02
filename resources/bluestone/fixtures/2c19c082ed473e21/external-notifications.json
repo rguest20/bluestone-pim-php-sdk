@@ -1,0 +1,145 @@
+{
+  "schema_version": 1,
+  "component": "external-notifications",
+  "revision": "2c19c082ed473e21",
+  "openapi_sha256": "bf10b0946719903ee6a7448d181fb6d9493a51cf14b1e3213e6520a60fa09b59",
+  "payloads": {
+    "webhook_call": {
+      "request": {
+        "httpMethod": "POST",
+        "payload": "{}",
+        "url": "https://hooks.example.test/events"
+      },
+      "response": {
+        "active": true,
+        "id": "webhook-1",
+        "retryAttempts": 0,
+        "secret": "PRIVATE_FIXTURE_VALUE",
+        "url": "https://hooks.example.test/events"
+      },
+      "timestamp": 1710000000000
+    }
+  },
+  "operations": {
+    "create": {
+      "method": "POST",
+      "request": {
+        "expected_path": "/notification-external/webhooks",
+        "json": {
+          "active": true,
+          "secret": "PRIVATE_FIXTURE_VALUE",
+          "url": "https://hooks.example.test/events"
+        }
+      },
+      "response": {
+        "status": 201,
+        "body": ""
+      },
+      "invalid_requests": [
+        {
+          "at": "/json/secret",
+          "replace": "",
+          "reason": "WebhookCreateRequest requires a non-empty secret."
+        }
+      ],
+      "invalid_responses": [
+        {
+          "at": "/status",
+          "replace": 200,
+          "reason": "Webhook creation documents HTTP 201."
+        }
+      ],
+      "remote_errors": [400, 409]
+    },
+    "subscribe": {
+      "method": "PUT",
+      "request": {
+        "expected_path": "/notification-external/subscriptions/webhook/webhook-1/events",
+        "path_parameters": {
+          "webhookId": "webhook-1"
+        },
+        "json": {
+          "eventTypes": ["PRODUCT_CREATED"]
+        }
+      },
+      "response": {
+        "status": 200,
+        "body": ""
+      },
+      "invalid_requests": [
+        {
+          "at": "/json/eventTypes",
+          "remove": true,
+          "reason": "WebhookEventTypeListRequest requires eventTypes."
+        }
+      ],
+      "invalid_responses": [
+        {
+          "at": "/status",
+          "replace": 204,
+          "reason": "Webhook event subscription documents HTTP 200."
+        }
+      ],
+      "remote_errors": [400]
+    },
+    "getMessages": {
+      "method": "POST",
+      "request": {
+        "expected_path": "/notification-external/messages/webhook/list",
+        "json": {
+          "page": 0,
+          "pageSize": 10,
+          "webhookId": "webhook-1"
+        }
+      },
+      "response": {
+        "status": 200,
+        "json": []
+      },
+      "invalid_requests": [
+        {
+          "at": "/json/pageSize",
+          "replace": 0,
+          "reason": "WebhookMessageSearchRequest pageSize must be at least one."
+        }
+      ],
+      "invalid_responses": [
+        {
+          "at": "/status",
+          "replace": 204,
+          "reason": "Webhook message search documents a JSON HTTP 200 response."
+        }
+      ],
+      "remote_errors": [400]
+    },
+    "pingWebhook": {
+      "method": "POST",
+      "request": {
+        "expected_path": "/notification-external/messages/webhook?url=https%3A%2F%2Fhooks.example.test%2Fevents&secret=PRIVATE_FIXTURE_VALUE",
+        "query": {
+          "url": "https://hooks.example.test/events",
+          "secret": "PRIVATE_FIXTURE_VALUE"
+        }
+      },
+      "response": {
+        "status": 200,
+        "json_ref": "webhook_call"
+      },
+      "invalid_requests": [
+        {
+          "at": "/query/secret",
+          "remove": true,
+          "reason": "pingWebhook requires a secret query parameter."
+        }
+      ],
+      "invalid_responses": [
+        {
+          "at": "/json/response/secret",
+          "remove": true,
+          "reason": "WebhookResponse requires its secret field."
+        }
+      ],
+      "remote_errors": [400]
+    }
+  }
+}

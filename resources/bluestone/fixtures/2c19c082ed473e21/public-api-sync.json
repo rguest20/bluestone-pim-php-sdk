@@ -1,0 +1,105 @@
+{
+  "schema_version": 1,
+  "component": "public-api-sync",
+  "revision": "2c19c082ed473e21",
+  "openapi_sha256": "fcbabc1a160ab89ce35d0682e9e83077654d69f9dc8c4bf2f4f7471ea07e535f",
+  "payloads": {
+    "session_request": {
+      "contexts": ["en"]
+    },
+    "session": {
+      "id": "session-1",
+      "contexts": ["en"],
+      "status": "CREATED",
+      "errorReports": []
+    }
+  },
+  "operations": {
+    "createSession": {
+      "method": "POST",
+      "request": {
+        "expected_path": "/papi-sync/session",
+        "json_ref": "session_request"
+      },
+      "response": {
+        "status": 201,
+        "body": "",
+        "headers": {
+          "Resource-Id": "session-1",
+          "Location": "https://api.test.bluestonepim.com/papi-sync/session/session-1"
+        }
+      },
+      "invalid_requests": [
+        {
+          "at": "/json/contexts",
+          "replace": "en",
+          "reason": "contexts must be an array of context identifiers."
+        }
+      ],
+      "invalid_responses": [
+        {
+          "at": "/status",
+          "replace": 200,
+          "reason": "Session creation documents HTTP 201."
+        }
+      ],
+      "remote_errors": [400]
+    },
+    "getSession": {
+      "method": "GET",
+      "request": {
+        "expected_path": "/papi-sync/session/session-1",
+        "path_parameters": {
+          "id": "session-1"
+        }
+      },
+      "response": {
+        "status": 200,
+        "json_ref": "session"
+      },
+      "invalid_requests": [
+        {
+          "at": "/path_parameters/id",
+          "replace": "",
+          "reason": "id is a required path value."
+        }
+      ],
+      "invalid_responses": [
+        {
+          "at": "/json/status",
+          "replace": "NOT_A_SESSION_STATE",
+          "reason": "Session status must use a documented lifecycle state."
+        }
+      ],
+      "remote_errors": [400, 404]
+    },
+    "closeSession": {
+      "method": "PUT",
+      "request": {
+        "expected_path": "/papi-sync/session/session-1/done",
+        "path_parameters": {
+          "id": "session-1"
+        }
+      },
+      "response": {
+        "status": 200,
+        "body": ""
+      },
+      "invalid_requests": [
+        {
+          "at": "/path_parameters/id",
+          "replace": "",
+          "reason": "id is a required path value."
+        }
+      ],
+      "invalid_responses": [
+        {
+          "at": "/status",
+          "replace": 204,
+          "reason": "Session close documents HTTP 200."
+        }
+      ],
+      "remote_errors": [400, 404]
+    }
+  }
+}

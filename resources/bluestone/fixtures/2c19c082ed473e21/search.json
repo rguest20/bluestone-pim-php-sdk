@@ -1,0 +1,289 @@
+{
+    "schema_version": 1,
+    "component": "search",
+    "revision": "2c19c082ed473e21",
+    "openapi_sha256": "2362edaccca3b85e18e11963ad8b830a50dcc572e7e0313f46fcd3b3cb4e5f36",
+    "complete_component": true,
+    "payloads": {
+        "products_search": {
+            "page": 0,
+            "pageSize": 20
+        },
+        "products_scroll": {
+            "pageSize": 20
+        },
+        "products_cursor": {
+            "count": 20
+        },
+        "products_count": {
+            "typeFilter": {
+                "type": "SINGLE"
+            }
+        },
+        "assets_search": {
+            "page": 0,
+            "resultsPerPage": 20
+        },
+        "assets_cursor": {
+            "count": 20
+        },
+        "assets_count": {
+            "quickSearch": "chair"
+        },
+        "products": {
+            "data": []
+        },
+        "product_scroll": {
+            "data": [],
+            "scrollId": null
+        },
+        "product_cursor": {
+            "data": [],
+            "cursor": null
+        },
+        "count": {
+            "count": 0
+        },
+        "assets": {
+            "data": []
+        },
+        "asset_cursor": {
+            "data": [],
+            "cursor": null
+        },
+        "find": {
+            "data": [],
+            "total": 0
+        }
+    },
+    "operations": {
+        "productsSearch": {
+            "method": "POST",
+            "request": {
+                "expected_path": "/search/products/search",
+                "json_ref": "products_search"
+            },
+            "response": {
+                "status": 200,
+                "json_ref": "products"
+            },
+            "invalid_requests": [
+                {
+                    "at": "/json/pageSize",
+                    "replace": 0,
+                    "reason": "Product pageSize has a minimum of one."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/json/data",
+                    "replace": "not-an-array",
+                    "reason": "Product search data is an array."
+                }
+            ],
+            "remote_errors": [
+                400
+            ]
+        },
+        "productsSearchWithScroll": {
+            "method": "POST",
+            "request": {
+                "expected_path": "/search/products/scroll/search",
+                "json_ref": "products_scroll"
+            },
+            "response": {
+                "status": 200,
+                "json_ref": "product_scroll"
+            },
+            "invalid_requests": [
+                {
+                    "at": "/json/pageSize",
+                    "replace": "twenty",
+                    "reason": "pageSize must be an integer."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/json/data",
+                    "replace": "not-an-array",
+                    "reason": "Scroll search data is an array."
+                }
+            ],
+            "remote_errors": [
+                400
+            ]
+        },
+        "productsSearchWithCursor": {
+            "method": "POST",
+            "request": {
+                "expected_path": "/search/products/cursor",
+                "json_ref": "products_cursor"
+            },
+            "response": {
+                "status": 200,
+                "json_ref": "product_cursor"
+            },
+            "invalid_requests": [
+                {
+                    "at": "/json/count",
+                    "replace": "twenty",
+                    "reason": "count must be an integer."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/json/cursor",
+                    "replace": 42,
+                    "reason": "Cursor is a string or null."
+                }
+            ],
+            "remote_errors": [
+                400
+            ]
+        },
+        "productsCount": {
+            "method": "POST",
+            "request": {
+                "expected_path": "/search/products/count",
+                "json_ref": "products_count"
+            },
+            "response": {
+                "status": 200,
+                "json_ref": "count"
+            },
+            "invalid_requests": [
+                {
+                    "at": "/json/typeFilter/type",
+                    "replace": "UNKNOWN",
+                    "reason": "Product type filter must use a documented enum."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/json/count",
+                    "replace": "none",
+                    "reason": "Product count is an integer."
+                }
+            ],
+            "remote_errors": [
+                400
+            ]
+        },
+        "assetsSearch": {
+            "method": "POST",
+            "request": {
+                "expected_path": "/search/assets/search",
+                "json_ref": "assets_search"
+            },
+            "response": {
+                "status": 200,
+                "json_ref": "assets"
+            },
+            "invalid_requests": [
+                {
+                    "at": "/json/resultsPerPage",
+                    "replace": 0,
+                    "reason": "Asset resultsPerPage has a minimum of one."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/json/data",
+                    "replace": "not-an-array",
+                    "reason": "Asset search data is an array."
+                }
+            ],
+            "remote_errors": [
+                400
+            ]
+        },
+        "assetsSearchWithCursor": {
+            "method": "POST",
+            "request": {
+                "expected_path": "/search/assets/cursor",
+                "json_ref": "assets_cursor"
+            },
+            "response": {
+                "status": 200,
+                "json_ref": "asset_cursor"
+            },
+            "invalid_requests": [
+                {
+                    "at": "/json/count",
+                    "replace": "twenty",
+                    "reason": "count must be an integer."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/json/data",
+                    "replace": "not-an-array",
+                    "reason": "Asset cursor data is an array."
+                }
+            ],
+            "remote_errors": [
+                400
+            ]
+        },
+        "assetsCount": {
+            "method": "POST",
+            "request": {
+                "expected_path": "/search/assets/count",
+                "json_ref": "assets_count"
+            },
+            "response": {
+                "status": 200,
+                "json_ref": "count"
+            },
+            "invalid_requests": [
+                {
+                    "at": "/json/quickSearch",
+                    "replace": 42,
+                    "reason": "Asset quickSearch is a string when supplied."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/json/count",
+                    "replace": "none",
+                    "reason": "Asset count is an integer."
+                }
+            ],
+            "remote_errors": [
+                400
+            ]
+        },
+        "find": {
+            "method": "GET",
+            "request": {
+                "expected_path": "/search/find?query=chair&page=0&pageSize=10",
+                "query": {
+                    "query": "chair",
+                    "page": 0,
+                    "pageSize": 10
+                }
+            },
+            "response": {
+                "status": 200,
+                "json_ref": "find"
+            },
+            "invalid_requests": [
+                {
+                    "at": "/query/fragmentSize",
+                    "replace": -1,
+                    "reason": "fragmentSize has a minimum value of zero."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/json/total",
+                    "replace": "none",
+                    "reason": "Search total is an integer."
+                }
+            ],
+            "remote_errors": [
+                400
+            ]
+        }
+    }
+}

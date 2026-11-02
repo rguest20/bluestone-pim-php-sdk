@@ -1,0 +1,296 @@
+{
+    "schema_version": 1,
+    "component": "metadata",
+    "revision": "2c19c082ed473e21",
+    "openapi_sha256": "bed114a345aa17a11b4079b78cd504902322f9bbd04011538c28a312c5b8f82f",
+    "complete_component": true,
+    "payloads": {
+        "providers_request": {
+            "numbers": [
+                "PROVIDER-1"
+            ]
+        },
+        "providers": {
+            "data": [
+                {
+                    "id": "provider-id-1",
+                    "name": "Product metadata",
+                    "number": "PROVIDER-1",
+                    "entityType": "PRODUCT"
+                }
+            ]
+        },
+        "cursor_request": {
+            "views": [
+                {
+                    "type": "METADATA"
+                }
+            ],
+            "count": 10
+        },
+        "cursor_response": {
+            "data": [
+                {
+                    "entityId": "product-id-1",
+                    "contextId": "en",
+                    "metadata": {
+                        "color": "blue"
+                    }
+                }
+            ],
+            "nextCursor": "next-id"
+        },
+        "entities_request": {
+            "entitiesIds": [
+                "product-id-1"
+            ],
+            "contextId": "en"
+        },
+        "entities_response": {
+            "data": [
+                {
+                    "entityId": "product-id-1",
+                    "providerName": "Product metadata",
+                    "metadata": {
+                        "color": "blue"
+                    },
+                    "contextId": "en"
+                }
+            ]
+        },
+        "upsert_request": {
+            "data": [
+                {
+                    "entityId": "product-id-1",
+                    "contextId": "en",
+                    "value": {
+                        "color": "blue"
+                    }
+                }
+            ]
+        },
+        "delete_request": {
+            "entityIds": [
+                "product-id-1"
+            ]
+        },
+        "delete_ids_request": {
+            "ids": [
+                {
+                    "entityId": "product-id-1",
+                    "contextId": "en"
+                }
+            ]
+        }
+    },
+    "operations": {
+        "listProviders": {
+            "method": "POST",
+            "request": {
+                "expected_path": "/metadata/provider/by-numbers",
+                "json_ref": "providers_request"
+            },
+            "response": {
+                "status": 200,
+                "json_ref": "providers"
+            },
+            "invalid_requests": [
+                {
+                    "at": "/json/numbers",
+                    "remove": true,
+                    "reason": "ListProviderRequest requires numbers."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/json/data/0/entityType",
+                    "replace": "UNKNOWN",
+                    "reason": "Provider entityType is PRODUCT or CATEGORY."
+                }
+            ],
+            "remote_errors": [
+                400
+            ]
+        },
+        "getRegisteredProviders": {
+            "method": "GET",
+            "request": {
+                "expected_path": "/metadata/provider"
+            },
+            "response": {
+                "status": 200,
+                "json_ref": "providers"
+            },
+            "invalid_request_not_applicable": "The operation declares no request parameters or body.",
+            "invalid_responses": [
+                {
+                    "at": "/json/data",
+                    "replace": "not-an-array",
+                    "reason": "Provider response data is an array."
+                }
+            ],
+            "remote_errors": [
+                400
+            ]
+        },
+        "findProviderMetadataWithCursorAndViewsByProviderId": {
+            "method": "POST",
+            "request": {
+                "expected_path": "/metadata/metadata/provider-id-1/cursor/views/all",
+                "path_parameters": {
+                    "providerId": "provider-id-1"
+                },
+                "json_ref": "cursor_request"
+            },
+            "response": {
+                "status": 200,
+                "json_ref": "cursor_response"
+            },
+            "invalid_requests": [
+                {
+                    "at": "/json/count",
+                    "replace": 101,
+                    "reason": "Cursor count has a maximum of 100."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/json/data",
+                    "replace": "not-an-array",
+                    "reason": "Metadata cursor data is an array."
+                }
+            ],
+            "remote_errors": [
+                400,
+                404
+            ]
+        },
+        "getMetadataForEntities": {
+            "method": "POST",
+            "request": {
+                "expected_path": "/metadata/metadata/provider-id-1/by-entities",
+                "path_parameters": {
+                    "providerId": "provider-id-1"
+                },
+                "json_ref": "entities_request"
+            },
+            "response": {
+                "status": 200,
+                "json_ref": "entities_response"
+            },
+            "invalid_requests": [
+                {
+                    "at": "/json/contextId",
+                    "remove": true,
+                    "reason": "A contextId is required for metadata lookup."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/json/data/0/metadata",
+                    "remove": true,
+                    "reason": "Metadata entity results require metadata."
+                }
+            ],
+            "remote_errors": [
+                400
+            ]
+        },
+        "upsertMetadata": {
+            "method": "POST",
+            "request": {
+                "expected_path": "/metadata/metadata/provider-id-1",
+                "path_parameters": {
+                    "providerId": "provider-id-1"
+                },
+                "json_ref": "upsert_request"
+            },
+            "response": {
+                "status": 204,
+                "body": ""
+            },
+            "invalid_requests": [
+                {
+                    "at": "/json/data/0/value",
+                    "remove": true,
+                    "reason": "Each metadata upsert requires a JSON value."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/status",
+                    "replace": 200,
+                    "reason": "Metadata upsert documents HTTP 204."
+                }
+            ],
+            "remote_errors": [
+                400,
+                404
+            ]
+        },
+        "deleteMetadata": {
+            "method": "DELETE",
+            "request": {
+                "expected_path": "/metadata/metadata/provider-id-1",
+                "path_parameters": {
+                    "providerId": "provider-id-1"
+                },
+                "json_ref": "delete_request"
+            },
+            "response": {
+                "status": 204,
+                "body": ""
+            },
+            "invalid_requests": [
+                {
+                    "at": "/json/entityIds",
+                    "remove": true,
+                    "reason": "Metadata deletion requires entityIds."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/status",
+                    "replace": 200,
+                    "reason": "Metadata deletion documents HTTP 204."
+                }
+            ],
+            "remote_errors": [
+                400,
+                404
+            ]
+        },
+        "deleteProviderMetadataByIds": {
+            "method": "DELETE",
+            "request": {
+                "expected_path": "/metadata/metadata/provider-id-1/by-ids",
+                "path_parameters": {
+                    "providerId": "provider-id-1"
+                },
+                "json_ref": "delete_ids_request"
+            },
+            "response": {
+                "status": 204,
+                "body": ""
+            },
+            "invalid_requests": [
+                {
+                    "at": "/json/ids",
+                    "replace": [],
+                    "reason": "The ids array has minimum size one."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/status",
+                    "replace": 200,
+                    "reason": "Provider metadata deletion documents HTTP 204."
+                }
+            ],
+            "remote_errors": [
+                400,
+                404
+            ]
+        }
+    }
+}

@@ -1,0 +1,394 @@
+{
+    "schema_version": 1,
+    "component": "query-builder",
+    "revision": "2c19c082ed473e21",
+    "openapi_sha256": "641242e9596d85b4f25ba7ca684c5efc1f36d0cdc51ce469816cba08da00d361",
+    "complete_component": true,
+    "payloads": {
+        "filters": {},
+        "main_query": {
+            "matchRule": "all",
+            "children": []
+        },
+        "persist_insert": {
+            "queryType": "product_relation_assign",
+            "query": {
+                "matchRule": "all",
+                "children": []
+            },
+            "queryId": "query-1",
+            "useOnlyNewIndex": false
+        },
+        "persist_update": {
+            "queryType": "product_relation_assign",
+            "query": {
+                "matchRule": "all",
+                "children": []
+            },
+            "queryId": "query-1"
+        },
+        "persist_delete": {
+            "queryType": "product_relation_assign",
+            "queryId": "query-1"
+        },
+        "persist_list": {
+            "queryType": "product_relation_assign"
+        },
+        "persist_search": {
+            "queryType": "product_relation_assign",
+            "productId": "product-1"
+        },
+        "scroll_start": {
+            "query": {
+                "matchRule": "all",
+                "children": []
+            }
+        },
+        "insert_response": {
+            "status": {
+                "statusType": "inserted",
+                "message": "created"
+            },
+            "data": {
+                "id": "query-1"
+            }
+        },
+        "status_response": {
+            "status": {
+                "statusType": "updated",
+                "message": "updated"
+            }
+        },
+        "list_response": {
+            "status": {
+                "statusType": "no_change",
+                "message": "listed"
+            },
+            "data": [
+                {
+                    "id": "query-1",
+                    "query": {
+                        "matchRule": "all",
+                        "children": []
+                    }
+                }
+            ]
+        },
+        "search_response": {
+            "status": {
+                "statusType": "no_change",
+                "message": "searched"
+            },
+            "data": [
+                {
+                    "id": "query-1"
+                }
+            ]
+        },
+        "search_response_products": {
+            "data": [],
+            "errors": []
+        },
+        "count_response": {
+            "count": 0
+        },
+        "scroll_response": {
+            "data": [],
+            "scrollId": "scroll-1"
+        },
+        "delete_report": {
+            "dryrun": true,
+            "result": []
+        },
+        "get_valid_response": {
+            "filter": {},
+            "isOriginalValid": true
+        },
+        "products_search_request": {
+            "query": {
+                "matchRule": "all",
+                "children": []
+            }
+        }
+    },
+    "operations": {
+        "GetValidView": {
+            "method": "POST",
+            "request": {
+                "expected_path": "/query-builder/savedViews/getValidView",
+                "json_ref": "filters"
+            },
+            "response": {
+                "status": 200,
+                "json_ref": "get_valid_response"
+            },
+            "invalid_requests": [
+                {
+                    "at": "/json",
+                    "replace": 42,
+                    "reason": "Filter/query input must match one of the documented composed request models."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/json/isOriginalValid",
+                    "replace": "yes",
+                    "reason": "isOriginalValid is boolean."
+                }
+            ],
+            "remote_errors": [],
+            "request_model": "PureProductFilters"
+        },
+        "CreatePersistedProductQuery": {
+            "method": "POST",
+            "request": {
+                "expected_path": "/query-builder/products/persistedQueries",
+                "json_ref": "persist_insert"
+            },
+            "response": {
+                "status": 200,
+                "json_ref": "insert_response"
+            },
+            "invalid_requests": [
+                {
+                    "at": "/json/query",
+                    "remove": true,
+                    "reason": "Persisted query creation requires query."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/json/status/statusType",
+                    "replace": "unknown",
+                    "reason": "Persisted query status uses its documented enum."
+                }
+            ],
+            "remote_errors": []
+        },
+        "UpdatePersistedProductQuery": {
+            "method": "PUT",
+            "request": {
+                "expected_path": "/query-builder/products/persistedQueries",
+                "json_ref": "persist_update"
+            },
+            "response": {
+                "status": 200,
+                "json_ref": "status_response"
+            },
+            "invalid_requests": [
+                {
+                    "at": "/json/queryId",
+                    "remove": true,
+                    "reason": "Persisted query update requires queryId."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/json/status/statusType",
+                    "replace": "unknown",
+                    "reason": "Persisted query status uses its documented enum."
+                }
+            ],
+            "remote_errors": []
+        },
+        "DeletePersistedProductQuery": {
+            "method": "DELETE",
+            "request": {
+                "expected_path": "/query-builder/products/persistedQueries",
+                "json_ref": "persist_delete"
+            },
+            "response": {
+                "status": 200,
+                "json_ref": "status_response"
+            },
+            "invalid_requests": [
+                {
+                    "at": "/json/queryType",
+                    "replace": "unknown",
+                    "reason": "queryType uses the documented enum."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/json/status/statusType",
+                    "replace": "unknown",
+                    "reason": "Persisted query status uses its documented enum."
+                }
+            ],
+            "remote_errors": []
+        },
+        "ListPersistedProductQueries": {
+            "method": "POST",
+            "request": {
+                "expected_path": "/query-builder/products/persistedQueries/list",
+                "json_ref": "persist_list"
+            },
+            "response": {
+                "status": 200,
+                "json_ref": "list_response"
+            },
+            "invalid_requests": [
+                {
+                    "at": "/json/queryType",
+                    "replace": "unknown",
+                    "reason": "queryType uses the documented enum."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/json/data",
+                    "replace": "not-an-array",
+                    "reason": "Persisted query list data is an array."
+                }
+            ],
+            "remote_errors": [],
+            "request_model": "PersistedProductQueryListRequest"
+        },
+        "SearchPersistedProductQueries": {
+            "method": "POST",
+            "request": {
+                "expected_path": "/query-builder/products/persistedQueries/search",
+                "json_ref": "persist_search"
+            },
+            "response": {
+                "status": 200,
+                "json_ref": "search_response"
+            },
+            "invalid_requests": [
+                {
+                    "at": "/json/productId",
+                    "remove": true,
+                    "reason": "Persisted query search requires productId."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/json/data",
+                    "replace": "not-an-array",
+                    "reason": "Persisted query search data is an array."
+                }
+            ],
+            "remote_errors": [],
+            "request_model": "PersistedProductQuerySearchRequest"
+        },
+        "Search": {
+            "method": "POST",
+            "request": {
+                "expected_path": "/query-builder/products/search?failOnAssociationQueryLimit=true",
+                "json_ref": "products_search_request",
+                "request_model": "ProductsSearchRequest",
+                "query": {
+                    "failOnAssociationQueryLimit": true
+                }
+            },
+            "response": {
+                "status": 200,
+                "json_ref": "search_response_products"
+            },
+            "invalid_requests": [
+                {
+                    "at": "/json/query/matchRule",
+                    "replace": "allOfThem",
+                    "reason": "MainQueryGroup matchRule is all or any."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/json/data",
+                    "replace": "not-an-array",
+                    "reason": "Search data is an array."
+                }
+            ],
+            "remote_errors": [
+                400,
+                422
+            ],
+            "request_model": "ProductsSearchRequest"
+        },
+        "GetCount": {
+            "method": "POST",
+            "request": {
+                "expected_path": "/query-builder/products/count",
+                "json_ref": "products_search_request",
+                "request_model": "ProductsSearchRequest"
+            },
+            "response": {
+                "status": 200,
+                "json_ref": "count_response"
+            },
+            "invalid_requests": [
+                {
+                    "at": "/json/query/matchRule",
+                    "replace": "allOfThem",
+                    "reason": "MainQueryGroup matchRule is all or any."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/json/count",
+                    "replace": "zero",
+                    "reason": "Product count is numeric."
+                }
+            ],
+            "remote_errors": [
+                422
+            ],
+            "request_model": "ProductsSearchRequest"
+        },
+        "ScrollSearch": {
+            "method": "POST",
+            "request": {
+                "expected_path": "/query-builder/products/scroll/search",
+                "json_ref": "scroll_start"
+            },
+            "response": {
+                "status": 200,
+                "json_ref": "scroll_response"
+            },
+            "invalid_requests": [
+                {
+                    "at": "/json/query/matchRule",
+                    "replace": "allOfThem",
+                    "reason": "MainQueryGroup matchRule is all or any."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/json/scrollId",
+                    "replace": 42,
+                    "reason": "scrollId is a string."
+                }
+            ],
+            "remote_errors": [],
+            "request_model": "ProductsScrollSearchRequestInitiation"
+        },
+        "DeleteOrganization": {
+            "method": "DELETE",
+            "request": {
+                "expected_path": "/query-builder/organization?dryrun=true",
+                "query": {
+                    "dryrun": true
+                }
+            },
+            "response": {
+                "status": 200,
+                "json_ref": "delete_report"
+            },
+            "invalid_requests": [
+                {
+                    "at": "/query/dryrun",
+                    "replace": [],
+                    "reason": "dryrun must be a boolean query value."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/json/dryrun",
+                    "replace": "yes",
+                    "reason": "Delete report dryrun is boolean."
+                }
+            ],
+            "remote_errors": []
+        }
+    }
+}

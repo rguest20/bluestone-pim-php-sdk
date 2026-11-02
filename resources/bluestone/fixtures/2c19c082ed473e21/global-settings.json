@@ -1,0 +1,625 @@
+{
+    "schema_version": 1,
+    "component": "global-settings",
+    "revision": "2c19c082ed473e21",
+    "openapi_sha256": "81e240cf49a1847308143fc0c220ff863fdddc369b4dc77276d7b1870c04bfc1",
+    "complete_component": true,
+    "payloads": {
+        "permission": {
+            "permissionType": "READ"
+        },
+        "context_request": {
+            "name": "French",
+            "locale": "fr-FR",
+            "fallback": "en"
+        },
+        "context": {
+            "id": "context-fr",
+            "name": "French",
+            "locale": "fr-FR",
+            "fallback": "en",
+            "initial": false,
+            "internalId": "internal-fr",
+            "archived": false
+        },
+        "contexts": {
+            "data": [
+                {
+                    "id": "context-fr",
+                    "name": "French",
+                    "locale": "fr-FR",
+                    "fallback": "en",
+                    "initial": false,
+                    "internalId": "internal-fr",
+                    "archived": false
+                }
+            ]
+        },
+        "filter_search": {
+            "name": "Fixture filter",
+            "page": 0,
+            "pageSize": 20
+        },
+        "filter_create": {
+            "name": "Fixture filter",
+            "service": "pim",
+            "entity": "product",
+            "public": false,
+            "valid": true,
+            "filter": {}
+        },
+        "filter": {
+            "id": "filter-id-1",
+            "ownerId": "user-id-1",
+            "name": "Fixture filter",
+            "service": "pim",
+            "entity": "product",
+            "public": false,
+            "valid": true,
+            "filter": {},
+            "updatedAt": 1710000000000,
+            "readonly": false
+        },
+        "filters": {
+            "data": [
+                {
+                    "id": "filter-id-1",
+                    "ownerId": "user-id-1",
+                    "name": "Fixture filter",
+                    "service": "pim",
+                    "entity": "product",
+                    "public": false,
+                    "valid": true,
+                    "filter": {},
+                    "updatedAt": 1710000000000,
+                    "readonly": false
+                }
+            ]
+        },
+        "names": {
+            "names": [
+                "French"
+            ]
+        },
+        "permissions": {
+            "data": [
+                {
+                    "userId": "user-id-1",
+                    "permissionType": "READ"
+                }
+            ]
+        }
+    },
+    "operations": {
+        "grantPermission": {
+            "method": "PUT",
+            "request": {
+                "expected_path": "/global-settings/filter/filter-id-1/user/user-id-1",
+                "path_parameters": {
+                    "id": "filter-id-1",
+                    "userId": "user-id-1"
+                },
+                "json_ref": "permission"
+            },
+            "response": {
+                "status": 204,
+                "body": ""
+            },
+            "invalid_requests": [
+                {
+                    "at": "/json/permissionType",
+                    "replace": "EXECUTE",
+                    "reason": "permissionType accepts only READ or WRITE."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/status",
+                    "replace": 200,
+                    "reason": "Permission grant documents HTTP 204."
+                }
+            ],
+            "remote_errors": [
+                400,
+                404
+            ]
+        },
+        "revokePermission": {
+            "method": "DELETE",
+            "request": {
+                "expected_path": "/global-settings/filter/filter-id-1/user/user-id-1",
+                "path_parameters": {
+                    "id": "filter-id-1",
+                    "userId": "user-id-1"
+                }
+            },
+            "response": {
+                "status": 204,
+                "body": ""
+            },
+            "invalid_requests": [
+                {
+                    "at": "/path_parameters/userId",
+                    "replace": "",
+                    "reason": "userId is a required path value."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/status",
+                    "replace": 200,
+                    "reason": "Permission revocation documents HTTP 204."
+                }
+            ],
+            "remote_errors": [
+                400,
+                404
+            ]
+        },
+        "get": {
+            "method": "GET",
+            "request": {
+                "expected_path": "/global-settings/context/context-fr",
+                "path_parameters": {
+                    "id": "context-fr"
+                }
+            },
+            "response": {
+                "status": 200,
+                "json_ref": "context"
+            },
+            "invalid_requests": [
+                {
+                    "at": "/path_parameters/id",
+                    "replace": "",
+                    "reason": "id is a required context path value."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/json/id",
+                    "replace": 42,
+                    "reason": "Context response IDs are strings."
+                }
+            ],
+            "remote_errors": [
+                400,
+                404
+            ]
+        },
+        "update": {
+            "method": "PUT",
+            "request": {
+                "expected_path": "/global-settings/context/context-fr",
+                "path_parameters": {
+                    "id": "context-fr"
+                },
+                "json_ref": "context_request"
+            },
+            "response": {
+                "status": 204,
+                "body": ""
+            },
+            "invalid_requests": [
+                {
+                    "at": "/json/name",
+                    "replace": 42,
+                    "reason": "Context name is a string when supplied."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/status",
+                    "replace": 200,
+                    "reason": "Context update documents HTTP 204."
+                }
+            ],
+            "remote_errors": [
+                400,
+                404,
+                409
+            ]
+        },
+        "archive": {
+            "method": "DELETE",
+            "request": {
+                "expected_path": "/global-settings/context/context-fr",
+                "path_parameters": {
+                    "id": "context-fr"
+                }
+            },
+            "response": {
+                "status": 204,
+                "body": ""
+            },
+            "invalid_requests": [
+                {
+                    "at": "/path_parameters/id",
+                    "replace": "",
+                    "reason": "id is a required context path value."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/status",
+                    "replace": 200,
+                    "reason": "Context archive documents HTTP 204."
+                }
+            ],
+            "remote_errors": [
+                400,
+                404
+            ]
+        },
+        "findAll": {
+            "method": "POST",
+            "request": {
+                "expected_path": "/global-settings/filter/list/all",
+                "json_ref": "filter_search"
+            },
+            "response": {
+                "status": 200,
+                "json_ref": "filters"
+            },
+            "invalid_requests": [
+                {
+                    "at": "/json/page",
+                    "replace": "not-an-integer",
+                    "reason": "Filter search page is an integer."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/json/data",
+                    "replace": "not-an-array",
+                    "reason": "Filter result data is an array."
+                }
+            ],
+            "remote_errors": [
+                400
+            ]
+        },
+        "findFilter": {
+            "method": "POST",
+            "request": {
+                "expected_path": "/global-settings/filter/list",
+                "json_ref": "filter_search"
+            },
+            "response": {
+                "status": 200,
+                "json_ref": "filters"
+            },
+            "invalid_requests": [
+                {
+                    "at": "/json/pageSize",
+                    "replace": "not-an-integer",
+                    "reason": "Filter search pageSize is an integer."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/json/data",
+                    "replace": "not-an-array",
+                    "reason": "Filter result data is an array."
+                }
+            ],
+            "remote_errors": [
+                400
+            ]
+        },
+        "createFilter": {
+            "method": "POST",
+            "request": {
+                "expected_path": "/global-settings/filter",
+                "json_ref": "filter_create"
+            },
+            "response": {
+                "status": 201,
+                "body": ""
+            },
+            "invalid_requests": [
+                {
+                    "at": "/json/name",
+                    "replace": 42,
+                    "reason": "Filter names are strings."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/status",
+                    "replace": 200,
+                    "reason": "Filter creation documents HTTP 201."
+                }
+            ],
+            "remote_errors": [
+                400,
+                409
+            ]
+        },
+        "findByNames": {
+            "method": "POST",
+            "request": {
+                "expected_path": "/global-settings/context/list/by-names?contextState=ACTIVE",
+                "query": {
+                    "contextState": "ACTIVE"
+                },
+                "json_ref": "names"
+            },
+            "response": {
+                "status": 200,
+                "json_ref": "contexts"
+            },
+            "invalid_requests": [
+                {
+                    "at": "/json/names",
+                    "replace": [],
+                    "reason": "The names array has a minimum size of one."
+                },
+                {
+                    "at": "/query/contextState",
+                    "replace": "UNKNOWN",
+                    "reason": "contextState accepts ACTIVE or ARCHIVE."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/json/data",
+                    "replace": "not-an-array",
+                    "reason": "Context list data is an array."
+                }
+            ],
+            "remote_errors": [
+                400
+            ]
+        },
+        "find": {
+            "method": "GET",
+            "request": {
+                "expected_path": "/global-settings/context?contextState=ACTIVE",
+                "query": {
+                    "contextState": "ACTIVE"
+                }
+            },
+            "response": {
+                "status": 200,
+                "json_ref": "contexts"
+            },
+            "invalid_requests": [
+                {
+                    "at": "/query/contextState",
+                    "replace": "UNKNOWN",
+                    "reason": "contextState accepts ACTIVE or ARCHIVE."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/json/data",
+                    "replace": "not-an-array",
+                    "reason": "Context list data is an array."
+                }
+            ],
+            "remote_errors": [
+                400
+            ]
+        },
+        "create": {
+            "method": "POST",
+            "request": {
+                "expected_path": "/global-settings/context",
+                "json_ref": "context_request"
+            },
+            "response": {
+                "status": 201,
+                "body": ""
+            },
+            "invalid_requests": [
+                {
+                    "at": "/json/locale",
+                    "replace": 42,
+                    "reason": "Context locale is a string when supplied."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/status",
+                    "replace": 200,
+                    "reason": "Context creation documents HTTP 201."
+                }
+            ],
+            "remote_errors": [
+                400,
+                409
+            ]
+        },
+        "getFilter": {
+            "method": "GET",
+            "request": {
+                "expected_path": "/global-settings/filter/filter-id-1",
+                "path_parameters": {
+                    "id": "filter-id-1"
+                }
+            },
+            "response": {
+                "status": 200,
+                "json_ref": "filter"
+            },
+            "invalid_requests": [
+                {
+                    "at": "/path_parameters/id",
+                    "replace": "",
+                    "reason": "id is a required filter path value."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/json/public",
+                    "replace": "yes",
+                    "reason": "Filter visibility is boolean."
+                }
+            ],
+            "remote_errors": [
+                400,
+                404
+            ]
+        },
+        "deleteFilter": {
+            "method": "DELETE",
+            "request": {
+                "expected_path": "/global-settings/filter/filter-id-1",
+                "path_parameters": {
+                    "id": "filter-id-1"
+                }
+            },
+            "response": {
+                "status": 204,
+                "body": ""
+            },
+            "invalid_requests": [
+                {
+                    "at": "/path_parameters/id",
+                    "replace": "",
+                    "reason": "id is a required filter path value."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/status",
+                    "replace": 200,
+                    "reason": "Filter deletion documents HTTP 204."
+                }
+            ],
+            "remote_errors": [
+                400,
+                404
+            ]
+        },
+        "updateFilter": {
+            "method": "PATCH",
+            "request": {
+                "expected_path": "/global-settings/filter/filter-id-1",
+                "path_parameters": {
+                    "id": "filter-id-1"
+                },
+                "json_ref": "filter_create"
+            },
+            "response": {
+                "status": 204,
+                "body": ""
+            },
+            "invalid_requests": [
+                {
+                    "at": "/json/public",
+                    "replace": "yes",
+                    "reason": "Filter visibility is boolean."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/status",
+                    "replace": 200,
+                    "reason": "Filter update documents HTTP 204."
+                }
+            ],
+            "remote_errors": [
+                400,
+                404,
+                409
+            ]
+        },
+        "deleteFilterFromAll": {
+            "method": "DELETE",
+            "request": {
+                "expected_path": "/global-settings/filter/all/filter-id-1",
+                "path_parameters": {
+                    "id": "filter-id-1"
+                }
+            },
+            "response": {
+                "status": 204,
+                "body": ""
+            },
+            "invalid_requests": [
+                {
+                    "at": "/path_parameters/id",
+                    "replace": "",
+                    "reason": "id is a required filter path value."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/status",
+                    "replace": 200,
+                    "reason": "Global filter deletion documents HTTP 204."
+                }
+            ],
+            "remote_errors": [
+                400,
+                404
+            ]
+        },
+        "updatePublicFilter": {
+            "method": "PATCH",
+            "request": {
+                "expected_path": "/global-settings/filter/all/filter-id-1",
+                "path_parameters": {
+                    "id": "filter-id-1"
+                },
+                "json_ref": "filter_create"
+            },
+            "response": {
+                "status": 204,
+                "body": ""
+            },
+            "invalid_requests": [
+                {
+                    "at": "/json/public",
+                    "replace": "yes",
+                    "reason": "Filter visibility is boolean."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/status",
+                    "replace": 200,
+                    "reason": "Global filter update documents HTTP 204."
+                }
+            ],
+            "remote_errors": [
+                400,
+                404,
+                409
+            ]
+        },
+        "getPermissions": {
+            "method": "GET",
+            "request": {
+                "expected_path": "/global-settings/filter/filter-id-1/user",
+                "path_parameters": {
+                    "id": "filter-id-1"
+                }
+            },
+            "response": {
+                "status": 200,
+                "json_ref": "permissions"
+            },
+            "invalid_requests": [
+                {
+                    "at": "/path_parameters/id",
+                    "replace": "",
+                    "reason": "id is a required filter path value."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/json/data",
+                    "replace": "not-an-array",
+                    "reason": "Permission list data is an array."
+                }
+            ],
+            "remote_errors": [
+                400,
+                404
+            ]
+        }
+    }
+}

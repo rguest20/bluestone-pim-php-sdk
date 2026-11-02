@@ -1,0 +1,216 @@
+{
+    "schema_version": 1,
+    "component": "ui-settings",
+    "revision": "2c19c082ed473e21",
+    "openapi_sha256": "a1455a2a4527d26754f2b9ecaec1ddbc5284a77fcce8461dd31d9445561a42f3",
+    "complete_component": true,
+    "payloads": {
+        "setup": {
+            "name": "Product review",
+            "isDefault": false,
+            "isPublic": true,
+            "columns": [
+                {
+                    "id": "number",
+                    "columnType": "GENERAL",
+                    "width": 180
+                }
+            ],
+            "service": "pim",
+            "entity": "product",
+            "owner": "fixture@example.invalid",
+            "sortConfig": {
+                "columnId": "number",
+                "direction": "ASC"
+            }
+        },
+        "setups": [
+            {
+                "name": "Product review",
+                "isDefault": false,
+                "isPublic": true,
+                "columns": [
+                    {
+                        "id": "number",
+                        "columnType": "GENERAL",
+                        "width": 180
+                    }
+                ],
+                "service": "pim",
+                "entity": "product",
+                "owner": "fixture@example.invalid",
+                "sortConfig": {
+                    "columnId": "number",
+                    "direction": "ASC"
+                }
+            }
+        ],
+        "create": {
+            "name": "Product review",
+            "isPublic": true,
+            "columns": [
+                {
+                    "id": "number",
+                    "columnType": "GENERAL",
+                    "width": 180
+                }
+            ],
+            "service": "pim",
+            "entity": "product",
+            "owner": "fixture@example.invalid"
+        },
+        "update": {
+            "name": "Product review",
+            "isPublic": false,
+            "columns": [
+                {
+                    "id": "number",
+                    "columnType": "GENERAL",
+                    "width": 180
+                }
+            ],
+            "sortConfig": {
+                "columnId": "number",
+                "direction": "DESC"
+            }
+        }
+    },
+    "operations": {
+        "GetAllColumnSetups": {
+            "method": "GET",
+            "request": {
+                "expected_path": "/ui-settings/columnsSetups/all"
+            },
+            "response": {
+                "status": 200,
+                "json_ref": "setups"
+            },
+            "invalid_requests": [],
+            "invalid_request_not_applicable": "This operation declares no request body or path/query/header parameters.",
+            "invalid_responses": [
+                {
+                    "at": "/json/0/isPublic",
+                    "replace": "PRIVATE_FIXTURE_VALUE",
+                    "reason": "isPublic must be a boolean."
+                }
+            ],
+            "remote_errors": []
+        },
+        "CreateColumnsSetupOfAnyUser": {
+            "method": "POST",
+            "request": {
+                "expected_path": "/ui-settings/columnsSetups/all",
+                "json_ref": "create"
+            },
+            "response": {
+                "status": 200,
+                "json_ref": "setup"
+            },
+            "invalid_requests": [
+                {
+                    "at": "/json/owner",
+                    "remove": true,
+                    "reason": "Creating another user's column setup requires the owner field."
+                },
+                {
+                    "at": "/json/columns/0/columnType",
+                    "remove": true,
+                    "reason": "Every column requires its columnType."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/json/service",
+                    "remove": true,
+                    "reason": "A ColumnsSetup response requires service."
+                }
+            ],
+            "remote_errors": []
+        },
+        "GetColumnSetupByIdOfAnyUser": {
+            "method": "GET",
+            "request": {
+                "expected_path": "/ui-settings/columnsSetups/all/setup-1",
+                "path_parameters": {
+                    "id": "setup-1"
+                }
+            },
+            "response": {
+                "status": 200,
+                "json_ref": "setup"
+            },
+            "invalid_requests": [
+                {
+                    "at": "/path_parameters/id",
+                    "remove": true,
+                    "reason": "The setup ID is a required path parameter."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/json/columns/0/columnType",
+                    "remove": true,
+                    "reason": "A returned column requires columnType."
+                }
+            ],
+            "remote_errors": []
+        },
+        "UpdateSetupByIdOfAnyUser": {
+            "method": "PUT",
+            "request": {
+                "expected_path": "/ui-settings/columnsSetups/all/setup-1",
+                "path_parameters": {
+                    "id": "setup-1"
+                },
+                "json_ref": "update"
+            },
+            "response": {
+                "status": 200,
+                "json_ref": "setup"
+            },
+            "invalid_requests": [
+                {
+                    "at": "/json/sortConfig/direction",
+                    "replace": "PRIVATE_FIXTURE_VALUE",
+                    "reason": "The sort direction enum permits ASC or DESC."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/json/sortConfig/direction",
+                    "replace": "PRIVATE_FIXTURE_VALUE",
+                    "reason": "Returned sort configuration uses the same ASC/DESC constraint."
+                }
+            ],
+            "remote_errors": []
+        },
+        "DeleteColumnSetupByIdOfAnyUser": {
+            "method": "DELETE",
+            "request": {
+                "expected_path": "/ui-settings/columnsSetups/all/setup-1",
+                "path_parameters": {
+                    "id": "setup-1"
+                }
+            },
+            "response": {
+                "status": 200,
+                "json_ref": "setup"
+            },
+            "invalid_requests": [
+                {
+                    "at": "/path_parameters/id",
+                    "remove": true,
+                    "reason": "The setup ID is required even when deleting."
+                }
+            ],
+            "invalid_responses": [
+                {
+                    "at": "/json/name",
+                    "replace": null,
+                    "reason": "A returned setup name is a non-null string."
+                }
+            ],
+            "remote_errors": []
+        }
+    }
+}

@@ -1,0 +1,63 @@
+{
+    "schema_version": 1,
+    "component": "labels",
+    "revision": "2c19c082ed473e21",
+    "openapi_sha256": "0ec4854f554655b1e46dd04012c6cbf5b211fb7b3490e631064d1f91b91b9724",
+    "complete_component": true,
+    "payloads": {
+        "label": {"id": "label-id-1", "name": "Gift wrap"},
+        "labels": {"data": [{"id": "label-id-1", "name": "Gift wrap"}]},
+        "label_request": {"name": "Gift wrap"},
+        "ids_request": {"ids": ["label-id-1", "label-id-2"]}
+    },
+    "operations": {
+        "create": {
+            "method": "POST",
+            "request": {"expected_path": "/labels/labels", "headers": {"context": "en"}, "json_ref": "label_request"},
+            "response": {"status": 201, "body": ""},
+            "invalid_requests": [{"at": "/json/name", "replace": "", "reason": "A label name has a minimum length of one character in the schema."}],
+            "invalid_responses": [{"at": "/status", "replace": 200, "reason": "Label creation documents HTTP 201 as its successful response."}],
+            "remote_errors": [400, 409]
+        },
+        "find": {
+            "method": "GET",
+            "request": {"expected_path": "/labels/labels/label-id-1", "path_parameters": {"id": "label-id-1"}, "headers": {"context": "en"}},
+            "response": {"status": 200, "json_ref": "label"},
+            "invalid_requests": [{"at": "/path_parameters/id", "replace": "", "reason": "The label ID is a required path value."}],
+            "invalid_responses": [{"at": "/json/name", "replace": 42, "reason": "A label response name must be a string when supplied."}],
+            "remote_errors": [400, 404]
+        },
+        "update": {
+            "method": "PUT",
+            "request": {"expected_path": "/labels/labels/label-id-1", "path_parameters": {"id": "label-id-1"}, "headers": {"context": "en"}, "json_ref": "label_request"},
+            "response": {"status": 204, "body": ""},
+            "invalid_requests": [{"at": "/json/name", "replace": "", "reason": "A label update requires a non-empty name."}],
+            "invalid_responses": [{"at": "/status", "replace": 200, "reason": "Label update documents HTTP 204 as its successful response."}],
+            "remote_errors": [400, 404, 409]
+        },
+        "delete": {
+            "method": "DELETE",
+            "request": {"expected_path": "/labels/labels/label-id-1", "path_parameters": {"id": "label-id-1"}},
+            "response": {"status": 204, "body": ""},
+            "invalid_requests": [{"at": "/path_parameters/id", "replace": "", "reason": "The label ID is a required path value."}],
+            "invalid_responses": [{"at": "/status", "replace": 200, "reason": "Label deletion documents HTTP 204 as its successful response."}],
+            "remote_errors": [400, 404]
+        },
+        "list": {
+            "method": "GET",
+            "request": {"expected_path": "/labels/labels?page=0&pageSize=20", "query": {"page": 0, "pageSize": 20}, "headers": {"context": "en"}},
+            "response": {"status": 200, "json_ref": "labels"},
+            "invalid_requests": [{"at": "/query/pageSize", "replace": 0, "reason": "The pageSize query parameter has a minimum value of one."}],
+            "invalid_responses": [{"at": "/json/data", "replace": "not-an-array", "reason": "The list response data field must be an array when supplied."}],
+            "remote_errors": [400]
+        },
+        "findByIds": {
+            "method": "POST",
+            "request": {"expected_path": "/labels/labels/by-ids", "headers": {"context": "en"}, "json_ref": "ids_request"},
+            "response": {"status": 200, "json_ref": "labels"},
+            "invalid_requests": [{"at": "/json/ids", "remove": true, "reason": "The IDs request requires the ids array."}],
+            "invalid_responses": [{"at": "/json/data", "replace": "not-an-array", "reason": "The lookup response data field must be an array when supplied."}],
+            "remote_errors": [400]
+        }
+    }
+}
