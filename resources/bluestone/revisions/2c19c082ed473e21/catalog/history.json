@@ -1,0 +1,591 @@
+{
+    "schema_version": 1,
+    "component": "history",
+    "title": "History",
+    "specification_version": "1-core",
+    "source_url": "https://docs.api.bluestonepim.com/openapi/history.json",
+    "source_sha256": "b08c510446d8d74923691cb71b17483c2e41bcc904b8199459293693a882ec26",
+    "operations": {
+        "count": {
+            "method": "GET",
+            "path": "/history/history/{entityType}/{id}/count",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "entityType",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "eventType",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "field",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "origin",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "userId",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "fromTime",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "toTime",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "eventId",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "metadataEntityId",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "context",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "History"
+            ],
+            "deprecated": false
+        },
+        "list": {
+            "method": "GET",
+            "path": "/history/history",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "page",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "pageSize",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "eventType",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "field",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "origin",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "userId",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "fromTime",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "toTime",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "eventId",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "metadataEntityId",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "context",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "History"
+            ],
+            "deprecated": false
+        },
+        "list_1": {
+            "method": "GET",
+            "path": "/history/history/{entityType}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "entityType",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "page",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "pageSize",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "eventType",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "field",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "origin",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "userId",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "fromTime",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "toTime",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "eventId",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "metadataEntityId",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "context",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "History"
+            ],
+            "deprecated": false
+        },
+        "list_2": {
+            "method": "GET",
+            "path": "/history/history/{entityType}/{id}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "entityType",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "page",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "pageSize",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "eventType",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "field",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "origin",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "userId",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "fromTime",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "toTime",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "eventId",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "metadataEntityId",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "context",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "History"
+            ],
+            "deprecated": false
+        },
+        "scrollList": {
+            "method": "GET",
+            "path": "/history/history/{entityType}/scroll",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "entityType",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "scrollId",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "count",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "eventType",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "field",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "origin",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "userId",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "fromTime",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "toTime",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "eventId",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "metadataEntityId",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "context",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "History"
+            ],
+            "deprecated": false
+        },
+        "search": {
+            "method": "GET",
+            "path": "/history/history/search/{entityType}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "entityType",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "page",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "pageSize",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "context",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "query",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "History"
+            ],
+            "deprecated": false
+        },
+        "search_1": {
+            "method": "GET",
+            "path": "/history/history/search/{entityType}/{id}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "entityType",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "page",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "pageSize",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "context",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "query",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "History"
+            ],
+            "deprecated": false
+        }
+    }
+}

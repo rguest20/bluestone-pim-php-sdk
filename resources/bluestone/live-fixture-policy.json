@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "default_groups": [],
+  "groups": {
+    "public-api-health": {
+      "component": "public-api",
+      "operations": ["GetHealth"],
+      "effect": "read_only",
+      "prerequisites": ["A named disposable test tenant and its Public API base URL."],
+      "cleanup": "No tenant data is created.",
+      "requires_explicit_selection": true
+    },
+    "media-upload-roundtrip": {
+      "component": "media-bank",
+      "operations": ["createAsset", "completeAsset", "deleteAssetUpload"],
+      "effect": "reversible_write",
+      "prerequisites": [
+        "A dedicated test tenant with MEDIA write permission.",
+        "A disposable local file and exact allowlisted upload host.",
+        "An isolated tracking database and configured transfer encryption key."
+      ],
+      "cleanup": "Delete or reconcile the created upload asset after the run, including failure paths.",
+      "requires_explicit_selection": true
+    },
+    "external-webhook-ping": {
+      "component": "external-notifications",
+      "operations": ["pingWebhook"],
+      "effect": "external_side_effect",
+      "prerequisites": [
+        "A disposable webhook endpoint controlled by the test owner.",
+        "A short-lived webhook secret stored in local secret configuration."
+      ],
+      "cleanup": "Remove the disposable webhook and revoke its secret after the run.",
+      "requires_explicit_selection": true
+    },
+    "idp-policy-lifecycle": {
+      "component": "idp",
+      "operations": ["CreatePolicy", "GetPolicyWithId", "ArchivePolicyWithId"],
+      "effect": "broad_administrative_write",
+      "prerequisites": [
+        "A dedicated organization created only for integration testing.",
+        "An isolated administrator account and explicitly scoped IDP permissions.",
+        "A unique policy name that can be read back to resolve its identifier because CreatePolicy returns no response body or resource header.",
+        "A database isolated from all other targets."
+      ],
+      "cleanup": "Archive only the policy created by this fixture and verify the dedicated organization is clean.",
+      "requires_explicit_selection": true,
+      "broad_effect_opt_in": true
+    }
+  }
+}

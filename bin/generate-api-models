@@ -1,0 +1,160 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+use App\Api\OperationCatalog;
+use App\Api\OpenApiOperationAdapterGenerator;
+
+require dirname(__DIR__).'/vendor/autoload.php';
+
+$root = dirname(__DIR__);
+$catalog = new OperationCatalog($root.'/resources/bluestone');
+$arguments = getopt('', ['component:', 'revision:']);
+$revision = $arguments['revision'] ?? $catalog->activeRevision() ?? throw new RuntimeException('No pinned API revision is available. Run php bin/update-api-catalog first.');
+if (!preg_match('/^[a-f0-9]{16}$/', $revision)) {
+    throw new InvalidArgumentException('Invalid API catalog revision.');
+}
+$selected = isset($arguments['component']) ? [$arguments['component']] : array_keys(OperationCatalog::COMPONENTS);
+foreach ($selected as $component) {
+    if (!isset(OperationCatalog::COMPONENTS[$component])) {
+        throw new InvalidArgumentException('Unknown API component: '.$component);
+    }
+}
+
+$remove = static function (string $path) use (&$remove): void {
+    if (is_dir($path)) {
+        foreach (scandir($path) ?: [] as $entry) {
+            if ($entry !== '.' && $entry !== '..') {
+                $remove($path.'/'.$entry);
+            }
+        }
+        rmdir($path);
+    } elseif (file_exists($path)) {
+        unlink($path);
+    }
+};
+$write = static function (string $path, string $content): void {
+    if (file_put_contents($path, $content) !== strlen($content)) {
+        throw new RuntimeException('Could not write generated contract metadata.');
+    }
+};
+$className = static fn (string $component): string => str_replace(' ', '', ucwords(str_replace('-', ' ', $component)));
+$tempRoot = sys_get_temp_dir();
+if (preg_match('/\s/', $tempRoot)) {
+    throw new RuntimeException('Jane requires an OpenAPI input path without spaces; configure a temporary directory without spaces.');
+}
+$generatedRoot = $root.'/generated';
+if (!is_dir($generatedRoot) && !mkdir($generatedRoot, 0775, true) && !is_dir($generatedRoot)) {
+    throw new RuntimeException('Cannot create generated contract directory.');
+}
+$revisionRoot = $generatedRoot.'/R'.$revision;
+$stageRoot = $generatedRoot.'/.staging-R'.$revision.'-'.bin2hex(random_bytes(4));
+$backup = $generatedRoot.'/.backup-R'.$revision.'-'.bin2hex(random_bytes(4));
+$copy = static function (string $source, string $destination) use (&$copy): void {
+    if (is_dir($source)) {
+        if (!mkdir($destination, 0775, true) && !is_dir($destination)) {
+            throw new RuntimeException('Could not stage existing generated contracts.');
+        }
+        foreach (scandir($source) ?: [] as $entry) {
+            if ($entry !== '.' && $entry !== '..') {
+                $copy($source.'/'.$entry, $destination.'/'.$entry);
+            }
+        }
+    } elseif (!copy($source, $destination)) {
+        throw new RuntimeException('Could not stage existing generated contract file.');
+    }
+};
+if (isset($arguments['component']) && is_dir($revisionRoot)) {
+    $copy($revisionRoot, $stageRoot);
+} elseif (!mkdir($stageRoot, 0775, true)) {
+    throw new RuntimeException('Cannot create temporary generated contract revision.');
+}
+$rootManifest = ['schema_version' => 1, 'revision' => $revision, 'generator' => 'jane-php/open-api-3 7.14.4', 'components' => []];
+if (isset($arguments['component']) && is_file($revisionRoot.'/manifest.json')) {
+    $existingManifest = json_decode(file_get_contents($revisionRoot.'/manifest.json'), true, 512, JSON_THROW_ON_ERROR);
+    $rootManifest['components'] = $existingManifest['components'] ?? [];
+}
+
+try {
+foreach ($selected as $component) {
+    $source = $catalog->openApiPath($component, $revision);
+    $temp = $tempRoot.'/bluestone-contract-'.$revision.'-'.$component.'-'.bin2hex(random_bytes(4));
+    $stage = $stageRoot.'/'.$className($component);
+    if (is_dir($stage)) {
+        $remove($stage);
+    }
+    if (!mkdir($temp, 0775, true) || !mkdir($stage, 0775, true)) {
+        throw new RuntimeException('Cannot create temporary generation directories.');
+    }
+    try {
+        $input = $temp.'/openapi.json';
+        if (!copy($source, $input)) {
+            throw new RuntimeException('Could not stage the pinned OpenAPI input.');
+        }
+        $config = ['openapi-file' => $input, 'namespace' => 'App\\Generated\\R'.$revision.'\\'.$className($component),
+            'directory' => $stage, 'strict' => true, 'validation' => true, 'reference' => true,
+            'include-null-value' => false, 'skip-null-values' => false];
+        $configFile = $temp.'/jane-config.php';
+        $write($configFile, '<?php return '.var_export($config, true).";\n");
+        $process = proc_open([PHP_BINARY, $root.'/vendor/bin/jane-openapi', 'generate', '--config-file='.$configFile, '--no-interaction'],
+            [0 => ['file', '/dev/null', 'r'], 1 => ['pipe', 'w'], 2 => ['pipe', 'w']], $pipes, $root);
+        if (!is_resource($process)) {
+            throw new RuntimeException('Could not start the pinned Jane generator.');
+        }
+        $stdout = stream_get_contents($pipes[1]);
+        fclose($pipes[1]);
+        $stderr = stream_get_contents($pipes[2]);
+        fclose($pipes[2]);
+        $exitCode = proc_close($process);
+        if ($exitCode !== 0) {
+            throw new RuntimeException('Jane generation failed for '.$component.': '.trim($stderr ?: $stdout));
+        }
+
+        $adapterInventory = (new OpenApiOperationAdapterGenerator())->generate(
+            $component,
+            $revision,
+            json_decode(file_get_contents($input), true, 512, JSON_THROW_ON_ERROR),
+            $catalog->component($component, $revision),
+            $stage,
+        );
+
+        // Keep generated models/normalizers/validators and shared-runner operation facades only.
+        $remove($stage.'/Endpoint');
+        $remove($stage.'/Exception');
+        $remove($stage.'/Runtime/Client');
+        $remove($stage.'/Client.php');
+        if (!is_dir($stage.'/Model') || !is_file($stage.'/Normalizer/JaneObjectNormalizer.php')) {
+            throw new RuntimeException('Jane did not produce the expected models and normalizer for '.$component.'.');
+        }
+        $models = glob($stage.'/Model/*.php') ?: [];
+        if ($models === []) {
+            throw new RuntimeException('Jane produced no models for '.$component.'.');
+        }
+        $rootManifest['components'][$component] = ['openapi_sha256' => hash_file('sha256', $source), 'model_count' => count($models)] + $adapterInventory;
+        printf("%s: generated %d models for revision %s\n", $component, count($models), $revision);
+    } finally {
+        $remove($temp);
+    }
+}
+$write($stageRoot.'/manifest.json', json_encode($rootManifest, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR)."\n");
+if (is_dir($revisionRoot) && !rename($revisionRoot, $backup)) {
+    throw new RuntimeException('Could not preserve the previous generated contract revision.');
+}
+if (!rename($stageRoot, $revisionRoot)) {
+    if (is_dir($backup)) {
+        rename($backup, $revisionRoot);
+    }
+    throw new RuntimeException('Could not publish the complete generated contract revision.');
+}
+$remove($backup);
+} finally {
+    $remove($stageRoot);
+    if (is_dir($backup)) {
+        if (!is_dir($revisionRoot)) {
+            rename($backup, $revisionRoot);
+        } else {
+            $remove($backup);
+        }
+    }
+}

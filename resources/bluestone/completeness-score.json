@@ -1,0 +1,483 @@
+{
+    "schema_version": 1,
+    "component": "completeness-score",
+    "title": "Completeness score",
+    "specification_version": "1-core",
+    "source_url": "https://docs.api.bluestonepim.com/openapi/completeness-score.json",
+    "source_sha256": "65e2c5cd0b2f70817e0e5c792596862057a68e60e3fa71054d32e00ed5d7b05b",
+    "operations": {
+        "addExcludedCategory": {
+            "method": "PUT",
+            "path": "/completeness-score/requirements/{requirementId}/categories/{categoryId}/excluded",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "requirementId",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "categoryId",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Requirements"
+            ],
+            "deprecated": false
+        },
+        "addIncludedCategory": {
+            "method": "PUT",
+            "path": "/completeness-score/requirements/{requirementId}/categories/{categoryId}/included",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "requirementId",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "categoryId",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Requirements"
+            ],
+            "deprecated": false
+        },
+        "addIncludedProductType": {
+            "method": "PUT",
+            "path": "/completeness-score/requirements/{requirementId}/productType/{productType}/included",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "requirementId",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "productType",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Requirements"
+            ],
+            "deprecated": false
+        },
+        "count": {
+            "method": "POST",
+            "path": "/completeness-score/requirements/count",
+            "authentication": "oauth2",
+            "parameters": [],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Requirements"
+            ],
+            "deprecated": false
+        },
+        "create": {
+            "method": "POST",
+            "path": "/completeness-score/requirements",
+            "authentication": "oauth2",
+            "parameters": [],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Requirements"
+            ],
+            "deprecated": false
+        },
+        "delete": {
+            "method": "DELETE",
+            "path": "/completeness-score/requirements/{requirementId}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "requirementId",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Requirements"
+            ],
+            "deprecated": false
+        },
+        "getBulkValidationIssues": {
+            "method": "POST",
+            "path": "/completeness-score/validations/by-ids",
+            "authentication": "oauth2",
+            "parameters": [],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Validation"
+            ],
+            "deprecated": false
+        },
+        "getCalculationStatus": {
+            "method": "GET",
+            "path": "/completeness-score/scores/status/{context}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "context",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Scores"
+            ],
+            "deprecated": false
+        },
+        "getCategoryScores": {
+            "method": "POST",
+            "path": "/completeness-score/scores/category/list",
+            "authentication": "oauth2",
+            "parameters": [],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Scores"
+            ],
+            "deprecated": false
+        },
+        "getDetailedScoresForSingleEntity": {
+            "method": "GET",
+            "path": "/completeness-score/scores/{entityId}/{context}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "entityId",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "context",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Scores"
+            ],
+            "deprecated": false
+        },
+        "getRequirementsForSingleEntity": {
+            "method": "GET",
+            "path": "/completeness-score/requirements/entity/{entityId}/{context}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "entityId",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "context",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Requirements"
+            ],
+            "deprecated": false
+        },
+        "getScores": {
+            "method": "POST",
+            "path": "/completeness-score/scores/list",
+            "authentication": "oauth2",
+            "parameters": [],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Scores"
+            ],
+            "deprecated": false
+        },
+        "getValidationIssues": {
+            "method": "GET",
+            "path": "/completeness-score/validations/{entityId}/{context}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "entityId",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "context",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Validation"
+            ],
+            "deprecated": false
+        },
+        "list": {
+            "method": "POST",
+            "path": "/completeness-score/requirements/list",
+            "authentication": "oauth2",
+            "parameters": [],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Requirements"
+            ],
+            "deprecated": false
+        },
+        "recalculateForEntity": {
+            "method": "POST",
+            "path": "/completeness-score/scores/calculation/recalculate/entity",
+            "authentication": "oauth2",
+            "parameters": [],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Scores"
+            ],
+            "deprecated": false
+        },
+        "removeExcludedCategory": {
+            "method": "DELETE",
+            "path": "/completeness-score/requirements/{requirementId}/categories/{categoryId}/excluded",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "requirementId",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "categoryId",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Requirements"
+            ],
+            "deprecated": false
+        },
+        "removeIncludedCategory": {
+            "method": "DELETE",
+            "path": "/completeness-score/requirements/{requirementId}/categories/{categoryId}/included",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "requirementId",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "categoryId",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Requirements"
+            ],
+            "deprecated": false
+        },
+        "removeIncludedProductType": {
+            "method": "DELETE",
+            "path": "/completeness-score/requirements/{requirementId}/productType/{productType}/included",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "requirementId",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "productType",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Requirements"
+            ],
+            "deprecated": false
+        },
+        "scoresInvalidation": {
+            "method": "POST",
+            "path": "/completeness-score/scores/calculation/admin/invalidate",
+            "authentication": "oauth2",
+            "parameters": [],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Scores"
+            ],
+            "deprecated": false
+        },
+        "startCalculation": {
+            "method": "POST",
+            "path": "/completeness-score/scores/calculation/start",
+            "authentication": "oauth2",
+            "parameters": [],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Scores"
+            ],
+            "deprecated": false
+        },
+        "stopCalculation": {
+            "method": "POST",
+            "path": "/completeness-score/scores/calculation/stop",
+            "authentication": "oauth2",
+            "parameters": [],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Scores"
+            ],
+            "deprecated": false
+        },
+        "update": {
+            "method": "PUT",
+            "path": "/completeness-score/requirements/{requirementId}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "requirementId",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Requirements"
+            ],
+            "deprecated": false
+        },
+        "validateDefinitionValue": {
+            "method": "POST",
+            "path": "/completeness-score/validations/definition/value",
+            "authentication": "oauth2",
+            "parameters": [],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Validation"
+            ],
+            "deprecated": false
+        },
+        "validateProductAttribute": {
+            "method": "POST",
+            "path": "/completeness-score/validations/product/attribute",
+            "authentication": "oauth2",
+            "parameters": [],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Validation"
+            ],
+            "deprecated": false
+        }
+    }
+}

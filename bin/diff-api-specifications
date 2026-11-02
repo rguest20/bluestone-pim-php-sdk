@@ -1,0 +1,66 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+use App\Api\OperationCatalog;
+use App\Api\SpecificationDiff;
+
+require dirname(__DIR__).'/vendor/autoload.php';
+
+$options = getopt('', ['before:', 'after:', 'component:', 'json']);
+foreach (['before', 'after', 'component'] as $required) {
+    if (!isset($options[$required])) {
+        fwrite(STDERR, "Usage: php bin/diff-api-specifications --before=REV --after=REV --component=COMPONENT [--json]\n");
+        exit(2);
+    }
+}
+if (!isset(OperationCatalog::COMPONENTS[$options['component']])) {
+    throw new InvalidArgumentException('Unknown API component: '.$options['component']);
+}
+$base = dirname(__DIR__).'/resources/bluestone/revisions/';
+$read = static function (string $revision, string $component) use ($base): array {
+    if (!preg_match('/^[a-f0-9]{16}$/', $revision)) {
+        throw new InvalidArgumentException('Revision must be a 16-character lowercase hexadecimal ID.');
+    }
+    $componentFile = OperationCatalog::COMPONENTS[$component];
+    $path = $base.$revision.'/openapi/'.$componentFile.'.json';
+    $manifestPath = $base.$revision.'/manifest.json';
+    if (!is_file($path) || !is_file($manifestPath)) {
+        throw new RuntimeException('Specification revision not found: '.$revision);
+    }
+    $manifest = json_decode(file_get_contents($manifestPath), true, 512, JSON_THROW_ON_ERROR);
+    $expected = $manifest['components'][$component]['openapi_sha256'] ?? '';
+    if (!hash_equals($expected, hash_file('sha256', $path))) {
+        throw new RuntimeException('Specification source checksum does not match its revision manifest.');
+    }
+
+    return json_decode(file_get_contents($path), true, 512, JSON_THROW_ON_ERROR);
+};
+$difference = (new SpecificationDiff())->compare($read($options['before'], $options['component']), $read($options['after'], $options['component']));
+$difference['component'] = $options['component'];
+$difference['before'] = $options['before'];
+$difference['after'] = $options['after'];
+if (isset($options['json'])) {
+    echo json_encode($difference, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR)."\n";
+    exit(0);
+}
+printf("%s  %s → %s\n", $options['component'], $options['before'], $options['after']);
+printf("Added: %d  Removed: %d  Changed: %d  Changed schemas: %d  Required request field changes: %d\n", $difference['summary']['added'], $difference['summary']['removed'], $difference['summary']['changed'], $difference['summary']['changed_schemas'], $difference['summary']['operations_with_required_field_changes']);
+foreach (['added' => '+', 'removed' => '-', 'changed' => '~'] as $field => $prefix) {
+    foreach ($difference[$field] as $operation => $details) {
+        $label = $field === 'changed' ? (string) $operation.' ['.implode(', ', $details).']' : $details;
+        printf("%s %s\n", $prefix, $label);
+    }
+}
+foreach ($difference['changed_schemas'] as $schema) {
+    printf("~ schema %s\n", $schema);
+}
+foreach ($difference['required_request_field_changes'] as $operation => $fields) {
+    if ($fields['added'] !== []) {
+        printf("! %s newly requires: %s\n", $operation, implode(', ', $fields['added']));
+    }
+    if ($fields['removed'] !== []) {
+        printf("~ %s no longer requires: %s\n", $operation, implode(', ', $fields['removed']));
+    }
+}

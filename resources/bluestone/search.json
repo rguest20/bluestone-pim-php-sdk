@@ -1,0 +1,317 @@
+{
+    "schema_version": 1,
+    "component": "search",
+    "title": "Search",
+    "specification_version": "1-core",
+    "source_url": "https://docs.api.bluestonepim.com/openapi/search.json",
+    "source_sha256": "2362edaccca3b85e18e11963ad8b830a50dcc572e7e0313f46fcd3b3cb4e5f36",
+    "operations": {
+        "assetsCount": {
+            "method": "POST",
+            "path": "/search/assets/count",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "context",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "context-fallback",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Search"
+            ],
+            "deprecated": false
+        },
+        "assetsSearch": {
+            "method": "POST",
+            "path": "/search/assets/search",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "context",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "context-fallback",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Search"
+            ],
+            "deprecated": false
+        },
+        "assetsSearchWithCursor": {
+            "method": "POST",
+            "path": "/search/assets/cursor",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "context",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "context-fallback",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Search"
+            ],
+            "deprecated": false
+        },
+        "find": {
+            "method": "GET",
+            "path": "/search/find",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "context",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "query",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "searchableFields",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "archiveState",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "highlight",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "fragmentSize",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "fuzziness",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "page",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "pageSize",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Full-text search"
+            ],
+            "deprecated": false
+        },
+        "productsCount": {
+            "method": "POST",
+            "path": "/search/products/count",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "archiveState",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "context",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "context-fallback",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Search"
+            ],
+            "deprecated": false
+        },
+        "productsSearch": {
+            "method": "POST",
+            "path": "/search/products/search",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "archiveState",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "context",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "context-fallback",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Search"
+            ],
+            "deprecated": false
+        },
+        "productsSearchWithCursor": {
+            "method": "POST",
+            "path": "/search/products/cursor",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "archiveState",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "context",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "context-fallback",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Search"
+            ],
+            "deprecated": false
+        },
+        "productsSearchWithScroll": {
+            "method": "POST",
+            "path": "/search/products/scroll/search",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "archiveState",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "context",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "context-fallback",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Search"
+            ],
+            "deprecated": false
+        }
+    }
+}

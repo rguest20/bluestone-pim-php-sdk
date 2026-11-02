@@ -1,0 +1,44 @@
+{
+    "schema_version": 1,
+    "component": "bulk-operations",
+    "title": "Bluestone Bulk Operations",
+    "specification_version": "1-core",
+    "source_url": "https://docs.api.bluestonepim.com/openapi/bulk-operations.json",
+    "source_sha256": "4ae1cca7a033c7382ac2c076e6a80595b066ada0f0c84ced077aac4920020959",
+    "operations": {
+        "getJobStatus": {
+            "method": "GET",
+            "path": "/bulk-operations/products/attributes/update/by-numbers/{jobId}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "jobId",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Products"
+            ],
+            "deprecated": false
+        },
+        "upsertAttributesByNumbers": {
+            "method": "POST",
+            "path": "/bulk-operations/products/attributes/update/by-numbers",
+            "authentication": "oauth2",
+            "parameters": [],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Products"
+            ],
+            "deprecated": false
+        }
+    }
+}

@@ -1,0 +1,350 @@
+{
+    "schema_version": 1,
+    "component": "global-settings",
+    "title": "Global settings",
+    "specification_version": "1-core",
+    "source_url": "https://docs.api.bluestonepim.com/openapi/global-settings.json",
+    "source_sha256": "81e240cf49a1847308143fc0c220ff863fdddc369b4dc77276d7b1870c04bfc1",
+    "operations": {
+        "archive": {
+            "method": "DELETE",
+            "path": "/global-settings/context/{id}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Contexts"
+            ],
+            "deprecated": false
+        },
+        "create": {
+            "method": "POST",
+            "path": "/global-settings/context",
+            "authentication": "oauth2",
+            "parameters": [],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Contexts"
+            ],
+            "deprecated": false
+        },
+        "createFilter": {
+            "method": "POST",
+            "path": "/global-settings/filter",
+            "authentication": "oauth2",
+            "parameters": [],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Filters"
+            ],
+            "deprecated": false
+        },
+        "deleteFilter": {
+            "method": "DELETE",
+            "path": "/global-settings/filter/{id}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Filters"
+            ],
+            "deprecated": false
+        },
+        "deleteFilterFromAll": {
+            "method": "DELETE",
+            "path": "/global-settings/filter/all/{id}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Filters"
+            ],
+            "deprecated": false
+        },
+        "find": {
+            "method": "GET",
+            "path": "/global-settings/context",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "contextState",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Contexts"
+            ],
+            "deprecated": false
+        },
+        "findAll": {
+            "method": "POST",
+            "path": "/global-settings/filter/list/all",
+            "authentication": "oauth2",
+            "parameters": [],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Filters"
+            ],
+            "deprecated": false
+        },
+        "findByNames": {
+            "method": "POST",
+            "path": "/global-settings/context/list/by-names",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "contextState",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                }
+            ],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Contexts"
+            ],
+            "deprecated": false
+        },
+        "findFilter": {
+            "method": "POST",
+            "path": "/global-settings/filter/list",
+            "authentication": "oauth2",
+            "parameters": [],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Filters"
+            ],
+            "deprecated": false
+        },
+        "get": {
+            "method": "GET",
+            "path": "/global-settings/context/{id}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Contexts"
+            ],
+            "deprecated": false
+        },
+        "getFilter": {
+            "method": "GET",
+            "path": "/global-settings/filter/{id}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Filters"
+            ],
+            "deprecated": false
+        },
+        "getPermissions": {
+            "method": "GET",
+            "path": "/global-settings/filter/{id}/user",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Filters"
+            ],
+            "deprecated": false
+        },
+        "grantPermission": {
+            "method": "PUT",
+            "path": "/global-settings/filter/{id}/user/{userId}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "userId",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Filters"
+            ],
+            "deprecated": false
+        },
+        "revokePermission": {
+            "method": "DELETE",
+            "path": "/global-settings/filter/{id}/user/{userId}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "userId",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Filters"
+            ],
+            "deprecated": false
+        },
+        "update": {
+            "method": "PUT",
+            "path": "/global-settings/context/{id}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Contexts"
+            ],
+            "deprecated": false
+        },
+        "updateFilter": {
+            "method": "PATCH",
+            "path": "/global-settings/filter/{id}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Filters"
+            ],
+            "deprecated": false
+        },
+        "updatePublicFilter": {
+            "method": "PATCH",
+            "path": "/global-settings/filter/all/{id}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Filters"
+            ],
+            "deprecated": false
+        }
+    }
+}

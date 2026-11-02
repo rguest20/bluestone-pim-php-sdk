@@ -1,0 +1,934 @@
+{
+    "schema_version": 1,
+    "component": "public-api",
+    "title": "Bluestone Public API",
+    "specification_version": "1-core",
+    "source_url": "https://docs.api.bluestonepim.com/openapi/page.json",
+    "source_sha256": "44b71b4e22c3a3a7971eafd960fd811358c569295e37a5b809b62a0be28313fa",
+    "operations": {
+        "FindCategoriesByNumbers": {
+            "method": "POST",
+            "path": "/v1/categories/by-numbers",
+            "authentication": "api_key",
+            "parameters": [
+                {
+                    "name": "context",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Categories"
+            ],
+            "deprecated": false
+        },
+        "FindDictionaryValuesByCursor": {
+            "method": "POST",
+            "path": "/v1/attributes/dictionary/{attributeDefinitionId}/values/cursor/all",
+            "authentication": "api_key",
+            "parameters": [
+                {
+                    "name": "attributeDefinitionId",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "context",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Attributes"
+            ],
+            "deprecated": false
+        },
+        "FindPAttributesByNumbers": {
+            "method": "POST",
+            "path": "/v1/attributes/by-numbers",
+            "authentication": "api_key",
+            "parameters": [
+                {
+                    "name": "context",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Attributes"
+            ],
+            "deprecated": false
+        },
+        "FindProducts": {
+            "method": "POST",
+            "path": "/v1/products/list",
+            "authentication": "api_key",
+            "parameters": [
+                {
+                    "name": "sort",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "itemsOnPage",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "pageNo",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "context",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Products"
+            ],
+            "deprecated": false
+        },
+        "FindProductsByCursor": {
+            "method": "POST",
+            "path": "/v1/products/cursor/all",
+            "authentication": "api_key",
+            "parameters": [
+                {
+                    "name": "context",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Products"
+            ],
+            "deprecated": false
+        },
+        "FindProductsByIds": {
+            "method": "POST",
+            "path": "/v1/products/by-ids",
+            "authentication": "api_key",
+            "parameters": [
+                {
+                    "name": "context",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Products"
+            ],
+            "deprecated": false
+        },
+        "FindProductsByNumbers": {
+            "method": "POST",
+            "path": "/v1/products/by-numbers",
+            "authentication": "api_key",
+            "parameters": [
+                {
+                    "name": "context",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Products"
+            ],
+            "deprecated": false
+        },
+        "GetAncestors": {
+            "method": "GET",
+            "path": "/v1/categories/{categoryId}/ancestors",
+            "authentication": "api_key",
+            "parameters": [
+                {
+                    "name": "categoryId",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "itemsOnPage",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "pageNo",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "context",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Categories"
+            ],
+            "deprecated": false
+        },
+        "GetAttributeDifferences": {
+            "method": "GET",
+            "path": "/v1/differences/attributes",
+            "authentication": "api_key",
+            "parameters": [
+                {
+                    "name": "diffType",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "itemsOnPage",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "pageNo",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "context",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Differences"
+            ],
+            "deprecated": false
+        },
+        "GetAttributeDifferencesOnSyncDeletes": {
+            "method": "GET",
+            "path": "/v1/differences/sync/{id}/attributes",
+            "authentication": "api_key",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "diffType",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "itemsOnPage",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "pageNo",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Differences"
+            ],
+            "deprecated": false
+        },
+        "GetAttributes": {
+            "method": "GET",
+            "path": "/v1/attributes",
+            "authentication": "api_key",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "itemsOnPage",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "pageNo",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "context",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Attributes"
+            ],
+            "deprecated": false
+        },
+        "GetCategories": {
+            "method": "GET",
+            "path": "/v1/categories",
+            "authentication": "api_key",
+            "parameters": [
+                {
+                    "name": "name",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "itemsOnPage",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "pageNo",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "context",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Categories"
+            ],
+            "deprecated": false
+        },
+        "GetCategoryById": {
+            "method": "GET",
+            "path": "/v1/categories/{categoryId}",
+            "authentication": "api_key",
+            "parameters": [
+                {
+                    "name": "categoryId",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "deep",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "context",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Categories"
+            ],
+            "deprecated": true
+        },
+        "GetCategoryDifferences": {
+            "method": "GET",
+            "path": "/v1/differences/categories",
+            "authentication": "api_key",
+            "parameters": [
+                {
+                    "name": "diffType",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "itemsOnPage",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "pageNo",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "context",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Differences"
+            ],
+            "deprecated": false
+        },
+        "GetCategoryDifferencesOnSyncDeletes": {
+            "method": "GET",
+            "path": "/v1/differences/sync/{id}/categories",
+            "authentication": "api_key",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "diffType",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "itemsOnPage",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "pageNo",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Differences"
+            ],
+            "deprecated": false
+        },
+        "GetHealth": {
+            "method": "GET",
+            "path": "/v1/health",
+            "authentication": "none",
+            "parameters": [],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Health"
+            ],
+            "deprecated": false
+        },
+        "GetProduct": {
+            "method": "GET",
+            "path": "/v1/products/{id}",
+            "authentication": "api_key",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "context",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Products"
+            ],
+            "deprecated": false
+        },
+        "GetProductDifferences": {
+            "method": "GET",
+            "path": "/v1/differences/products",
+            "authentication": "api_key",
+            "parameters": [
+                {
+                    "name": "diffType",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "itemsOnPage",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "pageNo",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "context",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Differences"
+            ],
+            "deprecated": false
+        },
+        "GetProductDifferencesOnSyncDeletes": {
+            "method": "GET",
+            "path": "/v1/differences/sync/{id}/products",
+            "authentication": "api_key",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "diffType",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "itemsOnPage",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "pageNo",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Differences"
+            ],
+            "deprecated": false
+        },
+        "GetProducts": {
+            "method": "GET",
+            "path": "/v1/categories/{categoryId}/products",
+            "authentication": "api_key",
+            "parameters": [
+                {
+                    "name": "categoryId",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "subCategories",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "labels",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "name",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "number",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "itemsOnPage",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "pageNo",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "context",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Categories",
+                "Products"
+            ],
+            "deprecated": false
+        },
+        "GetPublishInfo": {
+            "method": "GET",
+            "path": "/v1/syncs/{id}",
+            "authentication": "api_key",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Syncs"
+            ],
+            "deprecated": false
+        },
+        "GetPublishInfos": {
+            "method": "GET",
+            "path": "/v1/syncs",
+            "authentication": "api_key",
+            "parameters": [
+                {
+                    "name": "context",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "sort",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "publishStates",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "createdAfter",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "itemsOnPage",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "pageNo",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Syncs"
+            ],
+            "deprecated": false
+        },
+        "GetRelationDifferences": {
+            "method": "GET",
+            "path": "/v1/differences/relations",
+            "authentication": "api_key",
+            "parameters": [
+                {
+                    "name": "diffType",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "itemsOnPage",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "pageNo",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "context",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Differences"
+            ],
+            "deprecated": false
+        },
+        "GetRelationDifferencesOnSyncDeletes": {
+            "method": "GET",
+            "path": "/v1/differences/sync/{id}/relations",
+            "authentication": "api_key",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "diffType",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "itemsOnPage",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "pageNo",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Differences"
+            ],
+            "deprecated": false
+        },
+        "GetRelations": {
+            "method": "GET",
+            "path": "/v1/relations",
+            "authentication": "api_key",
+            "parameters": [
+                {
+                    "name": "context",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Relations"
+            ],
+            "deprecated": false
+        },
+        "GetSegmentInfo": {
+            "method": "GET",
+            "path": "/v1/contexts",
+            "authentication": "api_key",
+            "parameters": [],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Contexts"
+            ],
+            "deprecated": false
+        },
+        "Scan": {
+            "method": "GET",
+            "path": "/v1/categories/scan",
+            "authentication": "api_key",
+            "parameters": [
+                {
+                    "name": "categoryId",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "itemsOnPage",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "pageNo",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "context",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Categories"
+            ],
+            "deprecated": false
+        }
+    }
+}

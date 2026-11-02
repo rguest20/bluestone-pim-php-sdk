@@ -1,0 +1,22 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+require dirname(__DIR__).'/vendor/autoload.php';
+
+$root = dirname(__DIR__);
+$revisions = glob($root.'/resources/bluestone/revisions/*', GLOB_ONLYDIR) ?: [];
+sort($revisions, SORT_STRING);
+$built = 0;
+foreach ($revisions as $directory) {
+    $revision = basename($directory);
+    if (!preg_match('/^[a-f0-9]{16}$/', $revision)) continue;
+    foreach (['generate-api-models', 'verify-generated-contracts'] as $script) {
+        $process = proc_open([PHP_BINARY, $root.'/bin/'.$script, '--revision='.$revision], [0 => ['file', '/dev/null', 'r'], 1 => STDOUT, 2 => STDERR], $pipes, $root);
+        if (!is_resource($process) || proc_close($process) !== 0) throw new RuntimeException('Could not build and verify retained contract revision '.$revision.'.');
+    }
+    ++$built;
+}
+if ($built === 0) throw new RuntimeException('No retained specification revisions are available to build.');
+printf("Built %d retained API contract revision(s) offline.\n", $built);

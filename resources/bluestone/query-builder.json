@@ -1,0 +1,215 @@
+{
+    "schema_version": 1,
+    "component": "query-builder",
+    "title": "Query builder",
+    "specification_version": "1-core",
+    "source_url": "https://docs.api.bluestonepim.com/openapi/query-builder.json",
+    "source_sha256": "641242e9596d85b4f25ba7ca684c5efc1f36d0cdc51ce469816cba08da00d361",
+    "operations": {
+        "CreatePersistedProductQuery": {
+            "method": "POST",
+            "path": "/query-builder/products/persistedQueries",
+            "authentication": "oauth2",
+            "parameters": [],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Products"
+            ],
+            "deprecated": false
+        },
+        "DeleteOrganization": {
+            "method": "DELETE",
+            "path": "/query-builder/organization",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "dryrun",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Organization"
+            ],
+            "deprecated": false
+        },
+        "DeletePersistedProductQuery": {
+            "method": "DELETE",
+            "path": "/query-builder/products/persistedQueries",
+            "authentication": "oauth2",
+            "parameters": [],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Products"
+            ],
+            "deprecated": false
+        },
+        "GetCount": {
+            "method": "POST",
+            "path": "/query-builder/products/count",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "failOnAssociationQueryLimit",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "archiveState",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "context-fallback",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Products"
+            ],
+            "deprecated": false
+        },
+        "GetValidView": {
+            "method": "POST",
+            "path": "/query-builder/savedViews/getValidView",
+            "authentication": "oauth2",
+            "parameters": [],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "savedView"
+            ],
+            "deprecated": false
+        },
+        "ListPersistedProductQueries": {
+            "method": "POST",
+            "path": "/query-builder/products/persistedQueries/list",
+            "authentication": "oauth2",
+            "parameters": [],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Products"
+            ],
+            "deprecated": false
+        },
+        "ScrollSearch": {
+            "method": "POST",
+            "path": "/query-builder/products/scroll/search",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "archiveState",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "context-fallback",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Products"
+            ],
+            "deprecated": false
+        },
+        "Search": {
+            "method": "POST",
+            "path": "/query-builder/products/search",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "failOnAssociationQueryLimit",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "archiveState",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "context-fallback",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Products"
+            ],
+            "deprecated": false
+        },
+        "SearchPersistedProductQueries": {
+            "method": "POST",
+            "path": "/query-builder/products/persistedQueries/search",
+            "authentication": "oauth2",
+            "parameters": [],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Products"
+            ],
+            "deprecated": false
+        },
+        "UpdatePersistedProductQuery": {
+            "method": "PUT",
+            "path": "/query-builder/products/persistedQueries",
+            "authentication": "oauth2",
+            "parameters": [],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Products"
+            ],
+            "deprecated": false
+        }
+    }
+}

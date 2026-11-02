@@ -1,0 +1,7 @@
+{
+    "schema_version": 1,
+    "status": "blocked",
+    "recorded_on": "2026-10-31",
+    "reason": "Live tenant verification is blocked at the user's request until a dedicated test tenant, credentials and disposable fixtures are configured. Configuration is not expected before Monday, 2026-11-02.",
+    "resume_requirement": "Explicitly configure and select the test target and fixture scope, then change this status to ready. The date alone never enables tenant calls."
+}

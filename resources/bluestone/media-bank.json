@@ -1,0 +1,1502 @@
+{
+    "schema_version": 1,
+    "component": "media-bank",
+    "title": "Media bank",
+    "specification_version": "1-core",
+    "source_url": "https://docs.api.bluestonepim.com/openapi/media-bank.json",
+    "source_sha256": "a8f6a952383a5ba1407fae2fff6a549832773506098d5f16b5cff802b3932269",
+    "operations": {
+        "addAttributeToAssets": {
+            "method": "POST",
+            "path": "/media-bank/assets/attributes/add/by-ids",
+            "authentication": "oauth2",
+            "parameters": [],
+            "body_required": false,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Asset attributes"
+            ],
+            "deprecated": false
+        },
+        "addAttributeToAssets_1": {
+            "method": "PUT",
+            "path": "/media-bank/assets/attributes/by-ids",
+            "authentication": "oauth2",
+            "parameters": [],
+            "body_required": false,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Asset attributes"
+            ],
+            "deprecated": false
+        },
+        "addLabelsToAsset": {
+            "method": "POST",
+            "path": "/media-bank/assets/{id}/labels",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Assets"
+            ],
+            "deprecated": false
+        },
+        "appendAssetDictionaryAttributeValues": {
+            "method": "POST",
+            "path": "/media-bank/assets/attributes/dictionary/append/by-ids",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "failOnMissingAttribute",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "context",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Asset attributes"
+            ],
+            "deprecated": false
+        },
+        "appendSelectValues": {
+            "method": "POST",
+            "path": "/media-bank/assets/attributes/select/append/by-ids",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "failOnMissingAttribute",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "context",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Asset attributes"
+            ],
+            "deprecated": false
+        },
+        "assignAttributeToAsset": {
+            "method": "POST",
+            "path": "/media-bank/assets/{id}/attributes/{definitionId}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "definitionId",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Asset attributes"
+            ],
+            "deprecated": false
+        },
+        "bulkAddAssetsLabels": {
+            "method": "POST",
+            "path": "/media-bank/assets/labels/by-ids",
+            "authentication": "oauth2",
+            "parameters": [],
+            "body_required": false,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Assets"
+            ],
+            "deprecated": false
+        },
+        "bulkDeleteAssetsLabels": {
+            "method": "DELETE",
+            "path": "/media-bank/assets/labels/by-ids",
+            "authentication": "oauth2",
+            "parameters": [],
+            "body_required": false,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Assets"
+            ],
+            "deprecated": false
+        },
+        "bulkUpdateAssetPublished": {
+            "method": "PUT",
+            "path": "/media-bank/assets/published",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "context",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "context-fallback",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Assets"
+            ],
+            "deprecated": false
+        },
+        "checkStatuses": {
+            "method": "GET",
+            "path": "/media-bank/healthcheck",
+            "authentication": "oauth2",
+            "parameters": [],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Technical"
+            ],
+            "deprecated": false
+        },
+        "completeAsset": {
+            "method": "POST",
+            "path": "/media-bank/upload/{id}/done",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "context",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Upload"
+            ],
+            "deprecated": false
+        },
+        "create": {
+            "method": "POST",
+            "path": "/media-bank/labels",
+            "authentication": "oauth2",
+            "parameters": [],
+            "body_required": false,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Labels"
+            ],
+            "deprecated": false
+        },
+        "createAsset": {
+            "method": "POST",
+            "path": "/media-bank/upload",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "context",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Upload"
+            ],
+            "deprecated": false
+        },
+        "createType": {
+            "method": "POST",
+            "path": "/media-bank/labels/type/{type}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "type",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Labels"
+            ],
+            "deprecated": false
+        },
+        "createVersionAsset": {
+            "method": "POST",
+            "path": "/media-bank/upload/{id}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "context",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Upload"
+            ],
+            "deprecated": false
+        },
+        "deductAssetDictionaryAttributeValues": {
+            "method": "POST",
+            "path": "/media-bank/assets/attributes/dictionary/deduct/by-ids",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "failOnMissingAttribute",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "context",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Asset attributes"
+            ],
+            "deprecated": false
+        },
+        "deductSelectValues": {
+            "method": "POST",
+            "path": "/media-bank/assets/attributes/select/deduct/by-ids",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "failOnMissingAttribute",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "context",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Asset attributes"
+            ],
+            "deprecated": false
+        },
+        "delete": {
+            "method": "DELETE",
+            "path": "/media-bank/labels/{id}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Labels"
+            ],
+            "deprecated": false
+        },
+        "deleteAsset": {
+            "method": "DELETE",
+            "path": "/media-bank/assets/{id}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Assets"
+            ],
+            "deprecated": false
+        },
+        "deleteAssetAttributes": {
+            "method": "DELETE",
+            "path": "/media-bank/assets/attributes",
+            "authentication": "oauth2",
+            "parameters": [],
+            "body_required": false,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Asset attributes"
+            ],
+            "deprecated": false
+        },
+        "deleteAssetUpload": {
+            "method": "DELETE",
+            "path": "/media-bank/upload/{id}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "context",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Upload"
+            ],
+            "deprecated": false
+        },
+        "deleteType": {
+            "method": "DELETE",
+            "path": "/media-bank/labels/type/{type}/{id}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "type",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Labels"
+            ],
+            "deprecated": false
+        },
+        "describe": {
+            "method": "GET",
+            "path": "/media-bank/labels",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "labelType",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "mediaType",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "page",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "pageSize",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Labels"
+            ],
+            "deprecated": false
+        },
+        "describeAsset": {
+            "method": "GET",
+            "path": "/media-bank/assets/{id}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "context",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "context-fallback",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Assets"
+            ],
+            "deprecated": true
+        },
+        "describeAssetUploads": {
+            "method": "GET",
+            "path": "/media-bank/upload",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "context",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "context-fallback",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Upload"
+            ],
+            "deprecated": false
+        },
+        "describeAssetVersions": {
+            "method": "GET",
+            "path": "/media-bank/assets/{id}/versions",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "page",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "pageSize",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "context",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Assets"
+            ],
+            "deprecated": false
+        },
+        "duplicateAsset": {
+            "method": "POST",
+            "path": "/media-bank/assets/{id}/duplicate",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Assets"
+            ],
+            "deprecated": false
+        },
+        "generateDownloadUrls": {
+            "method": "POST",
+            "path": "/media-bank/assets/download",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "context",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "context-fallback",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Assets"
+            ],
+            "deprecated": false
+        },
+        "generateFixedLink": {
+            "method": "PUT",
+            "path": "/media-bank/assets/{id}/generate-fixed-link",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "context",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "context-fallback",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Assets"
+            ],
+            "deprecated": false
+        },
+        "getAssetAttributes": {
+            "method": "GET",
+            "path": "/media-bank/assets/{id}/attributes",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "page",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "pageSize",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "context",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "context-fallback",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Asset attributes"
+            ],
+            "deprecated": false
+        },
+        "getAssetViewsById": {
+            "method": "POST",
+            "path": "/media-bank/assets/{id}/views",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "context",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "context-fallback",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Assets"
+            ],
+            "deprecated": false
+        },
+        "getLabelById": {
+            "method": "GET",
+            "path": "/media-bank/labels/{id}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Labels"
+            ],
+            "deprecated": false
+        },
+        "list": {
+            "method": "POST",
+            "path": "/media-bank/labels/list",
+            "authentication": "oauth2",
+            "parameters": [],
+            "body_required": false,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Labels"
+            ],
+            "deprecated": false
+        },
+        "listAssetViewsByIds": {
+            "method": "POST",
+            "path": "/media-bank/assets/views/by-ids",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "context",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "context-fallback",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Assets"
+            ],
+            "deprecated": false
+        },
+        "listAssetsByIds": {
+            "method": "POST",
+            "path": "/media-bank/assets/search/by-ids",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "context",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "context-fallback",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Assets"
+            ],
+            "deprecated": true
+        },
+        "listAssetsByNumbers": {
+            "method": "POST",
+            "path": "/media-bank/assets/search/by-numbers",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "context",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "context-fallback",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Assets"
+            ],
+            "deprecated": false
+        },
+        "listWorkingAssetsWithCursor": {
+            "method": "POST",
+            "path": "/media-bank/assets/cursor/all",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "context",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "context-fallback",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Assets"
+            ],
+            "deprecated": false
+        },
+        "presentVersion": {
+            "method": "GET",
+            "path": "/media-bank/technical/version",
+            "authentication": "oauth2",
+            "parameters": [],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Technical"
+            ],
+            "deprecated": false
+        },
+        "removeAssetsByIds": {
+            "method": "POST",
+            "path": "/media-bank/assets/delete/by-ids",
+            "authentication": "oauth2",
+            "parameters": [],
+            "body_required": false,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Assets"
+            ],
+            "deprecated": false
+        },
+        "removeLabelFromAsset": {
+            "method": "DELETE",
+            "path": "/media-bank/assets/{id}/labels/{labelId}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "labelId",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Assets"
+            ],
+            "deprecated": false
+        },
+        "removeListOfAssets": {
+            "method": "DELETE",
+            "path": "/media-bank/assets/delete",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "ids",
+                    "in": "query",
+                    "required": true,
+                    "style": "form",
+                    "explode": true
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Assets"
+            ],
+            "deprecated": true
+        },
+        "revertAsset": {
+            "method": "POST",
+            "path": "/media-bank/assets/{id}/versions/{versionId}/revert",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "versionId",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "context",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Assets"
+            ],
+            "deprecated": false
+        },
+        "setLabelsToAsset": {
+            "method": "PUT",
+            "path": "/media-bank/assets/{id}/labels",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Assets"
+            ],
+            "deprecated": false
+        },
+        "unassignAttributeFromAsset": {
+            "method": "DELETE",
+            "path": "/media-bank/assets/{id}/attributes/{definitionId}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "definitionId",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Asset attributes"
+            ],
+            "deprecated": false
+        },
+        "update": {
+            "method": "PUT",
+            "path": "/media-bank/labels/{id}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Labels"
+            ],
+            "deprecated": false
+        },
+        "updateAsset": {
+            "method": "PUT",
+            "path": "/media-bank/upload/{id}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Upload"
+            ],
+            "deprecated": false
+        },
+        "updateAssetAlphaChannel": {
+            "method": "PUT",
+            "path": "/media-bank/assets/{id}/alpha-channel",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Assets"
+            ],
+            "deprecated": false
+        },
+        "updateAssetClippingPath": {
+            "method": "PUT",
+            "path": "/media-bank/assets/{id}/clipping-path",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Assets"
+            ],
+            "deprecated": false
+        },
+        "updateAssetDescription": {
+            "method": "PUT",
+            "path": "/media-bank/assets/{id}/description",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "context",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Assets"
+            ],
+            "deprecated": false
+        },
+        "updateAssetDictionaryAttributeValues": {
+            "method": "PUT",
+            "path": "/media-bank/assets/{id}/attributes/{definitionId}/dictionary",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "definitionId",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "context",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Asset attributes"
+            ],
+            "deprecated": false
+        },
+        "updateAssetInternal": {
+            "method": "PUT",
+            "path": "/media-bank/assets/{id}/internal",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Assets"
+            ],
+            "deprecated": false
+        },
+        "updateAssetName": {
+            "method": "PUT",
+            "path": "/media-bank/assets/{id}/name",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "context",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Assets"
+            ],
+            "deprecated": false
+        },
+        "updateAssetNumber": {
+            "method": "PUT",
+            "path": "/media-bank/assets/{id}/number",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "context",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Assets"
+            ],
+            "deprecated": false
+        },
+        "updateAssetPublished": {
+            "method": "PUT",
+            "path": "/media-bank/assets/{id}/published",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "context",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "context-fallback",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Assets"
+            ],
+            "deprecated": false
+        },
+        "updateAssetSelectAttributeValues": {
+            "method": "PUT",
+            "path": "/media-bank/assets/{id}/attributes/{definitionId}/select",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "definitionId",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "context",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Asset attributes"
+            ],
+            "deprecated": false
+        },
+        "updateAssetSimpleAttributeValue": {
+            "method": "PUT",
+            "path": "/media-bank/assets/{id}/attributes/{definitionId}/simple",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "definitionId",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "context",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Asset attributes"
+            ],
+            "deprecated": false
+        },
+        "updateAssetsAttribute": {
+            "method": "POST",
+            "path": "/media-bank/assets/attributes/by-ids",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "failOnMissingAttribute",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                }
+            ],
+            "body_required": false,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Asset attributes"
+            ],
+            "deprecated": false
+        },
+        "updateType": {
+            "method": "PUT",
+            "path": "/media-bank/labels/type/{type}/{id}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "type",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Labels"
+            ],
+            "deprecated": false
+        }
+    }
+}

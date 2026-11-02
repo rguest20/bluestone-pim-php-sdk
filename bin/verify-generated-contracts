@@ -1,0 +1,57 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+use App\Api\OperationCatalog;
+use App\Api\SpecificationCompiler;
+use PhpParser\ParserFactory;
+use PhpParser\PhpVersion;
+
+require dirname(__DIR__).'/vendor/autoload.php';
+
+$root = dirname(__DIR__);
+$catalog = new OperationCatalog($root.'/resources/bluestone');
+$arguments = getopt('', ['revision:']);
+$revision = $arguments['revision'] ?? $catalog->activeRevision();
+if (!is_string($revision) || !preg_match('/^[a-f0-9]{16}$/', $revision)) throw new RuntimeException('Select a valid pinned API revision.');
+$directory = $root.'/generated/R'.$revision;
+$manifestFile = $directory.'/manifest.json';
+$manifest = is_file($manifestFile) ? json_decode(file_get_contents($manifestFile), true, 512, JSON_THROW_ON_ERROR) : [];
+if (($manifest['revision'] ?? null) !== $revision) throw new RuntimeException('Generated contract manifest is missing or mismatched.');
+$parser = (new ParserFactory())->createForVersion(PhpVersion::fromString('8.2'));
+$files = 0;
+foreach (new RecursiveIteratorIterator(new RecursiveDirectoryIterator($directory, FilesystemIterator::SKIP_DOTS)) as $file) {
+    if ($file->getExtension() !== 'php') continue;
+    try {
+        $parser->parse(file_get_contents($file->getPathname()));
+    } catch (Throwable $error) {
+        throw new RuntimeException('Generated artifact does not parse as PHP 8.2: '.$file->getPathname(), 0, $error);
+    }
+    ++$files;
+}
+$methods = 0;
+foreach (array_keys(OperationCatalog::COMPONENTS) as $component) {
+    $source = $catalog->openApiPath($component, $revision);
+    $routes = $catalog->component($component, $revision);
+    $compiled = (new SpecificationCompiler())->compile($component, json_decode(file_get_contents($source), true, 512, JSON_THROW_ON_ERROR), $routes['source_url'], hash_file('sha256', $source));
+    if ($compiled !== $routes) throw new RuntimeException('Pinned routing artifacts do not match their source contract: '.$component);
+    $entry = $manifest['components'][$component] ?? [];
+    if (($entry['openapi_sha256'] ?? null) !== hash_file('sha256', $source)) throw new RuntimeException('Generated component checksum mismatch: '.$component);
+    if (($entry['missing_request_models'] ?? ['missing']) !== []) throw new RuntimeException('Resolve the generated request model gaps for '.$component.'.');
+    $name = str_replace(' ', '', ucwords(str_replace('-', ' ', $component)));
+    if (count(glob($directory.'/'.$name.'/Model/*.php') ?: []) !== ($entry['model_count'] ?? null)
+        || !is_file($directory.'/'.$name.'/Normalizer/JaneObjectNormalizer.php')) throw new RuntimeException('Generated model/normalizer set is incomplete: '.$component);
+    if (is_file($directory.'/'.$name.'/Client.php') || is_dir($directory.'/'.$name.'/Endpoint')) throw new RuntimeException('Independent generated HTTP endpoints must not be published.');
+    $class = 'App\\Generated\\R'.$revision.'\\'.$name.'\\Operations\\'.$name.'Operations';
+    if (!class_exists($class)) throw new RuntimeException('Generated operation facade is missing: '.$class);
+    $actual = [];
+    foreach ((new ReflectionClass($class))->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
+        if ($method->getDeclaringClass()->getName() === $class) $actual[] = $method->getName();
+    }
+    $expected = array_keys($catalog->component($component, $revision)['operations']);
+    sort($actual); sort($expected);
+    if ($actual !== $expected || count($actual) !== ($entry['operation_count'] ?? null)) throw new RuntimeException('Generated operation IDs do not reconcile for '.$component.'.');
+    $methods += count($actual);
+}
+printf("Verified %d generated PHP files against PHP 8.2 syntax and %d named operations across %d components (revision %s).\n", $files, $methods, count(OperationCatalog::COMPONENTS), $revision);

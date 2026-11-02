@@ -1,0 +1,98 @@
+{
+    "schema_version": 1,
+    "component": "ui-settings",
+    "title": "UI settings",
+    "specification_version": "1-core",
+    "source_url": "https://docs.api.bluestonepim.com/openapi/ui-settings.json",
+    "source_sha256": "a1455a2a4527d26754f2b9ecaec1ddbc5284a77fcce8461dd31d9445561a42f3",
+    "operations": {
+        "CreateColumnsSetupOfAnyUser": {
+            "method": "POST",
+            "path": "/ui-settings/columnsSetups/all",
+            "authentication": "oauth2",
+            "parameters": [],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Columns setups"
+            ],
+            "deprecated": false
+        },
+        "DeleteColumnSetupByIdOfAnyUser": {
+            "method": "DELETE",
+            "path": "/ui-settings/columnsSetups/all/{id}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Columns setups"
+            ],
+            "deprecated": false
+        },
+        "GetAllColumnSetups": {
+            "method": "GET",
+            "path": "/ui-settings/columnsSetups/all",
+            "authentication": "oauth2",
+            "parameters": [],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Columns setups"
+            ],
+            "deprecated": false
+        },
+        "GetColumnSetupByIdOfAnyUser": {
+            "method": "GET",
+            "path": "/ui-settings/columnsSetups/all/{id}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Columns setups"
+            ],
+            "deprecated": false
+        },
+        "UpdateSetupByIdOfAnyUser": {
+            "method": "PUT",
+            "path": "/ui-settings/columnsSetups/all/{id}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Columns setups"
+            ],
+            "deprecated": false
+        }
+    }
+}

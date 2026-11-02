@@ -1,0 +1,419 @@
+{
+    "schema_version": 1,
+    "component": "public-api-sync",
+    "title": "Public API sync",
+    "specification_version": "1-core",
+    "source_url": "https://docs.api.bluestonepim.com/openapi/public-api-sync.json",
+    "source_sha256": "fcbabc1a160ab89ce35d0682e9e83077654d69f9dc8c4bf2f4f7471ea07e535f",
+    "operations": {
+        "addProductsToSession": {
+            "method": "POST",
+            "path": "/papi-sync/session/{id}/products",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Session sync"
+            ],
+            "deprecated": false
+        },
+        "cancelSession": {
+            "method": "PUT",
+            "path": "/papi-sync/session/{id}/cancel",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Session sync"
+            ],
+            "deprecated": false
+        },
+        "changeProductState": {
+            "method": "POST",
+            "path": "/papi-sync/product/state",
+            "authentication": "oauth2",
+            "parameters": [],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Products"
+            ],
+            "deprecated": false
+        },
+        "closeSession": {
+            "method": "PUT",
+            "path": "/papi-sync/session/{id}/done",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Session sync"
+            ],
+            "deprecated": false
+        },
+        "createSession": {
+            "method": "POST",
+            "path": "/papi-sync/session",
+            "authentication": "oauth2",
+            "parameters": [],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Session sync"
+            ],
+            "deprecated": false
+        },
+        "createSessionReportAssetFile": {
+            "method": "POST",
+            "path": "/papi-sync/session/{id}/report/assets/file",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Session report"
+            ],
+            "deprecated": false
+        },
+        "createSessionReportFile": {
+            "method": "POST",
+            "path": "/papi-sync/session/{id}/report/entities/file",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Session report"
+            ],
+            "deprecated": false
+        },
+        "createSessionReportProductsFile": {
+            "method": "POST",
+            "path": "/papi-sync/session/{id}/report/products/file",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Session report"
+            ],
+            "deprecated": false
+        },
+        "getAssetIdsByIssueType": {
+            "method": "POST",
+            "path": "/papi-sync/session/{id}/report/issues/assets/cursor",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Session report"
+            ],
+            "deprecated": false
+        },
+        "getProductIdsByIssueType": {
+            "method": "POST",
+            "path": "/papi-sync/session/{id}/report/issues/products/cursor",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Session report"
+            ],
+            "deprecated": false
+        },
+        "getSession": {
+            "method": "GET",
+            "path": "/papi-sync/session/{id}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Session sync"
+            ],
+            "deprecated": false
+        },
+        "getSessionAssetsIssues": {
+            "method": "GET",
+            "path": "/papi-sync/session/{id}/report/issues/assets",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Session report"
+            ],
+            "deprecated": false
+        },
+        "getSessionEntitiesIssues": {
+            "method": "GET",
+            "path": "/papi-sync/session/{id}/report/issues/entities",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Session report"
+            ],
+            "deprecated": false
+        },
+        "getSessionProductsIssues": {
+            "method": "GET",
+            "path": "/papi-sync/session/{id}/report/issues/products",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Session report"
+            ],
+            "deprecated": false
+        },
+        "getSessionReport": {
+            "method": "GET",
+            "path": "/papi-sync/session/{id}/report",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Session report"
+            ],
+            "deprecated": false
+        },
+        "getSessionReportAssetLink": {
+            "method": "GET",
+            "path": "/papi-sync/session/{id}/report/assets/link",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "format",
+                    "in": "query",
+                    "required": true,
+                    "style": "form",
+                    "explode": true
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Session report"
+            ],
+            "deprecated": false
+        },
+        "getSessionReportLink": {
+            "method": "GET",
+            "path": "/papi-sync/session/{id}/report/entities/link",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "format",
+                    "in": "query",
+                    "required": true,
+                    "style": "form",
+                    "explode": true
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Session report"
+            ],
+            "deprecated": false
+        },
+        "getSessionReportProductsLink": {
+            "method": "GET",
+            "path": "/papi-sync/session/{id}/report/products/link",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "format",
+                    "in": "query",
+                    "required": true,
+                    "style": "form",
+                    "explode": true
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Session report"
+            ],
+            "deprecated": false
+        },
+        "searchCategoryStateByIds": {
+            "method": "POST",
+            "path": "/papi-sync/category/state/list/by-ids",
+            "authentication": "oauth2",
+            "parameters": [],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Categories"
+            ],
+            "deprecated": false
+        },
+        "searchProductStateByIds": {
+            "method": "POST",
+            "path": "/papi-sync/product/state/list/by-ids",
+            "authentication": "oauth2",
+            "parameters": [],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Products"
+            ],
+            "deprecated": false
+        }
+    }
+}

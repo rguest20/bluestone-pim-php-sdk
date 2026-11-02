@@ -1,0 +1,166 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+use App\Api\OperationCatalog;
+use App\Api\SpecificationCompiler;
+use App\Api\CoverageInventory;
+use App\Api\RevisionActivation;
+use Symfony\Component\HttpClient\HttpClient;
+
+require dirname(__DIR__).'/vendor/autoload.php';
+
+$write = static function (string $path, string $content): void {
+    $written = file_put_contents($path, $content);
+    if ($written === false || $written !== strlen($content)) {
+        throw new RuntimeException('Could not write staged API artifacts.');
+    }
+    chmod($path, 0644);
+};
+$remove = static function (string $path) use (&$remove): void {
+    if (is_dir($path)) {
+        foreach (scandir($path) ?: [] as $entry) {
+            if ($entry !== '.' && $entry !== '..') {
+                $remove($path.'/'.$entry);
+            }
+        }
+        rmdir($path);
+    } elseif (file_exists($path)) {
+        unlink($path);
+    }
+};
+$verifyRevision = static function (string $path, array $expectedChecksums): void {
+    $manifestFile = $path.'/manifest.json';
+    if (!is_file($manifestFile)) {
+        throw new RuntimeException('The existing API revision is incomplete; active revision was not changed.');
+    }
+    $manifest = json_decode(file_get_contents($manifestFile), true, 512, JSON_THROW_ON_ERROR);
+    foreach (OperationCatalog::COMPONENTS as $component => $specification) {
+        $entry = $manifest['components'][$component] ?? null;
+        $source = $path.'/openapi/'.$specification.'.json';
+        $catalog = $path.'/catalog/'.$component.'.json';
+        if (!is_array($entry) || !is_file($source) || !is_file($catalog)
+            || !hash_equals($expectedChecksums[$component], hash_file('sha256', $source))
+            || !hash_equals($expectedChecksums[$component], $entry['openapi_sha256'] ?? '')) {
+            throw new RuntimeException('The existing API revision failed validation; active revision was not changed.');
+        }
+        $data = json_decode(file_get_contents($catalog), true, 512, JSON_THROW_ON_ERROR);
+        if (($data['component'] ?? null) !== $component || !isset($data['operations'])
+            || count($data['operations']) !== $entry['operation_count']) {
+            throw new RuntimeException('An API catalog does not match its revision manifest.');
+        }
+    }
+    $coverageFile = $path.'/coverage.json';
+    if (!is_file($coverageFile)) {
+        throw new RuntimeException('The existing API revision is missing coverage data.');
+    }
+};
+
+// Optional local directory makes regeneration reproducible from previously downloaded specs.
+$arguments = getopt('', ['source-dir:']);
+$compiler = new SpecificationCompiler();
+$http = HttpClient::create(['timeout' => 30, 'max_duration' => 60, 'max_redirects' => 0]);
+$catalogs = [];
+$specifications = [];
+$checksums = [];
+foreach (OperationCatalog::COMPONENTS as $component => $file) {
+    $url = 'https://docs.api.bluestonepim.com/openapi/'.$file.'.json';
+    $source = isset($arguments['source-dir'])
+        ? file_get_contents($arguments['source-dir'].'/'.$file.'.json')
+        : $http->request('GET', $url)->getContent();
+    if ($source === false) {
+        throw new RuntimeException('Could not read specification for '.$component);
+    }
+    $checksums[$component] = hash('sha256', $source);
+    $specifications[$component] = $source;
+    $catalogs[$component] = $compiler->compile($component, json_decode($source, true, 512, JSON_THROW_ON_ERROR), $url, $checksums[$component]);
+}
+$directory = dirname(__DIR__).'/resources/bluestone';
+if (!is_dir($directory.'/revisions') && !mkdir($directory.'/revisions', 0775, true) && !is_dir($directory.'/revisions')) {
+    throw new RuntimeException('Cannot create API catalog directory.');
+}
+$revision = substr(hash('sha256', json_encode($checksums, JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR)), 0, 16);
+$revisionDirectory = $directory.'/revisions/'.$revision;
+if (!is_dir($revisionDirectory)) {
+    $staging = $directory.'/revisions/.staging-'.$revision.'-'.bin2hex(random_bytes(4));
+    try {
+        if (!mkdir($staging.'/catalog', 0775, true) || !mkdir($staging.'/openapi', 0775, true)) {
+            throw new RuntimeException('Cannot create staged API specification directories.');
+        }
+        foreach ($catalogs as $component => $catalog) {
+            $specification = OperationCatalog::COMPONENTS[$component];
+            $write($staging.'/openapi/'.$specification.'.json', $specifications[$component]);
+            $write($staging.'/catalog/'.$component.'.json', json_encode($catalog, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR)."\n");
+        }
+        $coverage = (new CoverageInventory())->build($catalogs, $revision);
+        $write($staging.'/coverage.json', json_encode($coverage, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR)."\n");
+        $manifest = ['schema_version' => 1, 'revision' => $revision, 'components' => []];
+        foreach ($checksums as $component => $checksum) {
+            $manifest['components'][$component] = ['source_url' => $catalogs[$component]['source_url'],
+                'openapi_file' => OperationCatalog::COMPONENTS[$component].'.json',
+                'openapi_sha256' => $checksum, 'specification_version' => $catalogs[$component]['specification_version'],
+                'operation_count' => count($catalogs[$component]['operations'])];
+        }
+        $write($staging.'/manifest.json', json_encode($manifest, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR)."\n");
+        $verifyRevision($staging, $checksums);
+        if (!rename($staging, $revisionDirectory)) {
+            throw new RuntimeException('Could not publish the validated API specification revision.');
+        }
+    } finally {
+        if (is_dir($staging)) {
+            $remove($staging);
+        }
+    }
+}
+$verifyRevision($revisionDirectory, $checksums);
+(new RevisionActivation($directory))->activate($revision, static function () use ($directory, $revision, $catalogs, $checksums): void {
+$generateModels = (new OperationCatalog($directory))->activeRevision() !== $revision;
+$generatedManifestPath = dirname(__DIR__).'/generated/R'.$revision.'/manifest.json';
+if (!$generateModels) {
+    if (!is_file($generatedManifestPath)) {
+        $generateModels = true;
+    } else {
+        $generatedManifest = json_decode(file_get_contents($generatedManifestPath), true, 512, JSON_THROW_ON_ERROR);
+        $generateModels = ($generatedManifest['revision'] ?? null) !== $revision;
+        foreach ($catalogs as $component => $catalog) {
+            $generated = $generatedManifest['components'][$component] ?? [];
+            $componentClass = str_replace(' ', '', ucwords(str_replace('-', ' ', $component)));
+            $facadePath = dirname(__DIR__).'/generated/R'.$revision.'/'.$componentClass.'/Operations/'.$componentClass.'Operations.php';
+            $facadeSource = is_file($facadePath) ? file_get_contents($facadePath) : false;
+            if (($generated['openapi_sha256'] ?? null) !== $checksums[$component]
+                || ($generated['operation_count'] ?? null) !== count($catalog['operations'])
+                || !is_string($facadeSource)
+                || preg_match_all('/^    public function /m', $facadeSource) !== count($catalog['operations'])) {
+                $generateModels = true;
+                break;
+            }
+        }
+    }
+}
+if ($generateModels) {
+    $generation = proc_open([PHP_BINARY, dirname(__DIR__).'/bin/generate-api-models', '--revision='.$revision],
+        [0 => ['file', '/dev/null', 'r'], 1 => ['pipe', 'w'], 2 => ['pipe', 'w']], $pipes, dirname(__DIR__));
+    if (!is_resource($generation)) {
+        throw new RuntimeException('Could not start model and operation adapter generation; the active revision remains unchanged.');
+    }
+    $generationOutput = stream_get_contents($pipes[1]);
+    fclose($pipes[1]);
+    $generationError = stream_get_contents($pipes[2]);
+    fclose($pipes[2]);
+    $generationExitCode = proc_close($generation);
+    if ($generationExitCode !== 0) {
+        throw new RuntimeException('Could not generate the candidate API contract set; the active revision remains unchanged: '.trim($generationError ?: $generationOutput));
+    }
+}
+$verification = proc_open([PHP_BINARY, dirname(__DIR__).'/bin/verify-generated-contracts', '--revision='.$revision],
+    [0 => ['file', '/dev/null', 'r'], 1 => ['pipe', 'w'], 2 => ['pipe', 'w']], $pipes, dirname(__DIR__));
+if (!is_resource($verification)) throw new RuntimeException('Could not verify generated contracts; the active revision remains unchanged.');
+$verificationOutput = stream_get_contents($pipes[1]); fclose($pipes[1]);
+$verificationError = stream_get_contents($pipes[2]); fclose($pipes[2]);
+if (proc_close($verification) !== 0) throw new RuntimeException('Candidate contract verification failed; the active revision remains unchanged: '.trim($verificationError ?: $verificationOutput));
+});
+foreach ($catalogs as $component => $catalog) {
+    printf("%s: %d operations\n", $component, count($catalog['operations']));
+}
+printf("Published complete specification revision %s (%d bytes of source JSON)\n", $revision, array_sum(array_map('strlen', $specifications)));

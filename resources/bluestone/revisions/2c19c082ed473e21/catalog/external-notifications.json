@@ -1,0 +1,573 @@
+{
+    "schema_version": 1,
+    "component": "external-notifications",
+    "title": "External notifications",
+    "specification_version": "1-core",
+    "source_url": "https://docs.api.bluestonepim.com/openapi/external-notifications.json",
+    "source_sha256": "bf10b0946719903ee6a7448d181fb6d9493a51cf14b1e3213e6520a60fa09b59",
+    "operations": {
+        "create": {
+            "method": "POST",
+            "path": "/notification-external/webhooks",
+            "authentication": "oauth2",
+            "parameters": [],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Webhooks"
+            ],
+            "deprecated": false
+        },
+        "delete": {
+            "method": "DELETE",
+            "path": "/notification-external/webhooks/{webhookId}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "webhookId",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Webhooks"
+            ],
+            "deprecated": false
+        },
+        "findConfiguration": {
+            "method": "GET",
+            "path": "/notification-external/subscriptions/user/email/aggregation/entity/{entityType}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "entityType",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Subscriptions email"
+            ],
+            "deprecated": false
+        },
+        "findEmail": {
+            "method": "GET",
+            "path": "/notification-external/subscriptions/user/email/events",
+            "authentication": "oauth2",
+            "parameters": [],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Subscriptions email"
+            ],
+            "deprecated": false
+        },
+        "findInApp": {
+            "method": "GET",
+            "path": "/notification-external/subscriptions/user/in-app/events",
+            "authentication": "oauth2",
+            "parameters": [],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Subscriptions in-app"
+            ],
+            "deprecated": false
+        },
+        "findUserConfig": {
+            "method": "GET",
+            "path": "/notification-external/subscriptions/user",
+            "authentication": "oauth2",
+            "parameters": [],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "User configuration"
+            ],
+            "deprecated": false
+        },
+        "findWatchedEntities": {
+            "method": "GET",
+            "path": "/notification-external/subscriptions/user/watch/event/{eventType}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "eventType",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Subscriptions watch"
+            ],
+            "deprecated": false
+        },
+        "findWebhook": {
+            "method": "GET",
+            "path": "/notification-external/subscriptions/webhook/{webhookId}/events",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "webhookId",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Subscriptions webhook"
+            ],
+            "deprecated": false
+        },
+        "get": {
+            "method": "GET",
+            "path": "/notification-external/webhooks/{webhookId}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "webhookId",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Webhooks"
+            ],
+            "deprecated": false
+        },
+        "getEmailMessage": {
+            "method": "GET",
+            "path": "/notification-external/messages/email/{messageId}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "messageId",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Email messages"
+            ],
+            "deprecated": false
+        },
+        "getEmailMessages": {
+            "method": "POST",
+            "path": "/notification-external/messages/email/list",
+            "authentication": "oauth2",
+            "parameters": [],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Email messages"
+            ],
+            "deprecated": false
+        },
+        "getInAppMessage": {
+            "method": "POST",
+            "path": "/notification-external/messages/in-app/list",
+            "authentication": "oauth2",
+            "parameters": [],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Messages in-app"
+            ],
+            "deprecated": false
+        },
+        "getInAppUserMessage": {
+            "method": "POST",
+            "path": "/notification-external/messages/user/in-app/list",
+            "authentication": "oauth2",
+            "parameters": [],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Messages in-app"
+            ],
+            "deprecated": false
+        },
+        "getMessages": {
+            "method": "POST",
+            "path": "/notification-external/messages/webhook/list",
+            "authentication": "oauth2",
+            "parameters": [],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Webhook messages"
+            ],
+            "deprecated": false
+        },
+        "getUseAppsQueue": {
+            "method": "GET",
+            "path": "/notification-external/subscriptions/webhook/{webhookId}/apps",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "webhookId",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Subscriptions apps queue webhook"
+            ],
+            "deprecated": false
+        },
+        "markAllMessagesAsRead": {
+            "method": "PUT",
+            "path": "/notification-external/messages/user/in-app/readall",
+            "authentication": "oauth2",
+            "parameters": [],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Messages in-app"
+            ],
+            "deprecated": false
+        },
+        "markMessageAsRead": {
+            "method": "PUT",
+            "path": "/notification-external/messages/user/in-app/{messageId}/read",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "messageId",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Messages in-app"
+            ],
+            "deprecated": false
+        },
+        "markMessageAsUnread": {
+            "method": "PUT",
+            "path": "/notification-external/messages/user/in-app/{messageId}/unread",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "messageId",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Messages in-app"
+            ],
+            "deprecated": false
+        },
+        "pingWebhook": {
+            "method": "POST",
+            "path": "/notification-external/messages/webhook",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "url",
+                    "in": "query",
+                    "required": true,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "secret",
+                    "in": "query",
+                    "required": true,
+                    "style": "form",
+                    "explode": true
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Webhook messages"
+            ],
+            "deprecated": false
+        },
+        "search": {
+            "method": "POST",
+            "path": "/notification-external/webhooks/list",
+            "authentication": "oauth2",
+            "parameters": [],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Webhooks"
+            ],
+            "deprecated": false
+        },
+        "subscribe": {
+            "method": "PUT",
+            "path": "/notification-external/subscriptions/webhook/{webhookId}/events",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "webhookId",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Subscriptions webhook"
+            ],
+            "deprecated": false
+        },
+        "subscribeEmail": {
+            "method": "PUT",
+            "path": "/notification-external/subscriptions/user/email/events",
+            "authentication": "oauth2",
+            "parameters": [],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Subscriptions email"
+            ],
+            "deprecated": false
+        },
+        "subscribeInApp": {
+            "method": "PUT",
+            "path": "/notification-external/subscriptions/user/in-app/events",
+            "authentication": "oauth2",
+            "parameters": [],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Subscriptions in-app"
+            ],
+            "deprecated": false
+        },
+        "subscribeToEntity": {
+            "method": "PUT",
+            "path": "/notification-external/subscriptions/user/watch/event/{eventType}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "eventType",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Subscriptions watch"
+            ],
+            "deprecated": false
+        },
+        "unsubscribe": {
+            "method": "DELETE",
+            "path": "/notification-external/subscriptions/webhook/{webhookId}/events",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "webhookId",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Subscriptions webhook"
+            ],
+            "deprecated": false
+        },
+        "unsubscribeEmail": {
+            "method": "DELETE",
+            "path": "/notification-external/subscriptions/user/email/events",
+            "authentication": "oauth2",
+            "parameters": [],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Subscriptions email"
+            ],
+            "deprecated": false
+        },
+        "unsubscribeFromEntity": {
+            "method": "DELETE",
+            "path": "/notification-external/subscriptions/user/watch/event/{eventType}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "eventType",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Subscriptions watch"
+            ],
+            "deprecated": false
+        },
+        "unsubscribeInApp": {
+            "method": "DELETE",
+            "path": "/notification-external/subscriptions/user/in-app/events",
+            "authentication": "oauth2",
+            "parameters": [],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Subscriptions in-app"
+            ],
+            "deprecated": false
+        },
+        "update": {
+            "method": "PUT",
+            "path": "/notification-external/webhooks/{webhookId}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "webhookId",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Webhooks"
+            ],
+            "deprecated": false
+        },
+        "updateAppsQueue": {
+            "method": "PUT",
+            "path": "/notification-external/subscriptions/webhook/{webhookId}/apps",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "webhookId",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Subscriptions apps queue webhook"
+            ],
+            "deprecated": false
+        },
+        "updateEmailFrequency": {
+            "method": "PUT",
+            "path": "/notification-external/subscriptions/user/email/aggregation/entity/{entityType}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "entityType",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Subscriptions email"
+            ],
+            "deprecated": false
+        },
+        "upsert": {
+            "method": "PATCH",
+            "path": "/notification-external/subscriptions/user",
+            "authentication": "oauth2",
+            "parameters": [],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "User configuration"
+            ],
+            "deprecated": false
+        }
+    }
+}

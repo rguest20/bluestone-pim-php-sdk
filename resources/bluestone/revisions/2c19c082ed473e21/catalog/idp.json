@@ -1,0 +1,1469 @@
+{
+    "schema_version": 1,
+    "component": "idp",
+    "title": "IDP",
+    "specification_version": "1-core",
+    "source_url": "https://docs.api.bluestonepim.com/openapi/idp.json",
+    "source_sha256": "8623b55cb5ffb178e95d904a2eb7662c1369d2eadc76587f41cc73a878d0e472",
+    "operations": {
+        "AcceptAgreement": {
+            "method": "POST",
+            "path": "/idp/consent/{agreementId}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "agreementId",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Consents"
+            ],
+            "deprecated": false
+        },
+        "AddManagedRoleToUserGroup": {
+            "method": "PUT",
+            "path": "/idp/userGroups/{id}/managedRoles/assign",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "UserGroups"
+            ],
+            "deprecated": false
+        },
+        "AddRoleToUserGroup": {
+            "method": "PUT",
+            "path": "/idp/userGroups/{id}/roles/assign",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "UserGroups"
+            ],
+            "deprecated": false
+        },
+        "ArchivePolicyWithId": {
+            "method": "DELETE",
+            "path": "/idp/policies/{id}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Policies"
+            ],
+            "deprecated": false
+        },
+        "ArchiveRoleWithId": {
+            "method": "DELETE",
+            "path": "/idp/roles/{id}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Roles"
+            ],
+            "deprecated": false
+        },
+        "AssignPluginPermissions": {
+            "method": "POST",
+            "path": "/idp/roles/{id}/plugin/{pluginId}/assign",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "pluginId",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Roles"
+            ],
+            "deprecated": false
+        },
+        "AssignPolicyToUserGroup": {
+            "method": "PUT",
+            "path": "/idp/userGroups/{id}/policies/assign",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "UserGroups"
+            ],
+            "deprecated": false
+        },
+        "AssignPropertiesToUser": {
+            "method": "PUT",
+            "path": "/idp/users/{id}/additionalProperties/grant",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Users"
+            ],
+            "deprecated": false
+        },
+        "AssignRolePermissionsWithId": {
+            "method": "POST",
+            "path": "/idp/roles/{id}/permissions/assign",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Roles"
+            ],
+            "deprecated": false
+        },
+        "AssignUserGroupToUser": {
+            "method": "PUT",
+            "path": "/idp/users/{id}/userGroups/{userGroupId}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "userGroupId",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Users"
+            ],
+            "deprecated": false
+        },
+        "ChangeUserPassword": {
+            "method": "PUT",
+            "path": "/idp/users/{id}/changePassword",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Users"
+            ],
+            "deprecated": false
+        },
+        "ClearDefaultRole": {
+            "method": "DELETE",
+            "path": "/idp/clearDefaultRole",
+            "authentication": "oauth2",
+            "parameters": [],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Roles"
+            ],
+            "deprecated": false
+        },
+        "CreatePolicy": {
+            "method": "POST",
+            "path": "/idp/policies",
+            "authentication": "oauth2",
+            "parameters": [],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Policies"
+            ],
+            "deprecated": false
+        },
+        "CreateRole": {
+            "method": "POST",
+            "path": "/idp/roles",
+            "authentication": "oauth2",
+            "parameters": [],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Roles"
+            ],
+            "deprecated": false
+        },
+        "CreateUser": {
+            "method": "POST",
+            "path": "/idp/users",
+            "authentication": "oauth2",
+            "parameters": [],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Users"
+            ],
+            "deprecated": false
+        },
+        "CreateUserGroup": {
+            "method": "POST",
+            "path": "/idp/userGroups",
+            "authentication": "oauth2",
+            "parameters": [],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "UserGroups"
+            ],
+            "deprecated": false
+        },
+        "DeleteUserGroup": {
+            "method": "DELETE",
+            "path": "/idp/userGroups/{id}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "UserGroups"
+            ],
+            "deprecated": false
+        },
+        "DuplicateUserGroup": {
+            "method": "POST",
+            "path": "/idp/userGroups/{id}/duplicate",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "UserGroups"
+            ],
+            "deprecated": false
+        },
+        "GetAdditionalConsentProperties": {
+            "method": "GET",
+            "path": "/idp/consent",
+            "authentication": "oauth2",
+            "parameters": [],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Consents"
+            ],
+            "deprecated": false
+        },
+        "GetAdditionalUserProperties": {
+            "method": "GET",
+            "path": "/idp/additionalUserProperties",
+            "authentication": "oauth2",
+            "parameters": [],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Additional user properties"
+            ],
+            "deprecated": false
+        },
+        "GetAllAPIClients": {
+            "method": "GET",
+            "path": "/idp/clients",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "page",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "pageSize",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "API Clients"
+            ],
+            "deprecated": false
+        },
+        "GetAllAPIClientsName": {
+            "method": "GET",
+            "path": "/idp/clients/name",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "page",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "pageSize",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "API Clients"
+            ],
+            "deprecated": false
+        },
+        "GetAllManagedRoles": {
+            "method": "GET",
+            "path": "/idp/managedRoles",
+            "authentication": "oauth2",
+            "parameters": [],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Managed roles"
+            ],
+            "deprecated": false
+        },
+        "GetAllPermissions": {
+            "method": "GET",
+            "path": "/idp/permissions",
+            "authentication": "oauth2",
+            "parameters": [],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Permissions"
+            ],
+            "deprecated": false
+        },
+        "GetAllPluginPermissions": {
+            "method": "GET",
+            "path": "/idp/plugins",
+            "authentication": "oauth2",
+            "parameters": [],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Plugins"
+            ],
+            "deprecated": false
+        },
+        "GetAllPolicies": {
+            "method": "GET",
+            "path": "/idp/policies",
+            "authentication": "oauth2",
+            "parameters": [],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Policies"
+            ],
+            "deprecated": false
+        },
+        "GetAllRoles": {
+            "method": "GET",
+            "path": "/idp/roles",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "page",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "pageSize",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Roles"
+            ],
+            "deprecated": false
+        },
+        "GetAllServicesIds": {
+            "method": "POST",
+            "path": "/idp/services/by-ids",
+            "authentication": "oauth2",
+            "parameters": [],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Services"
+            ],
+            "deprecated": false
+        },
+        "GetDefaultRole": {
+            "method": "GET",
+            "path": "/idp/getDefaultRole",
+            "authentication": "oauth2",
+            "parameters": [],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Roles"
+            ],
+            "deprecated": false
+        },
+        "GetDependentPermissionsForAllPermissions": {
+            "method": "GET",
+            "path": "/idp/dependentPermissions",
+            "authentication": "oauth2",
+            "parameters": [],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Dependent permissions"
+            ],
+            "deprecated": false
+        },
+        "GetLatestAgreement": {
+            "method": "GET",
+            "path": "/idp/latestAgreement",
+            "authentication": "oauth2",
+            "parameters": [],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Consents"
+            ],
+            "deprecated": false
+        },
+        "GetManagedRoleWithId": {
+            "method": "GET",
+            "path": "/idp/managedRoles/{id}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Managed roles"
+            ],
+            "deprecated": false
+        },
+        "GetOrganizationWithId": {
+            "method": "GET",
+            "path": "/idp/organizations/{id}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Organizations"
+            ],
+            "deprecated": false
+        },
+        "GetPermissionWithId": {
+            "method": "GET",
+            "path": "/idp/permissions/{id}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Permissions"
+            ],
+            "deprecated": false
+        },
+        "GetPluginPermissionWithId": {
+            "method": "GET",
+            "path": "/idp/plugins/{id}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Plugins"
+            ],
+            "deprecated": false
+        },
+        "GetPluginPermissions": {
+            "method": "GET",
+            "path": "/idp/roles/{id}/plugin/{pluginId}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "pluginId",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Roles"
+            ],
+            "deprecated": false
+        },
+        "GetPolicyWithId": {
+            "method": "GET",
+            "path": "/idp/policies/{id}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Policies"
+            ],
+            "deprecated": false
+        },
+        "GetRoleWithId": {
+            "method": "GET",
+            "path": "/idp/roles/{id}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Roles"
+            ],
+            "deprecated": false
+        },
+        "GetSSOProviders": {
+            "method": "GET",
+            "path": "/idp/sso-providers",
+            "authentication": "oauth2",
+            "parameters": [],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "SSO Providers"
+            ],
+            "deprecated": false
+        },
+        "GetUserGroupWithId": {
+            "method": "GET",
+            "path": "/idp/userGroups/{id}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "UserGroups"
+            ],
+            "deprecated": false
+        },
+        "GetUserGroupsCount": {
+            "method": "GET",
+            "path": "/idp/userGroups/count",
+            "authentication": "oauth2",
+            "parameters": [],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "UserGroups"
+            ],
+            "deprecated": false
+        },
+        "GetUserGroupsList": {
+            "method": "GET",
+            "path": "/idp/userGroups/list",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "page",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "pageSize",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "UserGroups"
+            ],
+            "deprecated": false
+        },
+        "GetUserOrganizations": {
+            "method": "GET",
+            "path": "/idp/organizations",
+            "authentication": "oauth2",
+            "parameters": [],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Organizations"
+            ],
+            "deprecated": false
+        },
+        "GetUserUIPermissions": {
+            "method": "GET",
+            "path": "/idp/me/ui-permissions",
+            "authentication": "oauth2",
+            "parameters": [],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Me"
+            ],
+            "deprecated": false
+        },
+        "GetUserWithId": {
+            "method": "GET",
+            "path": "/idp/users/{id}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Users"
+            ],
+            "deprecated": false
+        },
+        "GetUsers": {
+            "method": "GET",
+            "path": "/idp/users",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "fetchInactive",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "page",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "pageSize",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Users"
+            ],
+            "deprecated": false
+        },
+        "GrantManagedRole": {
+            "method": "PUT",
+            "path": "/idp/users/{id}/managedRoles/{roleId}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "roleId",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Users"
+            ],
+            "deprecated": false
+        },
+        "GrantPolicy": {
+            "method": "PUT",
+            "path": "/idp/users/{id}/policies/{policyId}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "policyId",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Users"
+            ],
+            "deprecated": false
+        },
+        "GrantRole": {
+            "method": "PUT",
+            "path": "/idp/users/{id}/roles/{roleName}/grant",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "roleName",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Users"
+            ],
+            "deprecated": false
+        },
+        "RemoveManagedRoleFromUserGroup": {
+            "method": "PUT",
+            "path": "/idp/userGroups/{id}/managedRoles/unassign",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "UserGroups"
+            ],
+            "deprecated": false
+        },
+        "RemovePropertiesFromUser": {
+            "method": "PUT",
+            "path": "/idp/users/{id}/additionalProperties/revoke",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Users"
+            ],
+            "deprecated": false
+        },
+        "RemoveRoleFromUserGroup": {
+            "method": "PUT",
+            "path": "/idp/userGroups/{id}/roles/unassign",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "UserGroups"
+            ],
+            "deprecated": false
+        },
+        "ResendJoinEmail": {
+            "method": "PUT",
+            "path": "/idp/users/{id}/resendJoinEmail",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Users"
+            ],
+            "deprecated": false
+        },
+        "ResetMFA": {
+            "method": "PUT",
+            "path": "/idp/me/resetMfa",
+            "authentication": "oauth2",
+            "parameters": [],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Me"
+            ],
+            "deprecated": false
+        },
+        "ResetMfaForUser": {
+            "method": "PUT",
+            "path": "/idp/users/{id}/resetMfa",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Users"
+            ],
+            "deprecated": false
+        },
+        "RevokeManagedRole": {
+            "method": "DELETE",
+            "path": "/idp/users/{id}/managedRoles/{roleId}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "roleId",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Users"
+            ],
+            "deprecated": false
+        },
+        "RevokePluginPermissions": {
+            "method": "POST",
+            "path": "/idp/roles/{id}/plugin/{pluginId}/revoke",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "pluginId",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Roles"
+            ],
+            "deprecated": false
+        },
+        "RevokePolicy": {
+            "method": "DELETE",
+            "path": "/idp/users/{id}/policies/{policyId}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "policyId",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Users"
+            ],
+            "deprecated": false
+        },
+        "RevokeRole": {
+            "method": "PUT",
+            "path": "/idp/users/{id}/roles/{roleName}/revoke",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "roleName",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Users"
+            ],
+            "deprecated": false
+        },
+        "RevokeRolePermissionsWithId": {
+            "method": "POST",
+            "path": "/idp/roles/{id}/permissions/revoke",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Roles"
+            ],
+            "deprecated": false
+        },
+        "SetDefaultRole": {
+            "method": "POST",
+            "path": "/idp/setDefaultRole",
+            "authentication": "oauth2",
+            "parameters": [],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Roles"
+            ],
+            "deprecated": false
+        },
+        "SetUserStatus": {
+            "method": "PUT",
+            "path": "/idp/users/{id}/setUserStatus",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Users"
+            ],
+            "deprecated": false
+        },
+        "UnassignPolicyFromUserGroup": {
+            "method": "PUT",
+            "path": "/idp/userGroups/{id}/policies/unassign",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "UserGroups"
+            ],
+            "deprecated": false
+        },
+        "UnassignUserGroupFromUser": {
+            "method": "DELETE",
+            "path": "/idp/users/{id}/userGroups/{userGroupId}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "userGroupId",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Users"
+            ],
+            "deprecated": false
+        },
+        "UpdatePluginPermissions": {
+            "method": "PUT",
+            "path": "/idp/roles/{id}/plugin/{pluginId}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "pluginId",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Roles"
+            ],
+            "deprecated": false
+        },
+        "UpdatePolicyWithId": {
+            "method": "PUT",
+            "path": "/idp/policies/{id}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Policies"
+            ],
+            "deprecated": false
+        },
+        "UpdateRoleWithId": {
+            "method": "PUT",
+            "path": "/idp/roles/{id}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Roles"
+            ],
+            "deprecated": false
+        },
+        "UpdateSSOProviderSecret": {
+            "method": "POST",
+            "path": "/idp/sso-providers/{clientId}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "clientId",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "SSO Providers"
+            ],
+            "deprecated": false
+        },
+        "UpdateUser": {
+            "method": "PUT",
+            "path": "/idp/users/{id}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Users"
+            ],
+            "deprecated": false
+        },
+        "UpdateUserGroup": {
+            "method": "PATCH",
+            "path": "/idp/userGroups/{id}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "UserGroups"
+            ],
+            "deprecated": false
+        },
+        "UpdateUserType": {
+            "method": "PUT",
+            "path": "/idp/users/{id}/userType/{type}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "type",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Users"
+            ],
+            "deprecated": false
+        },
+        "UploadUserPicture": {
+            "method": "PUT",
+            "path": "/idp/users/{id}/picture",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": true,
+            "content_types": [
+                "multipart/form-data"
+            ],
+            "tags": [
+                "Users"
+            ],
+            "deprecated": false
+        }
+    }
+}

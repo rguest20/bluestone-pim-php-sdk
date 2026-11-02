@@ -1,0 +1,185 @@
+{
+    "schema_version": 1,
+    "component": "labels",
+    "title": "Labels",
+    "specification_version": "1-core",
+    "source_url": "https://docs.api.bluestonepim.com/openapi/labels.json",
+    "source_sha256": "0ec4854f554655b1e46dd04012c6cbf5b211fb7b3490e631064d1f91b91b9724",
+    "operations": {
+        "create": {
+            "method": "POST",
+            "path": "/labels/labels",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "context",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Labels"
+            ],
+            "deprecated": false
+        },
+        "delete": {
+            "method": "DELETE",
+            "path": "/labels/labels/{id}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Labels"
+            ],
+            "deprecated": false
+        },
+        "find": {
+            "method": "GET",
+            "path": "/labels/labels/{id}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "context",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "context-fallback",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Labels"
+            ],
+            "deprecated": false
+        },
+        "findByIds": {
+            "method": "POST",
+            "path": "/labels/labels/by-ids",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "context",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "context-fallback",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Labels"
+            ],
+            "deprecated": false
+        },
+        "list": {
+            "method": "GET",
+            "path": "/labels/labels",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "page",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "pageSize",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "context",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "context-fallback",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Labels"
+            ],
+            "deprecated": false
+        },
+        "update": {
+            "method": "PUT",
+            "path": "/labels/labels/{id}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "context",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Labels"
+            ],
+            "deprecated": false
+        }
+    }
+}

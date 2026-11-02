@@ -1,0 +1,688 @@
+{
+    "schema_version": 1,
+    "component": "tasks",
+    "title": "Tasks",
+    "specification_version": "1-core",
+    "source_url": "https://docs.api.bluestonepim.com/openapi/tasks.json",
+    "source_sha256": "970d3e28f79dd721f96da658dcef9748d8f4e6e0ce725e4859be4218657207a8",
+    "operations": {
+        "addTaskComment": {
+            "method": "POST",
+            "path": "/tasks/comments/{taskId}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "taskId",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Task comments"
+            ],
+            "deprecated": false
+        },
+        "addTaskCommentReply": {
+            "method": "POST",
+            "path": "/tasks/comments/{taskId}/{commentId}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "taskId",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "commentId",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Task comments"
+            ],
+            "deprecated": false
+        },
+        "assignProducts": {
+            "method": "POST",
+            "path": "/tasks/tasks/{taskId}/products",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "taskId",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Tasks"
+            ],
+            "deprecated": false
+        },
+        "assignTask": {
+            "method": "PUT",
+            "path": "/tasks/tasks/{taskId}/assign",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "taskId",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Tasks"
+            ],
+            "deprecated": false
+        },
+        "completeTaskProduct": {
+            "method": "PUT",
+            "path": "/tasks/tasks/{taskId}/products/{productId}/complete",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "taskId",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "productId",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Tasks"
+            ],
+            "deprecated": false
+        },
+        "completeUserTask": {
+            "method": "PUT",
+            "path": "/tasks/userTasks/{taskId}/complete",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "taskId",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "User tasks"
+            ],
+            "deprecated": false
+        },
+        "createTask": {
+            "method": "POST",
+            "path": "/tasks/tasks",
+            "authentication": "oauth2",
+            "parameters": [],
+            "body_required": false,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Tasks"
+            ],
+            "deprecated": false
+        },
+        "createTasksReminderConfig": {
+            "method": "POST",
+            "path": "/tasks/tasks/reminders/task/{taskId}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "taskId",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Tasks reminders"
+            ],
+            "deprecated": false
+        },
+        "deleteReminderConfig": {
+            "method": "DELETE",
+            "path": "/tasks/tasks/reminders/{reminderId}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "reminderId",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Tasks reminders"
+            ],
+            "deprecated": false
+        },
+        "deleteTaskProduct": {
+            "method": "DELETE",
+            "path": "/tasks/tasks/{taskId}/products/{productId}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "taskId",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "productId",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Tasks"
+            ],
+            "deprecated": false
+        },
+        "fetchTasks": {
+            "method": "GET",
+            "path": "/tasks/tasks/users/{userId}/{taskType}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "page",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "pageSize",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "userId",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "taskType",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Tasks"
+            ],
+            "deprecated": false
+        },
+        "fetchTasksForUserGroup": {
+            "method": "GET",
+            "path": "/tasks/tasks/userGroups/{userGroupId}/{taskType}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "page",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "pageSize",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "userGroupId",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "taskType",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Tasks"
+            ],
+            "deprecated": false
+        },
+        "getAllUserTasks": {
+            "method": "GET",
+            "path": "/tasks/userTasks",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "page",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "pageSize",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "User tasks"
+            ],
+            "deprecated": false
+        },
+        "getAssignedUserTasks": {
+            "method": "GET",
+            "path": "/tasks/userTasks/assigned",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "page",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "pageSize",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "User tasks"
+            ],
+            "deprecated": false
+        },
+        "getReminderConfig": {
+            "method": "GET",
+            "path": "/tasks/tasks/reminders/task/{taskId}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "taskId",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Tasks reminders"
+            ],
+            "deprecated": false
+        },
+        "getSingleTask": {
+            "method": "GET",
+            "path": "/tasks/tasks/{taskId}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "taskId",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Tasks"
+            ],
+            "deprecated": false
+        },
+        "getUserTask": {
+            "method": "GET",
+            "path": "/tasks/userTasks/{taskId}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "taskId",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "User tasks"
+            ],
+            "deprecated": false
+        },
+        "listAllTaskComments": {
+            "method": "GET",
+            "path": "/tasks/comments/{taskId}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "taskId",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Task comments"
+            ],
+            "deprecated": false
+        },
+        "listArchivedTasksV2": {
+            "method": "GET",
+            "path": "/tasks/tasks/archived",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "page",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "pageSize",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Tasks"
+            ],
+            "deprecated": false
+        },
+        "listFolders": {
+            "method": "GET",
+            "path": "/tasks/tasks/folders",
+            "authentication": "oauth2",
+            "parameters": [],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Tasks"
+            ],
+            "deprecated": false
+        },
+        "listTasks": {
+            "method": "GET",
+            "path": "/tasks/tasks",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "productId",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "context",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "sortField",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "sortDirection",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "page",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                },
+                {
+                    "name": "pageSize",
+                    "in": "query",
+                    "required": false,
+                    "style": "form",
+                    "explode": true
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Tasks"
+            ],
+            "deprecated": false
+        },
+        "presentVersion": {
+            "method": "GET",
+            "path": "/tasks/technical/version",
+            "authentication": "oauth2",
+            "parameters": [],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Technical"
+            ],
+            "deprecated": false
+        },
+        "revokeTaskProduct": {
+            "method": "PUT",
+            "path": "/tasks/tasks/{taskId}/products/{productId}/revoke",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "taskId",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "productId",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Tasks"
+            ],
+            "deprecated": false
+        },
+        "setImportantUserTask": {
+            "method": "PUT",
+            "path": "/tasks/userTasks/{taskId}/important",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "taskId",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "User tasks"
+            ],
+            "deprecated": false
+        },
+        "setUnimportantUserTask": {
+            "method": "PUT",
+            "path": "/tasks/userTasks/{taskId}/unimportant",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "taskId",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "User tasks"
+            ],
+            "deprecated": false
+        },
+        "uncompleteUserTask": {
+            "method": "PUT",
+            "path": "/tasks/userTasks/{taskId}/revoke",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "taskId",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "User tasks"
+            ],
+            "deprecated": false
+        },
+        "updateReminderConfig": {
+            "method": "PUT",
+            "path": "/tasks/tasks/reminders/{reminderId}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "reminderId",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Tasks reminders"
+            ],
+            "deprecated": false
+        },
+        "updateTask": {
+            "method": "PUT",
+            "path": "/tasks/tasks/{taskId}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "taskId",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": false,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Tasks"
+            ],
+            "deprecated": false
+        }
+    }
+}

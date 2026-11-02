@@ -1,0 +1,118 @@
+{
+    "schema_version": 1,
+    "revision": "2c19c082ed473e21",
+    "components": {
+        "pim": {
+            "source_url": "https://docs.api.bluestonepim.com/openapi/pim.json",
+            "openapi_file": "pim.json",
+            "openapi_sha256": "16a144e96ff14532e0896f1bb5f83bf0937bbc18feb0b7bdc91a9e9f421cfdaa",
+            "specification_version": "1-core",
+            "operation_count": 224
+        },
+        "media-bank": {
+            "source_url": "https://docs.api.bluestonepim.com/openapi/media-bank.json",
+            "openapi_file": "media-bank.json",
+            "openapi_sha256": "a8f6a952383a5ba1407fae2fff6a549832773506098d5f16b5cff802b3932269",
+            "specification_version": "1-core",
+            "operation_count": 58
+        },
+        "search": {
+            "source_url": "https://docs.api.bluestonepim.com/openapi/search.json",
+            "openapi_file": "search.json",
+            "openapi_sha256": "2362edaccca3b85e18e11963ad8b830a50dcc572e7e0313f46fcd3b3cb4e5f36",
+            "specification_version": "1-core",
+            "operation_count": 8
+        },
+        "labels": {
+            "source_url": "https://docs.api.bluestonepim.com/openapi/labels.json",
+            "openapi_file": "labels.json",
+            "openapi_sha256": "0ec4854f554655b1e46dd04012c6cbf5b211fb7b3490e631064d1f91b91b9724",
+            "specification_version": "1-core",
+            "operation_count": 6
+        },
+        "global-settings": {
+            "source_url": "https://docs.api.bluestonepim.com/openapi/global-settings.json",
+            "openapi_file": "global-settings.json",
+            "openapi_sha256": "81e240cf49a1847308143fc0c220ff863fdddc369b4dc77276d7b1870c04bfc1",
+            "specification_version": "1-core",
+            "operation_count": 17
+        },
+        "history": {
+            "source_url": "https://docs.api.bluestonepim.com/openapi/history.json",
+            "openapi_file": "history.json",
+            "openapi_sha256": "b08c510446d8d74923691cb71b17483c2e41bcc904b8199459293693a882ec26",
+            "specification_version": "1-core",
+            "operation_count": 7
+        },
+        "tasks": {
+            "source_url": "https://docs.api.bluestonepim.com/openapi/tasks.json",
+            "openapi_file": "tasks.json",
+            "openapi_sha256": "970d3e28f79dd721f96da658dcef9748d8f4e6e0ce725e4859be4218657207a8",
+            "specification_version": "1-core",
+            "operation_count": 28
+        },
+        "query-builder": {
+            "source_url": "https://docs.api.bluestonepim.com/openapi/query-builder.json",
+            "openapi_file": "query-builder.json",
+            "openapi_sha256": "641242e9596d85b4f25ba7ca684c5efc1f36d0cdc51ce469816cba08da00d361",
+            "specification_version": "1-core",
+            "operation_count": 10
+        },
+        "public-api-sync": {
+            "source_url": "https://docs.api.bluestonepim.com/openapi/public-api-sync.json",
+            "openapi_file": "public-api-sync.json",
+            "openapi_sha256": "fcbabc1a160ab89ce35d0682e9e83077654d69f9dc8c4bf2f4f7471ea07e535f",
+            "specification_version": "1-core",
+            "operation_count": 20
+        },
+        "public-api": {
+            "source_url": "https://docs.api.bluestonepim.com/openapi/page.json",
+            "openapi_file": "page.json",
+            "openapi_sha256": "44b71b4e22c3a3a7971eafd960fd811358c569295e37a5b809b62a0be28313fa",
+            "specification_version": "1-core",
+            "operation_count": 27
+        },
+        "idp": {
+            "source_url": "https://docs.api.bluestonepim.com/openapi/idp.json",
+            "openapi_file": "idp.json",
+            "openapi_sha256": "8623b55cb5ffb178e95d904a2eb7662c1369d2eadc76587f41cc73a878d0e472",
+            "specification_version": "1-core",
+            "operation_count": 72
+        },
+        "external-notifications": {
+            "source_url": "https://docs.api.bluestonepim.com/openapi/external-notifications.json",
+            "openapi_file": "external-notifications.json",
+            "openapi_sha256": "bf10b0946719903ee6a7448d181fb6d9493a51cf14b1e3213e6520a60fa09b59",
+            "specification_version": "1-core",
+            "operation_count": 32
+        },
+        "completeness-score": {
+            "source_url": "https://docs.api.bluestonepim.com/openapi/completeness-score.json",
+            "openapi_file": "completeness-score.json",
+            "openapi_sha256": "65e2c5cd0b2f70817e0e5c792596862057a68e60e3fa71054d32e00ed5d7b05b",
+            "specification_version": "1-core",
+            "operation_count": 24
+        },
+        "metadata": {
+            "source_url": "https://docs.api.bluestonepim.com/openapi/metadata.json",
+            "openapi_file": "metadata.json",
+            "openapi_sha256": "bed114a345aa17a11b4079b78cd504902322f9bbd04011538c28a312c5b8f82f",
+            "specification_version": "1-core",
+            "operation_count": 7
+        },
+        "ui-settings": {
+            "source_url": "https://docs.api.bluestonepim.com/openapi/ui-settings.json",
+            "openapi_file": "ui-settings.json",
+            "openapi_sha256": "a1455a2a4527d26754f2b9ecaec1ddbc5284a77fcce8461dd31d9445561a42f3",
+            "specification_version": "1-core",
+            "operation_count": 5
+        },
+        "bulk-operations": {
+            "source_url": "https://docs.api.bluestonepim.com/openapi/bulk-operations.json",
+            "openapi_file": "bulk-operations.json",
+            "openapi_sha256": "4ae1cca7a033c7382ac2c076e6a80595b066ada0f0c84ced077aac4920020959",
+            "specification_version": "1-core",
+            "operation_count": 2
+        }
+    }
+}

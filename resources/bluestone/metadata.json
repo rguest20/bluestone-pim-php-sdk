@@ -1,0 +1,153 @@
+{
+    "schema_version": 1,
+    "component": "metadata",
+    "title": "Metadata",
+    "specification_version": "1-core",
+    "source_url": "https://docs.api.bluestonepim.com/openapi/metadata.json",
+    "source_sha256": "bed114a345aa17a11b4079b78cd504902322f9bbd04011538c28a312c5b8f82f",
+    "operations": {
+        "deleteMetadata": {
+            "method": "DELETE",
+            "path": "/metadata/metadata/{providerId}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "providerId",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Metadata"
+            ],
+            "deprecated": false
+        },
+        "deleteProviderMetadataByIds": {
+            "method": "DELETE",
+            "path": "/metadata/metadata/{providerId}/by-ids",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "providerId",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Metadata"
+            ],
+            "deprecated": false
+        },
+        "findProviderMetadataWithCursorAndViewsByProviderId": {
+            "method": "POST",
+            "path": "/metadata/metadata/{providerId}/cursor/views/all",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "providerId",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Metadata"
+            ],
+            "deprecated": false
+        },
+        "getMetadataForEntities": {
+            "method": "POST",
+            "path": "/metadata/metadata/{providerId}/by-entities",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "providerId",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                },
+                {
+                    "name": "context-fallback",
+                    "in": "header",
+                    "required": false,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Metadata"
+            ],
+            "deprecated": false
+        },
+        "getRegisteredProviders": {
+            "method": "GET",
+            "path": "/metadata/provider",
+            "authentication": "oauth2",
+            "parameters": [],
+            "body_required": false,
+            "content_types": [],
+            "tags": [
+                "Provider"
+            ],
+            "deprecated": false
+        },
+        "listProviders": {
+            "method": "POST",
+            "path": "/metadata/provider/by-numbers",
+            "authentication": "oauth2",
+            "parameters": [],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Provider"
+            ],
+            "deprecated": false
+        },
+        "upsertMetadata": {
+            "method": "POST",
+            "path": "/metadata/metadata/{providerId}",
+            "authentication": "oauth2",
+            "parameters": [
+                {
+                    "name": "providerId",
+                    "in": "path",
+                    "required": true,
+                    "style": "simple",
+                    "explode": false
+                }
+            ],
+            "body_required": true,
+            "content_types": [
+                "application/json"
+            ],
+            "tags": [
+                "Metadata"
+            ],
+            "deprecated": false
+        }
+    }
+}
