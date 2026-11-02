@@ -15,10 +15,12 @@ if (!is_file($autoload)) {
 }
 require $autoload;
 
-(new Dotenv())->bootEnv($projectDir.'/.env');
+$dotenvPath = $projectDir.'/.env';
+if (is_file($dotenvPath)) {
+    (new Dotenv())->bootEnv($dotenvPath);
+}
 $defaults = [
-    'DATABASE_URL' => 'sqlite:///'.$projectDir.'/var/bluestone-migrations.db',
-    'BLUESTONE_TARGET' => 'local-test',
+    'BLUESTONE_MIGRATIONS_DATABASE_URL' => 'sqlite:///'.$projectDir.'/var/bluestone-migrations.db',
     'BLUESTONE_API_BASE_URL' => 'https://api.test.bluestonepim.com',
     'BLUESTONE_TOKEN_URL' => 'https://idp.test.bluestonepim.com/op/token',
     'BLUESTONE_CLIENT_ID' => '',

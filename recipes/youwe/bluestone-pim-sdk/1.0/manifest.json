@@ -7,8 +7,8 @@
     },
     "env": {
         "#1": "Bluestone PIM migration SDK local defaults. Replace the target and URLs for your tenant/environment.",
-        "DATABASE_URL": "sqlite:///%kernel.project_dir%/var/bluestone-migrations.db",
-        "BLUESTONE_TARGET": "local-test",
+        "BLUESTONE_TARGET": "",
+        "BLUESTONE_MIGRATIONS_DATABASE_URL": "sqlite:///%kernel.project_dir%/var/bluestone-migrations.db",
         "BLUESTONE_API_BASE_URL": "https://api.test.bluestonepim.com",
         "BLUESTONE_TOKEN_URL": "https://idp.test.bluestonepim.com/op/token",
         "BLUESTONE_CLIENT_ID": "",

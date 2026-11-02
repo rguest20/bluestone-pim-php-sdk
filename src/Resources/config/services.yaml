@@ -20,22 +20,23 @@ services:
             - '../../Console/SdkConsoleKernel.php'
             - '../../Api/BluestoneApiException.php'
 
-    Doctrine\DBAL\Connection:
+    youwe_bluestone_pim.migrations_connection:
+        class: Doctrine\DBAL\Connection
         factory: ['Youwe\BluestonePim\Database\ConnectionFactory', 'create']
-        arguments: ['%env(resolve:DATABASE_URL)%']
+        arguments: ['%env(resolve:default:youwe_bluestone_pim.default_migrations_database_url:BLUESTONE_MIGRATIONS_DATABASE_URL)%']
 
     Youwe\BluestonePim\Api\BluestoneClient:
         arguments:
-            $baseUrl: '%env(BLUESTONE_API_BASE_URL)%'
-            $tokenUrl: '%env(BLUESTONE_TOKEN_URL)%'
-            $clientId: '%env(BLUESTONE_CLIENT_ID)%'
-            $clientSecret: '%env(BLUESTONE_CLIENT_SECRET)%'
-            $publicApiKey: '%env(BLUESTONE_PUBLIC_API_KEY)%'
+            $baseUrl: '%env(default:youwe_bluestone_pim.default_api_base_url:BLUESTONE_API_BASE_URL)%'
+            $tokenUrl: '%env(default:youwe_bluestone_pim.default_token_url:BLUESTONE_TOKEN_URL)%'
+            $clientId: '%env(default:youwe_bluestone_pim.empty:BLUESTONE_CLIENT_ID)%'
+            $clientSecret: '%env(default:youwe_bluestone_pim.empty:BLUESTONE_CLIENT_SECRET)%'
+            $publicApiKey: '%env(default:youwe_bluestone_pim.empty:BLUESTONE_PUBLIC_API_KEY)%'
 
     Youwe\BluestonePim\Service\MediaUploadRunner:
         arguments:
-            $transferEncryptionKey: '%env(BLUESTONE_MEDIA_TRANSFER_KEY)%'
-            $allowedTransferHosts: '%env(BLUESTONE_MEDIA_UPLOAD_HOSTS)%'
+            $transferEncryptionKey: '%env(default:youwe_bluestone_pim.empty:BLUESTONE_MEDIA_TRANSFER_KEY)%'
+            $allowedTransferHosts: '%env(default:youwe_bluestone_pim.empty:BLUESTONE_MEDIA_UPLOAD_HOSTS)%'
 
     Youwe\BluestonePim\Api\OperationCatalog:
         arguments:
@@ -57,8 +58,13 @@ services:
 
     Youwe\BluestonePim\Migration\MigrationStorage:
         arguments:
-            $target: '%env(BLUESTONE_TARGET)%'
-            $baseUrl: '%env(BLUESTONE_API_BASE_URL)%'
+            $connection: '@youwe_bluestone_pim.migrations_connection'
+            $target: '%env(default:youwe_bluestone_pim.empty:BLUESTONE_TARGET)%'
+            $baseUrl: '%env(default:youwe_bluestone_pim.default_api_base_url:BLUESTONE_API_BASE_URL)%'
+
+    Youwe\BluestonePim\Migration\MigrationLock:
+        arguments:
+            $connection: '@youwe_bluestone_pim.migrations_connection'
 
     Youwe\BluestonePim\Migration\MigrationRegistry:
         arguments:

@@ -84,7 +84,7 @@ final class MigrationStorage
         $fingerprint = hash('sha256', $this->target.'|'.rtrim($this->baseUrl, '/'));
         $stored = $this->connection->fetchOne('SELECT fingerprint FROM pim_migration_target WHERE id = 1');
         if ($stored !== false && !hash_equals($stored, $fingerprint)) {
-            throw new \RuntimeException('This database tracks a different Bluestone target or API URL. Configure a separate DATABASE_URL for this target.');
+            throw new \RuntimeException('This database tracks a different Bluestone target or API URL. Configure a separate BLUESTONE_MIGRATIONS_DATABASE_URL for this target.');
         }
         if ($stored === false && $bind) {
             $this->connection->insert('pim_migration_target', ['id' => 1, 'fingerprint' => $fingerprint]);
