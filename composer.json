@@ -42,6 +42,7 @@
     },
     "config": {
         "allow-plugins": {
+            "php-http/discovery": true,
             "symfony/runtime": true
         },
         "sort-packages": true,
