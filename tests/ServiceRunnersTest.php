@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests;
 
+use Youwe\BluestonePim\Api\BluestoneApiException;
 use Youwe\BluestonePim\Api\BluestoneClient;
 use Youwe\BluestonePim\Api\Connector\PimConnector;
 use Youwe\BluestonePim\Api\OperationCatalog;
@@ -74,6 +75,29 @@ final class ServiceRunnersTest extends TestCase
         $http = new MockHttpClient([new MockResponse('{"access_token":"test"}'), new MockResponse('{}')]);
         $this->lock->release();
         self::assertSame(200, $this->api($http)->run('GET', '/pim/example')->getStatusCode());
+    }
+
+    public function testRateLimitedRequestsAreRetried(): void
+    {
+        $http = new MockHttpClient([
+            new MockResponse('{"access_token":"test"}'),
+            new MockResponse('', ['http_code' => 429, 'response_headers' => ['Retry-After: 0']]),
+            new MockResponse('{}'),
+        ]);
+        self::assertSame(200, $this->api($http)->run('POST', '/pim/example', ['json' => []])->getStatusCode());
+        self::assertSame(3, $http->getRequestsCount());
+    }
+
+    public function testServerErrorsAreNotRetriedForNonIdempotentMethods(): void
+    {
+        $http = new MockHttpClient([new MockResponse('{"access_token":"test"}'), new MockResponse('', ['http_code' => 503])]);
+        try {
+            $this->api($http)->run('POST', '/pim/example', ['json' => []]);
+            self::fail('A 503 POST must not be retried.');
+        } catch (BluestoneApiException $error) {
+            self::assertSame(503, $error->statusCode);
+            self::assertSame(2, $http->getRequestsCount());
+        }
     }
 
     private function api(MockHttpClient $http): ApiOperationRunner

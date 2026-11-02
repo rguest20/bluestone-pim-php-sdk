@@ -172,7 +172,7 @@ final class TypedApiContractsTest extends TestCase
 
     public function testTypedWritesAreNotRetriedAndCannotOverrideCredentialsOrHost(): void
     {
-        $http = new MockHttpClient([new MockResponse('{"access_token":"oauth"}'), new MockResponse('private-error', ['http_code' => 429])]);
+        $http = new MockHttpClient([new MockResponse('{"access_token":"oauth"}'), new MockResponse('private-error', ['http_code' => 429, 'response_headers' => ['Retry-After: 120']])]);
         try {
             $this->pim($http)->executeTyped('partialUpdateCatalogNode', ['id' => 'one'], ['json' => ['number' => 'N1']]);
             self::fail('The failed write must propagate.');

@@ -54,13 +54,14 @@ final class BluestoneClient
         ]));
 
         $status = $response->getStatusCode();
+        $retryAfter = $response->getHeaders(false)['retry-after'][0] ?? null;
         // Consume the response now: a migration must not be marked applied before I/O finishes.
         $response->getContent(false);
         if ($status < 200 || $status >= 300) {
             if ($status === 401) {
                 $this->accessToken = null;
             }
-            throw new BluestoneApiException('Bluestone API request', $status);
+            throw new BluestoneApiException('Bluestone API request', $status, is_string($retryAfter) ? $retryAfter : null);
         }
 
         return $response;
@@ -82,8 +83,9 @@ final class BluestoneClient
             'max_duration' => 60,
         ]);
         if ($response->getStatusCode() !== 200) {
+            $retryAfter = $response->getHeaders(false)['retry-after'][0] ?? null;
             $response->getContent(false);
-            throw new BluestoneApiException('Bluestone authentication', $response->getStatusCode());
+            throw new BluestoneApiException('Bluestone authentication', $response->getStatusCode(), is_string($retryAfter) ? $retryAfter : null);
         }
         $data = $response->toArray();
         if (!is_string($data['access_token'] ?? null) || $data['access_token'] === '') {
