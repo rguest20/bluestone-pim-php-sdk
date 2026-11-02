@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Api;
+namespace Youwe\BluestonePim\Api;
 
 /** Discovers operations whose specs suggest acceptance, task polling or asynchronous completion. */
 final class AsyncOperationInventory

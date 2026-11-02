@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace App\Service;
+namespace Youwe\BluestonePim\Service;
 
-use App\Api\BluestoneClient;
-use App\Api\ApiAuthentication;
-use App\Migration\MigrationLock;
-use App\Api\ApiRevisionContext;
-use App\Migration\MigrationStorage;
+use Youwe\BluestonePim\Api\BluestoneClient;
+use Youwe\BluestonePim\Api\ApiAuthentication;
+use Youwe\BluestonePim\Migration\MigrationLock;
+use Youwe\BluestonePim\Api\ApiRevisionContext;
+use Youwe\BluestonePim\Migration\MigrationStorage;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
 /** Shared runner for any documented Management API operation. */

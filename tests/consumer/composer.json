@@ -1,0 +1,21 @@
+{
+    "name": "youwe/bluestone-sdk-consumer-check",
+    "type": "project",
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../../build/sdk/package",
+            "options": { "symlink": true, "reference": "config" }
+        }
+    ],
+    "require": {
+        "php": ">=8.2",
+        "youwe/bluestone-pim-sdk": "@dev"
+    },
+    "autoload": {
+        "psr-4": { "App\\": "src/" }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "config": { "sort-packages": true }
+}

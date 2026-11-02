@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests;
 
-use App\Api\LiveFixtureSelection;
+use Youwe\BluestonePim\Api\LiveFixtureSelection;
 use PHPUnit\Framework\TestCase;
 
 final class LiveFixturePolicyTest extends TestCase

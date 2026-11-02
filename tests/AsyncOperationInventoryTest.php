@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests;
 
-use App\Api\AsyncOperationInventory;
-use App\Api\OperationCatalog;
+use Youwe\BluestonePim\Api\AsyncOperationInventory;
+use Youwe\BluestonePim\Api\OperationCatalog;
 use PHPUnit\Framework\TestCase;
 
 final class AsyncOperationInventoryTest extends TestCase

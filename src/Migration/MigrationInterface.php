@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Migration;
+namespace Youwe\BluestonePim\Migration;
 
 /** Implementations in migrations/ are autowired Symfony services. */
 interface MigrationInterface

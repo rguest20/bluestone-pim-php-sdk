@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Service;
+namespace Youwe\BluestonePim\Service;
 
-use App\Api\Connector\PimConnector;
-use App\Migration\MigrationContext;
+use Youwe\BluestonePim\Api\Connector\PimConnector;
+use Youwe\BluestonePim\Migration\MigrationContext;
 
 /** Creates uniquely numbered attribute definitions and saves their returned resource IDs. */
 final readonly class AttributeDefinitionMutationRunner

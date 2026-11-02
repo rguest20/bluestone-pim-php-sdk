@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Api;
+namespace Youwe\BluestonePim\Api;
 
 /** Per-migration API specification snapshot selected by the migration ledger. */
 final class ApiRevisionContext

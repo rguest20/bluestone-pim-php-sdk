@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Api;
+namespace Youwe\BluestonePim\Api;
 
 /** Builds an explicit, no-network live-test scope from the reviewed fixture policy. */
 final readonly class LiveFixtureSelection

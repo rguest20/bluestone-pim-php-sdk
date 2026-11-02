@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Tests;
 
-use App\Api\BluestoneClient;
-use App\Api\Connector\PimConnector;
-use App\Api\OperationCatalog;
-use App\Database\ConnectionFactory;
-use App\Migration\MigrationLock;
-use App\Service\ApiOperationRunner;
-use App\Service\CatalogRunner;
-use App\Service\PimJobRunner;
+use Youwe\BluestonePim\Api\BluestoneClient;
+use Youwe\BluestonePim\Api\Connector\PimConnector;
+use Youwe\BluestonePim\Api\OperationCatalog;
+use Youwe\BluestonePim\Database\ConnectionFactory;
+use Youwe\BluestonePim\Migration\MigrationLock;
+use Youwe\BluestonePim\Service\ApiOperationRunner;
+use Youwe\BluestonePim\Service\CatalogRunner;
+use Youwe\BluestonePim\Service\PimJobRunner;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\MockResponse;

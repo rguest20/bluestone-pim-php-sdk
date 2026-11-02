@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Service;
+namespace Youwe\BluestonePim\Service;
 
-use App\Api\Connector\PimConnector;
-use App\Migration\MigrationContext;
+use Youwe\BluestonePim\Api\Connector\PimConnector;
+use Youwe\BluestonePim\Migration\MigrationContext;
 
 /** Checkpointed typed product mutations with durable IDs and conservative lost-response recovery. */
 final readonly class ProductMutationRunner

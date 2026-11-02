@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Tests;
 
-use App\Database\ConnectionFactory;
-use App\Migration\MigrationLock;
-use App\Migration\MigrationRegistry;
-use App\Migration\MigrationStorage;
-use App\Service\MigrationRunner;
+use Youwe\BluestonePim\Database\ConnectionFactory;
+use Youwe\BluestonePim\Migration\MigrationLock;
+use Youwe\BluestonePim\Migration\MigrationRegistry;
+use Youwe\BluestonePim\Migration\MigrationStorage;
+use Youwe\BluestonePim\Service\MigrationRunner;
 use App\Tests\Fixtures\Version20260101000001;
 use App\Tests\Fixtures\Version20260101000002;
 use Doctrine\DBAL\Connection;

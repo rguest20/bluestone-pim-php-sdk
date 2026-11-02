@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Api;
+namespace Youwe\BluestonePim\Api;
 
 /** Selects a snapshot only after all matching generated contracts are ready. */
 final readonly class RevisionActivation

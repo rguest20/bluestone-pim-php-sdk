@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Api;
+namespace Youwe\BluestonePim\Api;
 
-use App\Api\Connector\AbstractConnector;
+use Youwe\BluestonePim\Api\Connector\AbstractConnector;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
 /** Base class for revision-specific operation facades generated from OpenAPI documents. */

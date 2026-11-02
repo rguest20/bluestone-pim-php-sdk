@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Api;
+namespace Youwe\BluestonePim\Api;
 
 /** Extracts routing contracts from Bluestone's OpenAPI files without embedding production hosts. */
 final class SpecificationCompiler

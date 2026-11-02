@@ -3,8 +3,8 @@
 
 declare(strict_types=1);
 
-use App\Api\OperationCatalog;
-use App\Api\SpecificationCompiler;
+use Youwe\BluestonePim\Api\OperationCatalog;
+use Youwe\BluestonePim\Api\SpecificationCompiler;
 use PhpParser\ParserFactory;
 use PhpParser\PhpVersion;
 
@@ -43,7 +43,7 @@ foreach (array_keys(OperationCatalog::COMPONENTS) as $component) {
     if (count(glob($directory.'/'.$name.'/Model/*.php') ?: []) !== ($entry['model_count'] ?? null)
         || !is_file($directory.'/'.$name.'/Normalizer/JaneObjectNormalizer.php')) throw new RuntimeException('Generated model/normalizer set is incomplete: '.$component);
     if (is_file($directory.'/'.$name.'/Client.php') || is_dir($directory.'/'.$name.'/Endpoint')) throw new RuntimeException('Independent generated HTTP endpoints must not be published.');
-    $class = 'App\\Generated\\R'.$revision.'\\'.$name.'\\Operations\\'.$name.'Operations';
+    $class = 'Youwe\\BluestonePim\\Generated\\R'.$revision.'\\'.$name.'\\Operations\\'.$name.'Operations';
     if (!class_exists($class)) throw new RuntimeException('Generated operation facade is missing: '.$class);
     $actual = [];
     foreach ((new ReflectionClass($class))->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Service;
+namespace Youwe\BluestonePim\Service;
 
-use App\Migration\MigrationContext;
+use Youwe\BluestonePim\Migration\MigrationContext;
 
 /** Binds page checkpoints to the original query, context and pagination settings. */
 final class PaginationSource

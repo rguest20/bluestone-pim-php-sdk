@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Migration;
+namespace Youwe\BluestonePim\Migration;
 
 final readonly class MigrationDefinition
 {

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Tests;
 
-use App\Api\CoverageEvidence;
-use App\Api\CoverageInventory;
-use App\Api\OperationCatalog;
+use Youwe\BluestonePim\Api\CoverageEvidence;
+use Youwe\BluestonePim\Api\CoverageInventory;
+use Youwe\BluestonePim\Api\OperationCatalog;
 use PHPUnit\Framework\TestCase;
 
 final class CoverageEvidenceTest extends TestCase

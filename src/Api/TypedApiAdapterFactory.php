@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Api;
+namespace Youwe\BluestonePim\Api;
 
-use App\Api\Connector\AbstractConnector;
+use Youwe\BluestonePim\Api\Connector\AbstractConnector;
 
 /** Resolves the generated operation facade for the migration's pinned specification revision. */
 final class TypedApiAdapterFactory
@@ -17,7 +17,7 @@ final class TypedApiAdapterFactory
         private readonly OpenApiModelSerializer $models,
         private readonly ApiRevisionContext $revisionContext,
         private readonly OperationCatalog $catalog,
-        private readonly string $projectDir,
+        private readonly string $sdkRoot,
     ) {
         foreach ($connectors as $connector) {
             $this->connectors[$connector::COMPONENT] = $connector;
@@ -35,7 +35,7 @@ final class TypedApiAdapterFactory
             throw new \LogicException('No active OpenAPI revision is available.');
         }
         $connector = $this->connectors[$component] ?? throw new \InvalidArgumentException('No connector is registered for '.$component.'.');
-        $manifestPath = $this->projectDir.'/generated/R'.$revision.'/manifest.json';
+        $manifestPath = $this->sdkRoot.'/generated/R'.$revision.'/manifest.json';
         if (!is_file($manifestPath)) {
             throw new \RuntimeException('Generated API models are missing for revision '.$revision.'. Run php bin/generate-api-models.');
         }
@@ -50,7 +50,7 @@ final class TypedApiAdapterFactory
         }
 
         $componentClass = str_replace(' ', '', ucwords(str_replace(['-', '_', '/'], ' ', $component)));
-        $class = '\\App\\Generated\\R'.$revision.'\\'.$componentClass.'\\Operations\\'.$componentClass.'Operations';
+        $class = '\\Youwe\\BluestonePim\\Generated\\R'.$revision.'\\'.$componentClass.'\\Operations\\'.$componentClass.'Operations';
         if (!class_exists($class)) {
             throw new \RuntimeException('Generated operation facade is missing: '.$class);
         }

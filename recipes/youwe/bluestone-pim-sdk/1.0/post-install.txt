@@ -1,0 +1,1 @@
+Set BLUESTONE_TARGET, BLUESTONE_CLIENT_ID and BLUESTONE_CLIENT_SECRET in the application's environment or secret manager before running migrations. BLUESTONE_MIGRATIONS_DATABASE_URL defaults to an SDK-specific SQLite file; it does not change the host application's DATABASE_URL. Package installation never calls a tenant.

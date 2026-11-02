@@ -3,8 +3,8 @@
 
 declare(strict_types=1);
 
-use App\Api\OperationCatalog;
-use App\Api\OpenApiOperationAdapterGenerator;
+use Youwe\BluestonePim\Api\OperationCatalog;
+use Youwe\BluestonePim\Api\OpenApiOperationAdapterGenerator;
 
 require dirname(__DIR__).'/vendor/autoload.php';
 
@@ -92,7 +92,7 @@ foreach ($selected as $component) {
         if (!copy($source, $input)) {
             throw new RuntimeException('Could not stage the pinned OpenAPI input.');
         }
-        $config = ['openapi-file' => $input, 'namespace' => 'App\\Generated\\R'.$revision.'\\'.$className($component),
+        $config = ['openapi-file' => $input, 'namespace' => 'Youwe\\BluestonePim\\Generated\\R'.$revision.'\\'.$className($component),
             'directory' => $stage, 'strict' => true, 'validation' => true, 'reference' => true,
             'include-null-value' => false, 'skip-null-values' => false];
         $configFile = $temp.'/jane-config.php';

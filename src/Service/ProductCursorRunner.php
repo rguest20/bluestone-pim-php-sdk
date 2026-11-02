@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Service;
+namespace Youwe\BluestonePim\Service;
 
-use App\Api\Connector\PimConnector;
-use App\Migration\MigrationContext;
+use Youwe\BluestonePim\Api\Connector\PimConnector;
+use Youwe\BluestonePim\Migration\MigrationContext;
 
 /** Adapts the PIM product cursor protocol to durable page checkpoints. */
 final readonly class ProductCursorRunner

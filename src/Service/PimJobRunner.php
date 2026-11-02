@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Service;
+namespace Youwe\BluestonePim\Service;
 
-use App\Api\Connector\PimConnector;
-use App\Migration\MigrationContext;
+use Youwe\BluestonePim\Api\Connector\PimConnector;
+use Youwe\BluestonePim\Migration\MigrationContext;
 
 /** Poll PIM asynchronous operations before marking their migration applied. */
 final readonly class PimJobRunner

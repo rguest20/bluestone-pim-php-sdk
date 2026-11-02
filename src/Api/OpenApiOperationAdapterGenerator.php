@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Api;
+namespace Youwe\BluestonePim\Api;
 
 /** Emits named operation facades that route every request through a shared component connector. */
 final class OpenApiOperationAdapterGenerator
@@ -13,8 +13,8 @@ final class OpenApiOperationAdapterGenerator
         $operations = $catalog['operations'] ?? [];
         $usedNames = [];
         $missingModels = [];
-        $code = "<?php\n\ndeclare(strict_types=1);\n\nnamespace App\\Generated\\R{$revision}\\{$componentClass}\\Operations;\n\n"
-            ."use App\\Api\\GeneratedOperationAdapter;\n"
+        $code = "<?php\n\ndeclare(strict_types=1);\n\nnamespace Youwe\BluestonePim\\Generated\\R{$revision}\\{$componentClass}\\Operations;\n\n"
+            ."use Youwe\\BluestonePim\\Api\\GeneratedOperationAdapter;\n"
             ."use Symfony\\Contracts\\HttpClient\\ResponseInterface;\n\n"
             ."/** Named request facade for {$component} operations in OpenAPI revision {$revision}. */\n"
             ."final class {$componentClass}Operations extends GeneratedOperationAdapter\n{\n";
@@ -161,7 +161,7 @@ final class OpenApiOperationAdapterGenerator
             return null;
         }
 
-        return '\\App\\Generated\\R'.$revision.'\\'.$this->className($component).'\\Model\\'.$model;
+        return '\\Youwe\\BluestonePim\\Generated\\R'.$revision.'\\'.$this->className($component).'\\Model\\'.$model;
     }
 
     private function requestType(array $schema, array $specification, string $component, string $revision, string $directory, array $seen = []): ?string

@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests;
 
-use App\Api\SpecificationDiff;
+use Youwe\BluestonePim\Api\SpecificationDiff;
 use PHPUnit\Framework\TestCase;
 
 final class SpecificationDiffTest extends TestCase

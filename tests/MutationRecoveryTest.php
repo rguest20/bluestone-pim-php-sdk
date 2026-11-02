@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Tests;
 
-use App\Api\ApiRevisionContext;
-use App\Database\ConnectionFactory;
-use App\Migration\MigrationContext;
-use App\Migration\MigrationLock;
-use App\Migration\MigrationStorage;
-use App\Migration\MutationInDoubtException;
+use Youwe\BluestonePim\Api\ApiRevisionContext;
+use Youwe\BluestonePim\Database\ConnectionFactory;
+use Youwe\BluestonePim\Migration\MigrationContext;
+use Youwe\BluestonePim\Migration\MigrationLock;
+use Youwe\BluestonePim\Migration\MigrationStorage;
+use Youwe\BluestonePim\Migration\MutationInDoubtException;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\TestCase;
 

@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace App\Service;
+namespace Youwe\BluestonePim\Service;
 
-use App\Api\BluestoneApiException;
-use App\Migration\MigrationContext;
-use App\Migration\MigrationLock;
-use App\Migration\MigrationRegistry;
-use App\Migration\MigrationStorage;
-use App\Api\ApiRevisionContext;
-use App\Api\OperationCatalog;
+use Youwe\BluestonePim\Api\BluestoneApiException;
+use Youwe\BluestonePim\Migration\MigrationContext;
+use Youwe\BluestonePim\Migration\MigrationLock;
+use Youwe\BluestonePim\Migration\MigrationRegistry;
+use Youwe\BluestonePim\Migration\MigrationStorage;
+use Youwe\BluestonePim\Api\ApiRevisionContext;
+use Youwe\BluestonePim\Api\OperationCatalog;
 
 final class MigrationRunner
 {

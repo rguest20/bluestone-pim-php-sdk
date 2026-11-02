@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Command;
+namespace Youwe\BluestonePim\Command;
 
-use App\Service\MigrationRunner;
+use Youwe\BluestonePim\Service\MigrationRunner;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;

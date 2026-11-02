@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests;
 
-use App\Api\SpecificationCompiler;
+use Youwe\BluestonePim\Api\SpecificationCompiler;
 use PHPUnit\Framework\TestCase;
 
 final class SpecificationCompilerTest extends TestCase

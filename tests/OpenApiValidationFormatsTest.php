@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Tests;
 
-use App\Api\ApiAuthentication;
-use App\Api\ApiContractException;
-use App\Api\OpenApiContractValidator;
+use Youwe\BluestonePim\Api\ApiAuthentication;
+use Youwe\BluestonePim\Api\ApiContractException;
+use Youwe\BluestonePim\Api\OpenApiContractValidator;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\MockResponse;

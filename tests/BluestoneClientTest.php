@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests;
 
-use App\Api\BluestoneApiException;
-use App\Api\BluestoneClient;
+use Youwe\BluestonePim\Api\BluestoneApiException;
+use Youwe\BluestonePim\Api\BluestoneClient;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\MockResponse;

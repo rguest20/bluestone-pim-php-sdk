@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Service;
+namespace Youwe\BluestonePim\Service;
 
-use App\Api\BluestoneApiException;
-use App\Api\Connector\MediaBankConnector;
-use App\Migration\MigrationContext;
+use Youwe\BluestonePim\Api\BluestoneApiException;
+use Youwe\BluestonePim\Api\Connector\MediaBankConnector;
+use Youwe\BluestonePim\Migration\MigrationContext;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 /** Checkpointed Media Bank upload using a credential-free, allowlisted transfer request. */

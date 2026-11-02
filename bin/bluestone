@@ -1,0 +1,40 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+use Symfony\Bundle\FrameworkBundle\Console\Application;
+use Symfony\Component\Dotenv\Dotenv;
+use Youwe\BluestonePim\Console\SdkConsoleKernel;
+
+$projectDir = getcwd() ?: '.';
+$autoload = $GLOBALS['_composer_autoload_path'] ?? $projectDir.'/vendor/autoload.php';
+if (!is_file($autoload)) {
+    fwrite(STDERR, "Could not find Composer autoload.php. Run this command from a Composer project.\n");
+    exit(1);
+}
+require $autoload;
+
+(new Dotenv())->bootEnv($projectDir.'/.env');
+$defaults = [
+    'DATABASE_URL' => 'sqlite:///'.$projectDir.'/var/bluestone-migrations.db',
+    'BLUESTONE_TARGET' => 'local-test',
+    'BLUESTONE_API_BASE_URL' => 'https://api.test.bluestonepim.com',
+    'BLUESTONE_TOKEN_URL' => 'https://idp.test.bluestonepim.com/op/token',
+    'BLUESTONE_CLIENT_ID' => '',
+    'BLUESTONE_CLIENT_SECRET' => '',
+    'BLUESTONE_PUBLIC_API_KEY' => '',
+    'BLUESTONE_MEDIA_TRANSFER_KEY' => '',
+    'BLUESTONE_MEDIA_UPLOAD_HOSTS' => '',
+];
+foreach ($defaults as $name => $value) {
+    if (!isset($_SERVER[$name]) && !isset($_ENV[$name])) {
+        $_SERVER[$name] = $_ENV[$name] = $value;
+    }
+}
+$environment = $_SERVER['APP_ENV'] ?? $_ENV['APP_ENV'] ?? 'dev';
+$debug = filter_var($_SERVER['APP_DEBUG'] ?? $_ENV['APP_DEBUG'] ?? false, FILTER_VALIDATE_BOOL);
+$kernel = new SdkConsoleKernel($environment, $debug, $projectDir);
+$kernel->boot();
+
+exit((new Application($kernel))->run());

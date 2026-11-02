@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Service;
+namespace Youwe\BluestonePim\Service;
 
-use App\Api\Connector\BulkOperationsConnector;
-use App\Migration\MigrationContext;
+use Youwe\BluestonePim\Api\Connector\BulkOperationsConnector;
+use Youwe\BluestonePim\Migration\MigrationContext;
 
 /** Polls the Bulk Operations API's job protocol, which is distinct from PIM async tasks. */
 final readonly class BulkOperationsJobRunner

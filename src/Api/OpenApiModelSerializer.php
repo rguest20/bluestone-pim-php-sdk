@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Api;
+namespace Youwe\BluestonePim\Api;
 
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Normalizer\ArrayDenormalizer;
@@ -81,7 +81,7 @@ final class OpenApiModelSerializer
         }
         $componentName = str_replace(' ', '', ucwords(str_replace('-', ' ', $component)));
 
-        return 'App\\Generated\\R'.$revision.'\\'.$componentName;
+        return 'Youwe\\BluestonePim\\Generated\\R'.$revision.'\\'.$componentName;
     }
 
     private function assertSelectedRevision(string $revision): void

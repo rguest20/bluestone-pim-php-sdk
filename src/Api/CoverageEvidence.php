@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Api;
+namespace Youwe\BluestonePim\Api;
 
 /** Merges reviewed evidence without transferring passes between specification revisions. */
 final class CoverageEvidence

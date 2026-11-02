@@ -1,0 +1,47 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+use Youwe\BluestonePim\Api\OperationCatalog;
+
+require dirname(__DIR__).'/vendor/autoload.php';
+
+$root = dirname(__DIR__);
+$buildStatus = 0;
+passthru(PHP_BINARY.' '.escapeshellarg($root.'/bin/generate-api-models'), $buildStatus);
+if ($buildStatus !== 0) throw new RuntimeException('Generated SDK contracts could not be rebuilt offline.');
+$catalog = new OperationCatalog($root.'/resources/bluestone');
+$revision = $catalog->activeRevision() ?? throw new RuntimeException('No active pinned API revision is available.');
+$manifest = $root.'/generated/R'.$revision.'/manifest.json';
+if (!is_file($manifest) || (json_decode(file_get_contents($manifest), true, 512, JSON_THROW_ON_ERROR)['revision'] ?? null) !== $revision) throw new RuntimeException('Could not generate package contracts for revision '.$revision.'.');
+$verifyStatus = 0;
+passthru(PHP_BINARY.' '.escapeshellarg($root.'/bin/verify-generated-contracts'), $verifyStatus);
+if ($verifyStatus !== 0) throw new RuntimeException('Generated SDK contracts did not pass verification.');
+
+$destination = $root.'/build/sdk/package';
+$remove = static function (string $path) use (&$remove): void {
+    if (!file_exists($path) && !is_link($path)) return;
+    if (is_dir($path) && !is_link($path)) {
+        foreach (scandir($path) ?: [] as $entry) if ($entry !== '.' && $entry !== '..') $remove($path.'/'.$entry);
+        rmdir($path);
+    } else {
+        unlink($path);
+    }
+};
+$remove($destination);
+if (!mkdir($destination, 0775, true)) throw new RuntimeException('Could not create the SDK package staging directory.');
+$copy = static function (string $source, string $target) use (&$copy): void {
+    if (is_dir($source)) {
+        if (!mkdir($target, 0775, true) && !is_dir($target)) throw new RuntimeException('Could not stage SDK package files.');
+        foreach (scandir($source) ?: [] as $entry) if ($entry !== '.' && $entry !== '..') $copy($source.'/'.$entry, $target.'/'.$entry);
+    } else {
+        $parent = dirname($target);
+        if (!is_dir($parent) && !mkdir($parent, 0775, true) && !is_dir($parent)) throw new RuntimeException('Could not stage SDK package files.');
+        if (!copy($source, $target)) throw new RuntimeException('Could not stage SDK package file: '.$source);
+    }
+};
+foreach (['composer.json', 'bin/bluestone', 'src', 'resources/bluestone', 'generated/R'.$revision] as $relative) {
+    $copy($root.'/'.$relative, $destination.'/'.$relative);
+}
+fwrite(STDOUT, "Staged youwe/bluestone-pim-sdk with matching OpenAPI and generated revision {$revision} at build/sdk/package.\n");

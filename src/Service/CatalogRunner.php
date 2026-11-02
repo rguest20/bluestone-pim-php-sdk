@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace App\Service;
+namespace Youwe\BluestonePim\Service;
 
-use App\Api\Connector\PimConnector;
-use App\Api\ApiRevisionContext;
-use App\Api\OpenApiModelSerializer;
-use App\Migration\MigrationContext;
+use Youwe\BluestonePim\Api\Connector\PimConnector;
+use Youwe\BluestonePim\Api\ApiRevisionContext;
+use Youwe\BluestonePim\Api\OpenApiModelSerializer;
+use Youwe\BluestonePim\Migration\MigrationContext;
 
 /** Example domain runner; add similar services for other documented PIM areas. */
 final readonly class CatalogRunner

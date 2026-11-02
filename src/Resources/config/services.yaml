@@ -1,0 +1,71 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    _instanceof:
+        Youwe\BluestonePim\Migration\MigrationInterface:
+            tags: ['youwe.bluestone_pim.migration']
+        Youwe\BluestonePim\Api\Connector\AbstractConnector:
+            tags: ['youwe.bluestone_pim.api_connector']
+
+    Youwe\BluestonePim\:
+        resource: '../../'
+        exclude:
+            - '../../BluestonePimBundle.php'
+            - '../../DependencyInjection/'
+            - '../../Migration/MigrationDefinition.php'
+            - '../../Migration/MigrationContext.php'
+            - '../../Migration/AbstractPimMigration.php'
+            - '../../Console/SdkConsoleKernel.php'
+            - '../../Api/BluestoneApiException.php'
+
+    Doctrine\DBAL\Connection:
+        factory: ['Youwe\BluestonePim\Database\ConnectionFactory', 'create']
+        arguments: ['%env(resolve:DATABASE_URL)%']
+
+    Youwe\BluestonePim\Api\BluestoneClient:
+        arguments:
+            $baseUrl: '%env(BLUESTONE_API_BASE_URL)%'
+            $tokenUrl: '%env(BLUESTONE_TOKEN_URL)%'
+            $clientId: '%env(BLUESTONE_CLIENT_ID)%'
+            $clientSecret: '%env(BLUESTONE_CLIENT_SECRET)%'
+            $publicApiKey: '%env(BLUESTONE_PUBLIC_API_KEY)%'
+
+    Youwe\BluestonePim\Service\MediaUploadRunner:
+        arguments:
+            $transferEncryptionKey: '%env(BLUESTONE_MEDIA_TRANSFER_KEY)%'
+            $allowedTransferHosts: '%env(BLUESTONE_MEDIA_UPLOAD_HOSTS)%'
+
+    Youwe\BluestonePim\Api\OperationCatalog:
+        arguments:
+            $directory: '%youwe_bluestone_pim.resources_dir%'
+
+    Youwe\BluestonePim\Api\RevisionActivation:
+        arguments:
+            $directory: '%youwe_bluestone_pim.resources_dir%'
+
+    Youwe\BluestonePim\Api\LiveFixtureSelection:
+        arguments:
+            $policyFile: '%youwe_bluestone_pim.resources_dir%/live-fixture-policy.json'
+            $statusFile: '%youwe_bluestone_pim.resources_dir%/live-verification-status.json'
+
+    Youwe\BluestonePim\Api\TypedApiAdapterFactory:
+        arguments:
+            $connectors: !tagged_iterator youwe.bluestone_pim.api_connector
+            $sdkRoot: '%youwe_bluestone_pim.sdk_root%'
+
+    Youwe\BluestonePim\Migration\MigrationStorage:
+        arguments:
+            $target: '%env(BLUESTONE_TARGET)%'
+            $baseUrl: '%env(BLUESTONE_API_BASE_URL)%'
+
+    Youwe\BluestonePim\Migration\MigrationRegistry:
+        arguments:
+            $migrations: !tagged_iterator youwe.bluestone_pim.migration
+
+    Youwe\BluestonePim\Command\MakeMigrationCommand:
+        arguments:
+            $projectDir: '%kernel.project_dir%'
+            $migrationDirectory: 'src/Migration'
+            $migrationNamespace: 'App\Migration'

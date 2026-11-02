@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests\Fixtures;
 
-use App\Migration\MigrationContext;
-use App\Migration\MigrationInterface;
+use Youwe\BluestonePim\Migration\MigrationContext;
+use Youwe\BluestonePim\Migration\MigrationInterface;
 
 final class Version20260101000001 implements MigrationInterface
 {

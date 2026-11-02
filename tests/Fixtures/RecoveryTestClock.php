@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Tests\Fixtures;
 
-use App\Service\PollingClock;
+use Youwe\BluestonePim\Service\PollingClock;
 
 final class RecoveryTestClock implements PollingClock
 {

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Migration;
+namespace Youwe\BluestonePim\Migration;
 
 /** A mutation was started but did not reach a durable completed result. */
 final class MutationInDoubtException extends \RuntimeException

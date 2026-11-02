@@ -4,25 +4,25 @@ declare(strict_types=1);
 
 namespace App\Tests;
 
-use App\Api\ApiContractException;
-use App\Api\BluestoneApiException;
-use App\Api\ApiRevisionContext;
-use App\Api\BluestoneClient;
-use App\Api\Connector\BulkOperationsConnector;
-use App\Api\Connector\MediaBankConnector;
-use App\Api\Connector\PimConnector;
-use App\Api\Connector\PublicApiConnector;
-use App\Api\Connector\QueryBuilderConnector;
-use App\Api\Connector\IdpConnector;
-use App\Api\OpenApiContractValidator;
-use App\Api\OpenApiModelSerializer;
-use App\Api\OperationCatalog;
-use App\Api\TypedApiAdapterFactory;
-use App\Database\ConnectionFactory;
-use App\Migration\MigrationContext;
-use App\Migration\MigrationLock;
-use App\Migration\MigrationStorage;
-use App\Service\ApiOperationRunner;
+use Youwe\BluestonePim\Api\ApiContractException;
+use Youwe\BluestonePim\Api\BluestoneApiException;
+use Youwe\BluestonePim\Api\ApiRevisionContext;
+use Youwe\BluestonePim\Api\BluestoneClient;
+use Youwe\BluestonePim\Api\Connector\BulkOperationsConnector;
+use Youwe\BluestonePim\Api\Connector\MediaBankConnector;
+use Youwe\BluestonePim\Api\Connector\PimConnector;
+use Youwe\BluestonePim\Api\Connector\PublicApiConnector;
+use Youwe\BluestonePim\Api\Connector\QueryBuilderConnector;
+use Youwe\BluestonePim\Api\Connector\IdpConnector;
+use Youwe\BluestonePim\Api\OpenApiContractValidator;
+use Youwe\BluestonePim\Api\OpenApiModelSerializer;
+use Youwe\BluestonePim\Api\OperationCatalog;
+use Youwe\BluestonePim\Api\TypedApiAdapterFactory;
+use Youwe\BluestonePim\Database\ConnectionFactory;
+use Youwe\BluestonePim\Migration\MigrationContext;
+use Youwe\BluestonePim\Migration\MigrationLock;
+use Youwe\BluestonePim\Migration\MigrationStorage;
+use Youwe\BluestonePim\Service\ApiOperationRunner;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Symfony\Component\HttpClient\MockHttpClient;
@@ -59,7 +59,7 @@ final class TypedApiContractsTest extends TestCase
             $requests[] = [$method, $url, $options];
             return count($requests) === 1 ? new MockResponse('{"access_token":"oauth"}') : new MockResponse('', ['http_code' => 204]);
         });
-        $namespace = 'App\\Generated\\R'.$this->revision->current().'\\Pim\\Model\\';
+        $namespace = 'Youwe\\BluestonePim\\Generated\\R'.$this->revision->current().'\\Pim\\Model\\';
         $requestClass = $namespace.'CategoryMetadataUpdateRequest';
         $valueClass = $namespace.'PropertyUpdateString';
         $request = (new $requestClass())->setName((new $valueClass())->setValue('Hardware'))->setDescription(null);
@@ -121,7 +121,7 @@ final class TypedApiContractsTest extends TestCase
     {
         $http = new MockHttpClient([new MockResponse('{"access_token":"oauth"}'), new MockResponse('{"status":"COMPLETED","count":3}', ['response_headers' => ['Content-Type: application/json']])]);
         $response = $this->factory($http)->forComponent('pim')->getJobStatus('task');
-        $class = 'App\\Generated\\R'.$this->revision->current().'\\Pim\\Model\\JobStatusResponse';
+        $class = 'Youwe\\BluestonePim\\Generated\\R'.$this->revision->current().'\\Pim\\Model\\JobStatusResponse';
         $model = (new OpenApiModelSerializer($this->catalog, $this->revision))->fromArray($response->toArray(), $class, 'pim', $this->revision->current());
         self::assertSame('COMPLETED', $model->getStatus());
         self::assertSame(3, $model->getCount());
@@ -240,7 +240,7 @@ final class TypedApiContractsTest extends TestCase
             $requests[] = $options['body'];
             return new MockResponse('{"filter":{},"isOriginalValid":true}', ['response_headers' => ['Content-Type: application/json']]);
         });
-        $namespace = 'App\\Generated\\R'.$this->revision->current().'\\QueryBuilder\\Model\\';
+        $namespace = 'Youwe\\BluestonePim\\Generated\\R'.$this->revision->current().'\\QueryBuilder\\Model\\';
         $filtersClass = $namespace.'PureProductFilters';
         $queryClass = $namespace.'MainQueryGroup';
         $adapter = $this->factory($http)->forComponent('query-builder');
@@ -261,7 +261,7 @@ final class TypedApiContractsTest extends TestCase
             $requests[] = [$url, $options['body']];
             return new MockResponse('', ['http_code' => 204]);
         });
-        $class = 'App\\Generated\\R'.$this->revision->current().'\\Idp\\Model\\RoleSinglePluginPermission';
+        $class = 'Youwe\\BluestonePim\\Generated\\R'.$this->revision->current().'\\Idp\\Model\\RoleSinglePluginPermission';
         $permission = (new $class())->setModule('PRODUCTS')->setActionName('READ');
         $response = $this->factory($http)->forComponent('idp')->UpdatePluginPermissions('role', 'plugin', [$permission]);
         self::assertSame(204, $response->getStatusCode());
@@ -277,7 +277,7 @@ final class TypedApiContractsTest extends TestCase
             $requests[] = $options['body'];
             return new MockResponse('', ['http_code' => 204]);
         });
-        $namespace = 'App\\Generated\\R'.$this->revision->current().'\\Pim\\Model\\';
+        $namespace = 'Youwe\\BluestonePim\\Generated\\R'.$this->revision->current().'\\Pim\\Model\\';
         $requestClass = $namespace.'CategoryMetadataUpdateRequest';
         $nameClass = $namespace.'PropertyUpdateString';
         $request = (new $requestClass())->setName(new $nameClass());
@@ -293,7 +293,7 @@ final class TypedApiContractsTest extends TestCase
             $requests[] = json_decode($options['body'], true, 512, JSON_THROW_ON_ERROR);
             return new MockResponse('{"data":[],"scrollId":"next-scroll"}', ['response_headers' => ['Content-Type: application/json']]);
         });
-        $namespace = 'App\\Generated\\R'.$this->revision->current().'\\QueryBuilder\\Model\\';
+        $namespace = 'Youwe\\BluestonePim\\Generated\\R'.$this->revision->current().'\\QueryBuilder\\Model\\';
         $queryClass = $namespace.'MainQueryGroup';
         $initialClass = $namespace.'ProductsScrollSearchRequestInitiation';
         $continuationClass = $namespace.'ProductsScrollSearchRequestScrolling';

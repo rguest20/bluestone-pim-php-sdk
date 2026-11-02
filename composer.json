@@ -1,7 +1,7 @@
 {
-    "name": "youwe/bluestone-api-migrations",
-    "description": "Symfony service-based migrations for the Bluestone PIM Management API",
-    "type": "project",
+    "name": "youwe/bluestone-pim-sdk",
+    "description": "Company-maintained PHP SDK and resumable migration toolkit for Bluestone PIM",
+    "type": "symfony-bundle",
     "license": "proprietary",
     "require": {
         "php": ">=8.2",
@@ -16,26 +16,29 @@
         "symfony/framework-bundle": "7.4.*",
         "symfony/http-client": "7.4.*",
         "symfony/lock": "7.4.*",
-        "symfony/runtime": "7.4.*",
         "symfony/serializer": "7.4.*",
         "symfony/validator": "7.4.*",
         "symfony/yaml": "7.4.*"
     },
     "require-dev": {
         "jane-php/open-api-3": "7.14.4",
-        "phpunit/phpunit": "^11.5"
+        "phpunit/phpunit": "^11.5",
+        "symfony/runtime": "7.4.*"
     },
+    "bin": ["bin/bluestone"],
     "autoload": {
         "psr-4": {
-            "App\\": "src/",
-            "App\\Generated\\": "generated/",
-            "BluestoneMigrations\\": "migrations/"
+            "Youwe\\BluestonePim\\": "src/",
+            "Youwe\\BluestonePim\\Generated\\": "generated/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "App\\Tests\\": "tests/"
-        }
+            "App\\": "app/",
+            "App\\Tests\\": "tests/",
+            "BluestoneMigrations\\": "migrations/"
+        },
+        "exclude-from-classmap": ["/tests/consumer/"]
     },
     "config": {
         "allow-plugins": {

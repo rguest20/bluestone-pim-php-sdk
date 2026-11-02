@@ -4,15 +4,15 @@ declare(strict_types=1);
 
 namespace App\Tests\DatabaseIntegration;
 
-use App\Api\ApiRevisionContext;
-use App\Api\OperationCatalog;
-use App\Database\ConnectionFactory;
-use App\Migration\MigrationContext;
-use App\Migration\MigrationLock;
-use App\Migration\MigrationRegistry;
-use App\Migration\MigrationStorage;
-use App\Migration\MutationInDoubtException;
-use App\Service\MigrationRunner;
+use Youwe\BluestonePim\Api\ApiRevisionContext;
+use Youwe\BluestonePim\Api\OperationCatalog;
+use Youwe\BluestonePim\Database\ConnectionFactory;
+use Youwe\BluestonePim\Migration\MigrationContext;
+use Youwe\BluestonePim\Migration\MigrationLock;
+use Youwe\BluestonePim\Migration\MigrationRegistry;
+use Youwe\BluestonePim\Migration\MigrationStorage;
+use Youwe\BluestonePim\Migration\MutationInDoubtException;
+use Youwe\BluestonePim\Service\MigrationRunner;
 use App\Tests\Fixtures\Version20260101000001;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\TestCase;

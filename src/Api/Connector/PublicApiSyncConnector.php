@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Api\Connector;
+namespace Youwe\BluestonePim\Api\Connector;
 
 final class PublicApiSyncConnector extends AbstractConnector
 {

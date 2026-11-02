@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Service;
+namespace Youwe\BluestonePim\Service;
 
-use App\Migration\MigrationContext;
+use Youwe\BluestonePim\Migration\MigrationContext;
 
 /** Checkpoint-aware cursor traversal for endpoints with a stable next-cursor contract. */
 final class CursorPaginator

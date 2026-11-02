@@ -2,11 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Api\Connector;
+namespace Youwe\BluestonePim\Api\Connector;
 
-use App\Api\ApiAuthentication;
-use App\Api\OperationCatalog;
-use App\Service\ApiOperationRunner;
+use Youwe\BluestonePim\Api\ApiAuthentication;
+use Youwe\BluestonePim\Api\OperationCatalog;
+use Youwe\BluestonePim\Service\ApiOperationRunner;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
 abstract class AbstractConnector
@@ -16,8 +16,8 @@ abstract class AbstractConnector
     public function __construct(
         private readonly ApiOperationRunner $runner,
         private readonly OperationCatalog $catalog,
-        private readonly ?\App\Api\ApiRevisionContext $revisionContext = null,
-        private readonly ?\App\Api\OpenApiContractValidator $contractValidator = null,
+        private readonly ?\Youwe\BluestonePim\Api\ApiRevisionContext $revisionContext = null,
+        private readonly ?\Youwe\BluestonePim\Api\OpenApiContractValidator $contractValidator = null,
     ) {
     }
 

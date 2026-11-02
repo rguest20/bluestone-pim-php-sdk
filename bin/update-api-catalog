@@ -3,10 +3,10 @@
 
 declare(strict_types=1);
 
-use App\Api\OperationCatalog;
-use App\Api\SpecificationCompiler;
-use App\Api\CoverageInventory;
-use App\Api\RevisionActivation;
+use Youwe\BluestonePim\Api\OperationCatalog;
+use Youwe\BluestonePim\Api\SpecificationCompiler;
+use Youwe\BluestonePim\Api\CoverageInventory;
+use Youwe\BluestonePim\Api\RevisionActivation;
 use Symfony\Component\HttpClient\HttpClient;
 
 require dirname(__DIR__).'/vendor/autoload.php';

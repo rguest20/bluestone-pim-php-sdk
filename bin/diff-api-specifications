@@ -3,8 +3,8 @@
 
 declare(strict_types=1);
 
-use App\Api\OperationCatalog;
-use App\Api\SpecificationDiff;
+use Youwe\BluestonePim\Api\OperationCatalog;
+use Youwe\BluestonePim\Api\SpecificationDiff;
 
 require dirname(__DIR__).'/vendor/autoload.php';
 

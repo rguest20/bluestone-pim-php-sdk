@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Command;
+namespace Youwe\BluestonePim\Command;
 
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -14,8 +14,11 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 #[AsCommand(name: 'app:migrations:make', description: 'Generate an autowired Bluestone API migration service.')]
 final class MakeMigrationCommand extends Command
 {
-    public function __construct(private readonly string $projectDir)
-    {
+    public function __construct(
+        private readonly string $projectDir,
+        private readonly string $migrationDirectory = 'src/Migration',
+        private readonly string $migrationNamespace = 'App\\Migration',
+    ) {
         parent::__construct();
     }
 
@@ -27,18 +30,23 @@ final class MakeMigrationCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $class = 'Version'.gmdate('YmdHis');
-        $path = $this->projectDir.'/migrations/'.$class.'.php';
+        $relativeDirectory = trim($this->migrationDirectory, '/');
+        $directory = $this->projectDir.'/'.$relativeDirectory;
+        if (!is_dir($directory) && !mkdir($directory, 0775, true) && !is_dir($directory)) {
+            throw new \RuntimeException('Cannot create the migration directory: '.$relativeDirectory);
+        }
+        $path = $directory.'/'.$class.'.php';
         $description = var_export((string) $input->getArgument('description'), true);
         $template = <<<'PHP'
 <?php
 
 declare(strict_types=1);
 
-namespace BluestoneMigrations;
+namespace MIGRATION_NAMESPACE;
 
-use App\Migration\MigrationContext;
-use App\Migration\MigrationInterface;
-use App\Service\ApiOperationRunner;
+use Youwe\BluestonePim\Migration\MigrationContext;
+use Youwe\BluestonePim\Migration\MigrationInterface;
+use Youwe\BluestonePim\Service\ApiOperationRunner;
 
 final class CLASS_NAME implements MigrationInterface
 {
@@ -67,14 +75,14 @@ PHP;
             throw new \RuntimeException('Cannot create migration. Check permissions or retry next second if a version already exists.');
         }
         try {
-            $content = str_replace(['CLASS_NAME', 'DESCRIPTION'], [$class, $description], $template)."\n";
+            $content = str_replace(['MIGRATION_NAMESPACE', 'CLASS_NAME', 'DESCRIPTION'], [$this->migrationNamespace, $class, $description], $template)."\n";
             if (fwrite($handle, $content) !== strlen($content)) {
                 throw new \RuntimeException('Could not write the complete migration file.');
             }
         } finally {
             fclose($handle);
         }
-        (new SymfonyStyle($input, $output))->success('Created migrations/'.$class.'.php');
+        (new SymfonyStyle($input, $output))->success('Created '.$relativeDirectory.'/'.$class.'.php');
 
         return Command::SUCCESS;
     }

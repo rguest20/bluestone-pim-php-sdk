@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Tests;
 
-use App\Api\OperationCatalog;
-use App\Api\RevisionActivation;
+use Youwe\BluestonePim\Api\OperationCatalog;
+use Youwe\BluestonePim\Api\RevisionActivation;
 use PHPUnit\Framework\TestCase;
 
 final class RevisionActivationTest extends TestCase
