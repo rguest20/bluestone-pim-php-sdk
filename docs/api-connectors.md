@@ -1,6 +1,6 @@
 # Bluestone API connectors
 
-Each component in Bluestone's [published OpenAPI specifications](https://docs.api.bluestonepim.com/docs/generate-sdks-and-client-code-from-openapi) has an autowired service under `App\Api\Connector`. The checked-in routing catalog contains 547 operation IDs across 16 components.
+Each component in Bluestone's [published OpenAPI specifications](https://docs.api.bluestonepim.com/docs/generate-sdks-and-client-code-from-openapi) has an autowired service under `Youwe\BluestonePim\Api\Connector`. The checked-in routing catalog contains 547 operation IDs across 16 components.
 
 For an end-to-end starter PIM catalog/product setup, prerequisite planning and copyable migration examples, see [Initial PIM setup](initial-pim-setup.md).
 
@@ -25,18 +25,42 @@ For an end-to-end starter PIM catalog/product setup, prerequisite planning and c
 
 The token exchange is handled by the shared `BluestoneClient`. Management components use OAuth2 client credentials. Public API operations use `BLUESTONE_PUBLIC_API_KEY` as an `x-api-key` header; its health operation needs no authentication. Public API sync uses OAuth2. `IdpConnector` calls the documented `/idp` API on the configured API host; the OAuth token URL is configured separately.
 
-All destinations use `BLUESTONE_API_BASE_URL`, which defaults to the test environment. Production hosts in the OpenAPI specifications supply only service path prefixes to the catalog. Credentials and hosts cannot be overridden through connector request options. API execution requires the migration runner's active database lock.
+All destinations use `BLUESTONE_API_BASE_URL`, which defaults to the test environment. Production hosts in the OpenAPI specifications supply only service path prefixes to the catalog. Credentials and hosts cannot be overridden through connector request options. Calls made during a migration refresh its database lock and record operation usage; ordinary application calls outside a migration use the same authenticated transport without a migration lock or migration checkpoint.
+
+The shared runner retries HTTP 429 responses up to three total attempts, honoring `Retry-After` up to 30 seconds and using short exponential delays when the header is absent. If a longer server delay is requested, it stops and leaves a mutation safely retryable. It retries 502, 503 and 504 only for idempotent `GET` and `PUT` requests. Other methods receive the original error without an automatic retry. If retries are exhausted for a mutation, treat a 429 as not sent; a 5xx write may have been applied and still requires reconciliation before resubmission.
 
 ## Discover operations
 
 ```sh
-php bin/console app:api:list
-php bin/console app:api:list pim
-php bin/console app:api:list pim --tag="Catalog nodes"
-php bin/console app:api:list media-bank --tag=Upload
+php bin/console bluestone:api:list
+php bin/console bluestone:api:list pim
+php bin/console bluestone:api:list pim --tag="Catalog nodes"
+php bin/console bluestone:api:list media-bank --tag=Upload
 ```
 
 These commands work offline without credentials or a tracking database. They display exact, case-sensitive operation IDs, HTTP methods, paths, authentication, tags and deprecation markers. A connector's `operations()` method exposes the same routing metadata, including required inputs and documented body content types.
+
+## Use connectors in application services or migrations
+
+After registering the SDK bundle in the host app, inject a component connector into any Symfony service, such as a controller, Messenger handler or application command. These direct calls use the pinned SDK contracts and shared authentication/transport without a migration context:
+
+```php
+use Youwe\BluestonePim\Api\Connector\PimConnector;
+
+final class CatalogReader
+{
+    public function __construct(private readonly PimConnector $pim)
+    {
+    }
+
+    public function find(string $nodeId): array
+    {
+        return $this->pim->executeTyped('getNode', ['id' => $nodeId])->toArray();
+    }
+}
+```
+
+Migration code can inject the same connector. When invoked through the migration runner, requests also refresh the active lock and are recorded against that migration.
 
 ## Inject connectors into migrations
 
@@ -47,9 +71,9 @@ declare(strict_types=1);
 
 namespace BluestoneMigrations;
 
-use App\Api\Connector\PimConnector;
-use App\Migration\MigrationContext;
-use App\Migration\MigrationInterface;
+use Youwe\BluestonePim\Api\Connector\PimConnector;
+use Youwe\BluestonePim\Migration\MigrationContext;
+use Youwe\BluestonePim\Migration\MigrationInterface;
 
 final class Version20261028140000 implements MigrationInterface
 {
@@ -89,13 +113,13 @@ $this->pim->executeTyped('partialUpdateCatalogNode', ['id' => 'existing-node-id'
 ]);
 ```
 
-`executeTyped()` validates with the checked-in OpenAPI document before HTTP dispatch and validates the returned response before returning. It uses the shared connector, authentication, lock and transport path. Validation errors name the operation and schema-defined field without including rejected values, response content or the underlying validator exception. Typed validation requires a pinned full OpenAPI revision; legacy migrations that predate revision tracking must continue to use `execute()` until explicitly transitioned. Typed requests currently support JSON and string or scalar bodies; streaming and form/multipart request bodies should use `execute()` while their serializers are implemented.
+`executeTyped()` validates with the checked-in OpenAPI document before HTTP dispatch and validates the returned response before returning. It uses the shared connector, authentication and transport; when called during migration execution it also refreshes the lock. Validation errors name the operation and schema-defined field without including rejected values, response content or the underlying validator exception. Typed validation requires a pinned full OpenAPI revision; legacy migrations that predate revision tracking must continue to use `execute()` until explicitly transitioned. Typed requests currently support JSON and string or scalar bodies; streaming and form/multipart request bodies should use `execute()` while their serializers are implemented.
 
-The repository also contains revision-specific Jane DTOs, normalizers and named methods for every operation ID. Generate them from the active offline snapshots with `php bin/generate-api-models`; the command pins them under `generated/R<revision>/`, removes Jane's independent HTTP clients, and atomically publishes the full component set. Inject `TypedApiAdapterFactory` into a migration and call `forComponent('pim')` (or another component key) to get the facade for that migration's pinned revision. Each named method accepts path values, grouped query/header values and generated request DTOs. Composed Query builder request bodies use unions of their generated models; IDP array bodies normalize each generated item. All 547 operations have mapped signatures, with no unresolved request-model references in this revision. Every request uses the shared connector, auth, lock and transport. Fixture verification remains separate from generation.
+The repository also contains revision-specific Jane DTOs, normalizers and named methods for every operation ID. Generate them from the active offline snapshots with `php bin/generate-api-models`; the command pins them under `generated/R<revision>/`, removes Jane's independent HTTP clients, and atomically publishes the full component set. Inject `TypedApiAdapterFactory` into a migration and call `forComponent('pim')` (or another component key) to get the facade for that migration's pinned revision. Each named method accepts path values, grouped query/header values and generated request DTOs. Composed Query builder request bodies use unions of their generated models; IDP array bodies normalize each generated item. All 547 operations have mapped signatures, with no unresolved request-model references in this revision. Every request uses the shared connector and auth/transport path, with a migration lock heartbeat when inside a migration. Fixture verification remains separate from generation.
 
 ```php
-use App\Api\TypedApiAdapterFactory;
-use App\Migration\MigrationContext;
+use Youwe\BluestonePim\Api\TypedApiAdapterFactory;
+use Youwe\BluestonePim\Migration\MigrationContext;
 
 public function __construct(private readonly TypedApiAdapterFactory $apis)
 {
@@ -108,14 +132,14 @@ public function up(MigrationContext $context): void
 }
 ```
 
-The exact required arguments vary by operation. Use `php bin/console app:api:list pim` for operation IDs and `php bin/console app:api:coverage --json` for each generated method's schema-gap status. Generated facades are scoped to the pinned revision selected for the migration; they reject a revision mismatch and cannot be used by legacy migrations without a pinned specification.
+The exact required arguments vary by operation. Use `php bin/console bluestone:api:list pim` for operation IDs and `php bin/console bluestone:api:coverage --json` for each generated method's schema-gap status. Generated facades are scoped to the pinned revision selected for the migration; they reject a revision mismatch and cannot be used by legacy migrations without a pinned specification.
 
 Generated Jane DTO normalizers preserve omitted fields separately from explicit null values. A migration can still construct those model classes directly from `$context->apiRevision()` when convenient:
 
 ```php
 $revision = $context->apiRevision();
-$requestClass = 'App\\Generated\\R'.$revision.'\\Pim\\Model\\CategoryMetadataUpdateRequest';
-$valueClass = 'App\\Generated\\R'.$revision.'\\Pim\\Model\\PropertyUpdateString';
+$requestClass = 'Youwe\\BluestonePim\\Generated\\R'.$revision.'\\Pim\\Model\\CategoryMetadataUpdateRequest';
+$valueClass = 'Youwe\\BluestonePim\\Generated\\R'.$revision.'\\Pim\\Model\\PropertyUpdateString';
 $name = new $valueClass();
 $name->setValue('Hardware');
 $request = new $requestClass();
@@ -174,7 +198,7 @@ Use a domain runner when the operation sequence has persistent progress or a ret
 
 | Components | Workflow support | Other operations |
 | --- | --- | --- |
-| PIM | Product cursor traversal, product/attribute/catalog mutations, PIM job polling | Direct typed calls for other operations; asynchronous candidates are listed in `app:api:async-inventory` for contract review |
+| PIM | Product cursor traversal, product/attribute/catalog mutations, PIM job polling | Direct typed calls for other operations; asynchronous candidates are listed in `bluestone:api:async-inventory` for contract review |
 | Media bank | `MediaUploadRunner` for create, external transfer and completion | Direct typed calls for asset metadata, labels, attributes and reads |
 | Bulk Operations | Separate Bulk Operations job polling with its own terminal-state contract | Direct typed calls for job submission and other operations |
 | Search | Cursor/page traversal primitives can be composed with typed search methods | Direct typed calls unless the migration needs checkpointed multi-page processing |
@@ -192,9 +216,9 @@ Each immutable revision in `resources/bluestone/revisions/<revision>/` stores th
 # This reads public documentation and does not access a Bluestone tenant.
 php bin/update-api-catalog
 php bin/verify-generated-contracts
-php bin/console app:api:coverage
-php bin/console app:api:async-inventory
-php bin/console app:api:migration-compatibility
+php bin/console bluestone:api:coverage
+php bin/console bluestone:api:async-inventory
+php bin/console bluestone:api:migration-compatibility
 
 # Compare two saved component specifications, including newly required request fields:
 php bin/diff-api-specifications --before=OLD_REV --after=NEW_REV --component=pim
@@ -207,7 +231,7 @@ The updater reads and validates all components before staging a new revision, ve
 
 `bin/generate-api-models` uses the pinned Jane 7.14.4 OpenAPI 3.0 generator against the stored inputs and publishes models under the matching revision namespace. Generated HTTP clients and endpoint code are discarded, so API execution continues through the shared runner.
 
-The coverage inventory counts generated methods separately from fixture and workflow evidence. `resources/bluestone/contract-evidence.json` records test cases against the component, operation ID, revision and OpenAPI checksum. Evidence becomes stale when either revision or checksum differs. Partial, missing, stale, skipped, blocked and verified outcomes remain distinct; each incomplete row includes an action needed to close its gap. The current evidence contains complete fixture sets for eleven components and verifies 351 individual operations, including all 224 PIM operations, plus workflow evidence for five operations. Other tested cases remain partial where request or response fixtures are missing, and every live operation remains unverified. `executeTyped()` validation alone does not count as fixture verification. `app:api:async-inventory` lists operations whose specs contain asynchronous signals for review; an HTTP 202 response alone does not prove that polling is needed. Deprecated routes retain their published flag.
+The coverage inventory counts generated methods separately from fixture and workflow evidence. `resources/bluestone/contract-evidence.json` records test cases against the component, operation ID, revision and OpenAPI checksum. Evidence becomes stale when either revision or checksum differs. Partial, missing, stale, skipped, blocked and verified outcomes remain distinct; each incomplete row includes an action needed to close its gap. The current evidence contains complete fixture sets for eleven components and verifies 351 individual operations, including all 224 PIM operations, plus workflow evidence for five operations. Other tested cases remain partial where request or response fixtures are missing, and every live operation remains unverified. `executeTyped()` validation alone does not count as fixture verification. `bluestone:api:async-inventory` lists operations whose specs contain asynchronous signals for review; an HTTP 202 response alone does not prove that polling is needed. Deprecated routes retain their published flag.
 
 The reviewed offline fixture selection policy and live prerequisites are documented in [live verification](live-verification.md). The policy has no default live groups; do not treat it as evidence that a tenant fixture has run.
 

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace BluestoneMigrations;
 
-use App\Migration\MigrationContext;
-use App\Migration\MigrationInterface;
-use App\Service\CatalogRunner;
+use Youwe\BluestonePim\Migration\MigrationContext;
+use Youwe\BluestonePim\Migration\MigrationInterface;
+use Youwe\BluestonePim\Service\CatalogRunner;
 
 /** Copy/adapt this into a newly generated migration after resolving the tenant's category ID. */
 final class Version20261102100000_RenameStarterCategory implements MigrationInterface

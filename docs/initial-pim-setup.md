@@ -28,7 +28,7 @@ The Management API documents `createCategory` as creating a top-level catalog wh
 
 ## 2. Configure an isolated local environment
 
-Follow the [README setup](../README.md#setup) and keep credentials in `.env.local`. Use a dedicated test tenant and a tracking database that is used only for that tenant/environment. Keep the same database across deployments so applied versions and checkpoints persist.
+Follow the [README setup](../README.md#setup) and keep credentials in `.env.local`. Use a dedicated test tenant and a tracking database that is used only for that tenant/environment. Keep the same database across deployments so applied versions and checkpoints persist. In a consuming Symfony app, install the Composer package and create the ledger with `vendor/bin/bluestone bluestone:migrations:install` before applying migrations.
 
 ```dotenv
 BLUESTONE_TARGET=your-dedicated-test-tenant
@@ -36,20 +36,20 @@ BLUESTONE_API_BASE_URL=https://api.test.bluestonepim.com
 BLUESTONE_TOKEN_URL=https://idp.test.bluestonepim.com/op/token
 BLUESTONE_CLIENT_ID=your-client-id
 BLUESTONE_CLIENT_SECRET=your-client-secret
-DATABASE_URL="sqlite:///%kernel.project_dir%/var/migrations.db"
+BLUESTONE_MIGRATIONS_DATABASE_URL="sqlite:///%kernel.project_dir%/var/bluestone-migrations.db"
 ```
 
 Do not put credentials, tenant-specific secrets or generated IDs in migration source control. Stable *business identifiers* such as category, attribute and product numbers belong in migration source only when they are approved, unique and intended to be the same in every target. Keep resource IDs in tenant-specific configuration or discover them from that tenant.
 
 ## 3. Create a migration file
 
-Use the command to generate a timestamped migration skeleton:
+Use the command to generate a timestamped migration skeleton. In this repository, run:
 
 ```sh
-php bin/console app:migrations:make "Create starter product catalog"
+php bin/console bluestone:migrations:make "Create starter product catalog"
 ```
 
-It writes a class under `migrations/`, where the application auto-discovers it. Remove the generated guard only after implementing and reviewing `up()`. Migration constructors should inject services only; do not make API calls in constructors or `description()`.
+It writes a class under `migrations/`, where the application auto-discovers it. In a normal consumer app, use `vendor/bin/bluestone bluestone:migrations:make ...` to write under `src/Migration/`. Remove the generated guard only after implementing and reviewing `up()`. Migration constructors should inject services only; do not make API calls in constructors or `description()`.
 
 The files in [`examples/migrations/`](../examples/migrations/) end in `.php.example`, live outside the discovered `migrations/` directory and are not executable migrations. Use them as references: create a fresh migration with the command, then adapt the example code into that file. Do not move the examples into `migrations/` unchanged.
 
@@ -78,8 +78,8 @@ Run the local checks before any tenant request:
 
 ```sh
 composer check
-php bin/console app:migrations:status
-php bin/console app:migrations:migrate --dry-run
+php bin/console bluestone:migrations:status
+php bin/console bluestone:migrations:migrate --dry-run
 ```
 
 `composer check` uses offline fixtures and does not contact Bluestone. `--dry-run` lists the pending plan; it does **not** validate the remote tenant, permissions, IDs, payload semantics or current data. Review the migration source and target/database configuration separately.
@@ -87,8 +87,8 @@ php bin/console app:migrations:migrate --dry-run
 When the dedicated test tenant and its credentials are available, apply the planned migrations explicitly:
 
 ```sh
-php bin/console app:migrations:migrate
-php bin/console app:migrations:status
+php bin/console bluestone:migrations:migrate
+php bin/console bluestone:migrations:status
 ```
 
 Inspect the resulting catalog, category, product and value in that tenant before preparing a production run. Do not point a test ledger at production or reuse one ledger for multiple targets. A live run is always explicit; installation and normal project checks do not call Bluestone.
@@ -99,11 +99,11 @@ If a migration fails, inspect its completed steps and the tenant state before us
 
 - Keep migration versions immutable after application. Add a later migration for every change.
 - Use stable, unique product, category and definition numbers. Do not generate new numbers during each retry.
-- Use `executeTyped()` or a typed domain runner for requests with a pinned contract. Confirm the current `app:api:coverage` report; generated methods and fixture verification are separate evidence.
+- Use `executeTyped()` or a typed domain runner for requests with a pinned contract. Confirm the current `bluestone:api:coverage` report; generated methods and fixture verification are separate evidence.
 - Use one named step or mutation for each independently recoverable action. Persist only small IDs or other non-sensitive values.
 - Split asynchronous submission from polling and retain the returned task ID before waiting.
 - Reconcile uncertain creates/updates by a documented stable identifier before any manual retry.
 - Add schema-specific offline fixtures when introducing a new operation. Current fixture coverage is not proof of live tenant behavior.
 - Keep destructive, broad-effect, policy, permission and tenant-wide changes in separately reviewed migrations with their own explicit prerequisites and recovery plan.
 
-The full set of operation IDs and generated signatures is available through `php bin/console app:api:list pim`; use the pinned OpenAPI JSON and the official endpoint documentation to confirm each request's actual semantics. The examples here have not been executed against a live Bluestone tenant.
+The full set of operation IDs and generated signatures is available through `php bin/console bluestone:api:list pim`; use the pinned OpenAPI JSON and the official endpoint documentation to confirm each request's actual semantics. The examples here have not been executed against a live Bluestone tenant.

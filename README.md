@@ -2,6 +2,8 @@
 
 A Symfony 7.4 / PHP 8.2+ console application for versioned changes to Bluestone PIM through its Management API. Migrations and runners are autowired Symfony services. A local tracking database records applied migrations, attempts, failures and completed steps.
 
+This repository is also the source for the company Symfony bundle `youwe/bluestone-pim-sdk`. The reusable API, generated contracts, migration runner, workflow services and console commands use the `Youwe\BluestonePim\` namespace; the console kernel is the reference host. See [company SDK installation and release guidance](docs/company-sdk.md).
+
 Dedicated Symfony connectors cover all 16 API components in Bluestone's published specifications, with a local routing catalog for 547 documented operations. They support operation IDs, path/query parameters, JSON, raw/form/multipart bodies and endpoint-specific headers. The shared API runner also accepts complete Management API paths such as `/pim`, `/metadata` and `/media-bank`. Add specialised runner services for reusable business logic. See [API connectors](docs/api-connectors.md) for the component list and migration examples.
 
 ## Setup
@@ -36,7 +38,7 @@ Review the new revision and active pointer before adopting it. Existing revision
 composer build:contracts
 php bin/verify-generated-contracts
 composer check
-php bin/console app:api:coverage
+php bin/console bluestone:api:coverage
 ```
 
 The files have different roles:
@@ -60,44 +62,54 @@ BLUESTONE_API_BASE_URL=https://api.test.bluestonepim.com
 BLUESTONE_TOKEN_URL=https://idp.test.bluestonepim.com/op/token
 BLUESTONE_CLIENT_ID=your-client-id
 BLUESTONE_CLIENT_SECRET=your-client-secret
-DATABASE_URL="sqlite:///%kernel.project_dir%/var/migrations.db"
+BLUESTONE_MIGRATIONS_DATABASE_URL="sqlite:///%kernel.project_dir%/var/bluestone-migrations.db"
 ```
 
-SQLite's file and directory are created automatically. PostgreSQL and MySQL connection examples are in `.env.local.example`; create those databases first and install the matching PDO extension. Tables are initialized on the first real migration run.
+SQLite's file and directory are created automatically. PostgreSQL and MySQL connection examples are in `.env.local.example`; create those databases first and install the matching PDO extension. Tables are initialized on the first real migration run or explicitly with `bluestone:migrations:install`.
 
-Use a **separate persistent database for each Bluestone tenant/environment**. Keep its data between releases and back it up. The first run binds the ledger to `BLUESTONE_TARGET` and the API base URL; later runs reject a different configuration. This is a configuration guard, not validation of the organization associated with your credentials. Ensure those credentials belong to the configured target. Credential rotation does not reset the ledger.
-
-### Run the console and MySQL with DDEV
-
-This project currently provides a Symfony **console application**, not a browser-facing web UI. The checked-in DDEV config starts a PHP 8.3 container and MySQL 8.0, with the database URL pointed at DDEV's internal `db` service. `webserver_type: generic` keeps the repository root from being served as a website.
-
-```sh
-ddev start
-ddev composer install
-ddev composer build:contracts
-ddev exec php bin/console list
-ddev exec php bin/console app:migrations:status
-ddev exec php bin/console app:migrations:migrate --dry-run
-```
-
-`ddev start` launches the local PHP and MySQL services. The dry run lists pending migrations without executing migration code or contacting Bluestone. To use the DDEV database from a host-side PHP process, set `DATABASE_URL` to the host connection shown by `ddev describe`; inside DDEV use the configured `db` hostname. DDEV's local database is for development only; keep production credentials and tracking databases separate. See the [DDEV configuration](https://ddev.readthedocs.io/en/stable/users/configuration/config/) and [database type reference](https://ddev.readthedocs.io/en/stable/users/extend/database-types/).
+Use a **separate persistent `BLUESTONE_MIGRATIONS_DATABASE_URL` for each Bluestone tenant/environment**. Keep its data between releases and back it up. The first run binds the ledger to `BLUESTONE_TARGET` and the API base URL; later runs reject a different configuration. This is a configuration guard, not validation of the organization associated with your credentials. Ensure those credentials belong to the configured target. Credential rotation does not reset the ledger. The SDK connection is separate from the host application's `DATABASE_URL`.
 
 ## Commands
 
 ```sh
-php bin/console app:migrations:make "Rename a catalog node"
-php bin/console app:migrations:status
-php bin/console app:migrations:migrate --dry-run
-php bin/console app:migrations:migrate
+php bin/console bluestone:migrations:make "Rename a catalog node"
+php bin/console bluestone:migrations:install
+php bin/console bluestone:migrations:status
+php bin/console bluestone:migrations:migrate --dry-run
+php bin/console bluestone:migrations:migrate
 # After inspecting and reconciling a failed/interrupted operation:
-php bin/console app:migrations:migrate --retry
+php bin/console bluestone:migrations:migrate --retry
 ```
+
+### Use the SDK from another Symfony application
+
+Install `youwe/bluestone-pim-sdk` from the company Composer repository, then use the package executable. Symfony Flex is optional. If the consuming app uses DDEV, configure and start DDEV in that host app and run these commands inside its container; this SDK repository does not ship a DDEV project:
+
+```sh
+composer require youwe/bluestone-pim-sdk:^1.0
+vendor/bin/bluestone bluestone:migrations:install
+vendor/bin/bluestone bluestone:migrations:make "Create starter catalog"
+vendor/bin/bluestone bluestone:migrations:migrate --dry-run
+```
+
+The install command creates the database ledger and binds it to the configured target without contacting Bluestone. If no `BLUESTONE_MIGRATIONS_DATABASE_URL` is configured, the package uses SQLite at `var/bluestone-migrations.db`; the PIM base URL defaults to Bluestone test, but `BLUESTONE_TARGET` must be set explicitly. Set the target, API URLs and credentials in the consuming application's environment or secret manager before installing or applying migrations. The SDK tracking database is separate from the host app's `DATABASE_URL`. See [company SDK installation](docs/company-sdk.md).
+
+Migrations in a standard Symfony `App\` service scan can extend `AbstractPimMigration` and call the reusable checkpointed helper:
+
+```php
+$catalogId = $this->createCategory($context, 'starter-catalog', [
+    'name' => 'Starter catalog',
+    'number' => 'EXAMPLE-CATALOG-001',
+]);
+```
+
+Other documented operations are available through typed component connectors and workflow services. Use the SDK CLI for migration and API inspection commands; the OpenAPI operations themselves remain authenticated PHP calls inside migration code.
 
 `make` writes a timestamped class to `migrations/`. Implement its `up()` method and remove the generated guard before running it. The guard prevents an unfinished migration being recorded as successfully applied. Migration descriptions and constructors must have no side effects.
 
 `status` shows each migration's state, attempt count, completed checkpoint count, applied timestamp and last exception type. `--dry-run` only lists the plan: it does not invoke `up()`, run API requests or insert tracking rows. Opening a new SQLite database can create an empty database file. The plan does not validate remote permissions, payloads or current PIM data.
 
-Migrations run in ascending UTC timestamp order. Applied versions are skipped. The runner stops at the first failure and exits unsuccessfully. Retrying a failed or interrupted migration requires `--retry` and skips completed checkpoints. Migration file checksums prevent editing a version once it has been applied. You can correct a failed migration before retrying it; preserve its completed checkpoint names and behavior because they will remain skipped. Missing historical migrations and newly inserted versions older than the latest applied version are rejected. Keep historical migration files and add a later migration to change previously applied behavior.
+Migrations run in ascending UTC timestamp order. Applied versions are skipped. The runner stops at the first failure and exits unsuccessfully. Retrying a failed or interrupted migration requires `--retry` and skips completed checkpoints. Applied migrations use a normalized PHP token checksum, so comment and formatting changes do not alter the checksum while executable changes are still rejected. On the first migration run after upgrading from a release that stored raw file hashes, the runner rebases hashes only for byte-for-byte unchanged applied files; do that run before reformatting old migrations. You can correct a failed migration before retrying it; preserve its completed checkpoint names and behavior because they will remain skipped. Missing historical migrations and newly inserted versions older than the latest applied version are rejected. Keep historical migration behavior and add a later migration to change previously applied state.
 
 Use the domain mutation runners for writes that may be repeated by migration retries. Their durable intent prevents automatic resubmission when a response was lost; see [mutation recovery](docs/mutation-recovery.md) for the reconciliation path.
 
@@ -110,8 +122,8 @@ The application has two levels of runners:
 | Service | Purpose |
 | --- | --- |
 | `MigrationRunner` | Orders migrations, owns the database lock, and records progress. |
-| `ApiOperationRunner` | Executes any documented Management API request with authenticated HTTP and a lock heartbeat. |
-| `App\Api\Connector\*Connector` | Component services that dispatch published operation IDs using the local specification catalog. |
+| `ApiOperationRunner` | Executes any documented Management API request with authenticated HTTP, safe transient retries and a migration lock heartbeat when called during a migration. |
+| `Youwe\BluestonePim\Api\Connector\*Connector` | Component services that dispatch published operation IDs using the local specification catalog. |
 | `CatalogRunner` | Checkpointed typed catalog-node updates. |
 | `ProductMutationRunner` | Checkpointed product creation and updates with stable identifiers and saved resource IDs. |
 | `AttributeDefinitionMutationRunner` | Checkpointed attribute-definition creation using a stable unique number. |
@@ -129,9 +141,9 @@ declare(strict_types=1);
 
 namespace BluestoneMigrations;
 
-use App\Migration\MigrationContext;
-use App\Migration\MigrationInterface;
-use App\Service\CatalogRunner;
+use Youwe\BluestonePim\Migration\MigrationContext;
+use Youwe\BluestonePim\Migration\MigrationInterface;
+use Youwe\BluestonePim\Service\CatalogRunner;
 
 final class Version20261028130000 implements MigrationInterface
 {
@@ -196,7 +208,7 @@ Checkpoint names must be stable and unique within their migration. Return only s
 
 HTTP requests have a 60-second maximum duration and there are no automatic write retries, including on 401, 429 or 5xx responses. Access tokens are cached in memory and renewed before expiry. The database lock expires after 300 seconds if a process crashes and is refreshed around requests and checkpoints. Long-running loops, custom HTTP work or waits must call `$context->heartbeat()` at least every 60 seconds. All processes for the same target must use the same tracking database; separate ledgers cannot coordinate locks.
 
-The runner is forward-only. Undo a PIM change through a new corrective migration. A database rollback cannot undo an HTTP request. Changes to injected runner implementations can affect older migrations and retries, so preserve their historical behavior or version the runner logic where necessary. `app:api:migration-compatibility` compares operation records for unfinished migrations with the active OpenAPI revision; it excludes applied migrations and never changes migration state.
+The runner is forward-only. Undo a PIM change through a new corrective migration. A database rollback cannot undo an HTTP request. Changes to injected runner implementations can affect older migrations and retries, so preserve their historical behavior or version the runner logic where necessary. `bluestone:api:migration-compatibility` compares operation records for unfinished migrations with the active OpenAPI revision; it excludes applied migrations and never changes migration state.
 
 ## Checks and running elsewhere
 
@@ -206,9 +218,9 @@ composer check
 
 This validates Composer metadata, lints Symfony's service container, verifies generated contracts against PHP 8.2 syntax and the pinned specifications, and runs PHPUnit tests with mocked HTTP and real SQLite persistence. No credentials or live Bluestone instance are required for those checks.
 
-Use `php bin/console app:api:list` to browse API components, or `php bin/console app:api:list pim --tag="Catalog nodes"` to list operations in one area. Discovery reads local files and makes no API calls. To refresh from Bluestone's public specifications, run `php bin/update-api-catalog`. It builds the candidate snapshot and matching DTOs/facades before switching the active revision pointer. Review the changes, then run `composer check`. Run `php bin/generate-api-models` separately to reproduce generated files from the currently active offline snapshot.
+Use `php bin/console bluestone:api:list` to browse API components, or `php bin/console bluestone:api:list pim --tag="Catalog nodes"` to list operations in one area. Discovery reads local files and makes no API calls. To refresh from Bluestone's public specifications, run `php bin/update-api-catalog`. It builds the candidate snapshot and matching DTOs/facades before switching the active revision pointer. Review the changes, then run `composer check`. Run `php bin/generate-api-models` separately to reproduce generated files from the currently active offline snapshot.
 
-`php bin/console app:api:coverage` reports routing, typed contracts, fixtures, workflows and live verification separately. Add `--json` for the per-operation inventory. `php bin/console app:api:async-inventory` finds operations with response signals that may indicate asynchronous work. After importing a new specification revision, compare it with `php bin/diff-api-specifications --before=OLD_REV --after=NEW_REV --component=pim`.
+`php bin/console bluestone:api:coverage` reports routing, typed contracts, fixtures, workflows and live verification separately. Add `--json` for the per-operation inventory. `php bin/console bluestone:api:async-inventory` finds operations with response signals that may indicate asynchronous work. After importing a new specification revision, compare it with `php bin/diff-api-specifications --before=OLD_REV --after=NEW_REV --component=pim`.
 
 For production, supply secrets through environment variables, use `APP_ENV=prod` and `APP_DEBUG=0`, retain the tracking database and run `php bin/console cache:clear --env=prod` whenever the migration set changes. This rebuilds the service container so new migration classes are registered. Run the migration command explicitly as part of your release process; the repository does not trigger a deployment or call Bluestone automatically during installation.
 

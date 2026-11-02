@@ -4,7 +4,7 @@ The default test suite is offline and must not call a Bluestone tenant. The sele
 
 `resources/bluestone/live-fixture-policy.json` is the reviewed fixture policy. Its `default_groups` list is empty. Every group requires an explicit selection and declares its expected effect, prerequisites and cleanup behavior. Policy tests verify that read, media, webhook and IDP groups are not implicitly selected. This policy is preparation only: it does not claim that any group has been run or remotely verified.
 
-Use `php bin/console app:api:live-plan --target=<tenant> --group=<group> --operation=<component:operationId>` to validate a proposed scope. Repeat `--group` and `--operation` for additional selections. The command is plan-only and never sends API requests. The current status is `blocked`, and the plan reports `execution_allowed: false`. IDP administrative groups also require `--allow-broad-effect` in the plan.
+Use `php bin/console bluestone:api:live-plan --target=<tenant> --group=<group> --operation=<component:operationId>` to validate a proposed scope. Repeat `--group` and `--operation` for additional selections. The command is plan-only and never sends API requests. The current status is `blocked`, and the plan reports `execution_allowed: false`. IDP administrative groups also require `--allow-broad-effect` in the plan.
 
 ## Broad-effect and externally visible operations
 

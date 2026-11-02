@@ -1,6 +1,6 @@
 # Asynchronous operation inventory
 
-Run `php bin/console app:api:async-inventory` to inspect the active pinned specification, or add `--json` for the per-operation report. Each candidate includes its component, operation ID, HTTP route, specification signals and assessment. The command examines each of the 16 pinned component specifications offline.
+Run `php bin/console bluestone:api:async-inventory` to inspect the active pinned specification, or add `--json` for the per-operation report. Each candidate includes its component, operation ID, HTTP route, specification signals and assessment. The command examines each of the 16 pinned component specifications offline.
 
 The inventory uses two supported polling protocols:
 
