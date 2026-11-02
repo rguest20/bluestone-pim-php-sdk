@@ -104,6 +104,16 @@ final class MigrationStorage
         return $this->connection->fetchAllAssociativeIndexed('SELECT migration.*, contract.revision AS contract_revision FROM pim_migration migration LEFT JOIN pim_migration_contract contract ON contract.version = migration.version ORDER BY migration.version');
     }
 
+    /** Upgrade an unchanged, previously applied raw-file checksum while the migration lock is held. */
+    public function upgradeAppliedChecksum(string $version, string $legacyChecksum, string $codeChecksum): void
+    {
+        $this->connection->update('pim_migration', ['checksum' => $codeChecksum], [
+            'version' => $version,
+            'status' => 'applied',
+            'checksum' => $legacyChecksum,
+        ]);
+    }
+
     /** A migration keeps the contract revision it first used, including after a failed attempt. */
     public function start(MigrationDefinition $definition, ?string $currentRevision = null): string
     {

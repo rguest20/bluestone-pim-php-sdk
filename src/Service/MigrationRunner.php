@@ -35,7 +35,10 @@ final class MigrationRunner
             if (!isset($definitions[$version])) {
                 throw new \RuntimeException(sprintf('Previously started migration %s is missing from the repository.', $version));
             }
-            if ($row['status'] === 'applied' && !hash_equals($row['checksum'], $definitions[$version]->checksum)) {
+            $definition = $definitions[$version];
+            $checksumMatches = hash_equals($row['checksum'], $definition->checksum)
+                || ($definition->legacyChecksum !== null && hash_equals($row['checksum'], $definition->legacyChecksum));
+            if ($row['status'] === 'applied' && !$checksumMatches) {
                 throw new \RuntimeException(sprintf('Migration %s has changed after it was applied. Restore the original and create a new migration.', $version));
             }
         }
@@ -67,6 +70,9 @@ final class MigrationRunner
         $this->lock->acquire();
         try {
             $this->storage->initialize();
+            // Check the ledger target before making even checksum-only metadata updates.
+            $this->storage->assertTarget();
+            $this->upgradeLegacyChecksums();
             $plan = $this->plan();
             $this->storage->assertTarget(true);
             $count = 0;
@@ -103,6 +109,21 @@ final class MigrationRunner
             return $count;
         } finally {
             $this->lock->release();
+        }
+    }
+
+    /** Move legacy raw-file checksums only when the current source is byte-for-byte unchanged. */
+    private function upgradeLegacyChecksums(): void
+    {
+        $history = $this->storage->history();
+        foreach ($this->registry->all() as $version => $definition) {
+            $row = $history[$version] ?? null;
+            if ($row === null || $row['status'] !== 'applied' || $definition->legacyChecksum === null) {
+                continue;
+            }
+            if (hash_equals($definition->legacyChecksum, $row['checksum'])) {
+                $this->storage->upgradeAppliedChecksum($version, $definition->legacyChecksum, $definition->checksum);
+            }
         }
     }
 }
