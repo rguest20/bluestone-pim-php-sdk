@@ -2,7 +2,7 @@
 
 See [proposal.md](proposal.md) for motivation and the four capability deltas under `specs/` for the behavior contracts.
 
-The repository already provides component services, a 547-operation routing snapshot, shared HTTP authentication, and persistent migration checkpoints. `SpecificationCompiler` currently discards request/response schemas when extracting routing metadata. `CatalogRunner` and `PimJobRunner` demonstrate domain workflows; broader component workflows and typed contracts remain to be implemented. Existing tests use mocked HTTP and SQLite. There is no live endpoint verification evidence.
+The repository is currently a Symfony console migration application with 16 component connectors, 547 generated named operations, pinned OpenAPI revisions, fixture evidence, shared HTTP authentication, persistent migration checkpoints and reusable PIM/media workflows. The Composer root is still a `project`, public classes use the application namespace, and generated PHP contracts live under an ignored build directory. The runtime consumes pinned local contracts; there is no live endpoint verification evidence.
 
 Node 22 is selected through `.nvmrc`. It supports development tools; generated application artifacts must remain compatible with PHP 8.2 and Symfony 7.4.
 
@@ -14,6 +14,7 @@ Node 22 is selected through `.nvmrc`. It supports development tools; generated a
 - Make full specifications, generated output and coverage evidence reproducible as a compatible revision set.
 - Keep multi-request workflows resumable without changing the meaning of completed checkpoints.
 - Distinguish offline contract checks from evidence obtained through a test tenant.
+- Deliver the reusable API and migration capabilities as a company-maintained Composer SDK that company PHP applications can install and use.
 
 **Non-Goals:**
 
@@ -21,6 +22,7 @@ Node 22 is selected through `.nvmrc`. It supports development tools; generated a
 - Automatically executing every operation against a tenant or running production migrations during installation.
 - Promising atomic transactions or exactly-once execution across HTTP and database writes.
 - Building business-specific import transformations before their source data and desired changes are defined.
+- Publishing an official Bluestone-maintained or public Packagist SDK.
 
 ## Decisions
 
@@ -62,6 +64,20 @@ Provide a separate integration suite requiring a named test target and selected 
 
 No tenant writes are part of this planning change. Default `composer check` remains offline. PostgreSQL/MySQL ledger checks are additional targeted integration checks before claiming those deployment combinations verified.
 
+### 7. Make this repository the source for the company Composer SDK
+
+Treat this repository as the source of a company-maintained PHP Composer SDK/toolkit, with the current migration console as its development host and reference integration. Do not require a new repository as part of the package work. Publish one library package named `youwe/bluestone-pim-sdk` and use `Youwe\BluestonePim\` for SDK classes. Migration classes remain in the consuming application's namespace and directory; the SDK supplies the interface, runner and Symfony service configuration.
+
+The package surface covers typed component operations, transport/authentication, pinned contract revision data, generated DTOs/facades, validation, migration tracking, reusable workflow services and reusable migration/inspection console commands. Keep the migration ledger and its HTTP lock guarantees intact. The console kernel, tests and sample migrations remain development/reference-host concerns; they are not part of the SDK's public API. DDEV belongs in the consuming host application's repository and is not shipped from this SDK repository.
+
+Release artifacts must contain generated code matching the packaged OpenAPI revision. Keep generated PHP out of the source repository and produce a complete package artifact through a deterministic offline build. A clean consumer installation must prove that Composer autoloading, service registration, pinned revision selection and offline typed calls work without source copying. Keep the package under company-controlled distribution; this change does not assume a public registry.
+
+### 8. Make the Composer package usable without Symfony Flex
+
+Ship the SDK as a `symfony-bundle` package with a Composer `bin` executable that boots the consuming Symfony application's configuration and enables the SDK bundle for that CLI process. The consumer can install the package and run `vendor/bin/bluestone bluestone:migrations:install` without editing `config/bundles.php`. SDK commands use the `bluestone:` namespace. The install command creates the tracking tables and binds them to the explicitly configured target without making API calls. Use a dedicated `BLUESTONE_MIGRATIONS_DATABASE_URL` connection with a local SQLite default; never replace the host application's DBAL connection or `DATABASE_URL`. Require an explicit target label before binding the ledger, and use Bluestone test-host defaults for API URLs. Give non-secret optional credentials and media settings empty service defaults so the SDK bundle can load alongside host application services. Discover and generate migrations under `src/Migration` and `App\Migration`. Provide reusable helpers such as `AbstractPimMigration::createCategory()` so migrations can call typed, checkpointed operations in concise domain language. Flex registration remains an optional convenience for exposing SDK commands through the application's own `bin/console`; private recipes can be published separately.
+
+Mutation callbacks distinguish explicit pre-dispatch validation/configuration failures from failures after dispatch may have begun. Persist a `not_sent` state for the former so a retry can safely submit the unchanged request; preserve the original exception as the cause for uncertain outcomes and continue to stop automatic retries.
+
 ## Risks / Trade-offs
 
 - **Specification gaps or incorrect schemas** → Keep source provenance, record gaps, add verified fixtures, and avoid inventing undocumented field constraints.
@@ -78,6 +94,7 @@ No tenant writes are part of this planning change. Default `composer check` rema
 2. Prove and pin generation/validation tooling; generate typed adapters and models in component-sized increments with offline fixtures.
 3. Add and verify workflow services, preserving existing generic calls and checkpoint records.
 4. Add the scoped integration harness and execute only the selected test-tenant fixtures once their prerequisites are available.
-5. Publish documentation and the coverage report, including outstanding live-verification gaps. Rebuild the production service container before using newly added services.
+5. Resolve the SDK/application package boundary, establish stable package metadata and namespace, and prove installation from a clean company consumer.
+6. Publish SDK installation/update documentation and the coverage report, including outstanding live-verification gaps. Rebuild the production service container before using newly added services.
 
 Rollback selects the previous compatible application/contract artifact set and retains the tracking database. It does not roll back API side effects; changes already applied to Bluestone require reconciliation or a forward corrective migration.

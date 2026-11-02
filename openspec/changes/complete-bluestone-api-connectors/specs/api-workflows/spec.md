@@ -30,11 +30,27 @@ The system SHALL poll asynchronous operations using each service's documented st
 
 ### Requirement: Recoverable mutations
 
-Mutation workflows SHALL use stable resource identifiers or documented idempotency support where available. When the remote outcome is uncertain and cannot be established through documented reads, the workflow SHALL report that reconciliation is required before another write.
+Mutation workflows SHALL use stable resource identifiers or documented idempotency support where available. Failures identified before the business request is dispatched SHALL leave the mutation safely retryable and preserve the original exception. Once dispatch may have occurred, an uncertain remote outcome SHALL preserve the original cause and require reconciliation before another write.
+
+#### Scenario: Request validation fails before dispatch
+- **WHEN** local validation rejects a mutation before its business request is sent
+- **THEN** the mutation is marked `not_sent`, the original validation error is surfaced, and retry may safely dispatch the same immutable request
 
 #### Scenario: Response is lost after remote acceptance
 - **WHEN** a create request has an uncertain outcome following a connection failure
-- **THEN** retry checks for the intended resource or uses documented idempotency support before creating another resource, and otherwise stops for reconciliation
+- **THEN** the original exception remains available as the cause and retry checks for the intended resource or uses documented idempotency support before creating another resource, otherwise stopping for reconciliation
+
+### Requirement: Applied migration integrity
+
+The runner SHALL reject executable changes to applied migrations while allowing changes limited to comments and formatting. Existing raw-file checksums SHALL be upgraded only when the current applied migration source still matches the legacy checksum byte-for-byte.
+
+#### Scenario: Comment or formatting change after checksum upgrade
+- **WHEN** an applied migration has the normalized checksum and only comments or formatting change
+- **THEN** the runner accepts the migration as unchanged
+
+#### Scenario: Executable migration change
+- **WHEN** executable tokens in an applied migration change
+- **THEN** the runner rejects the version and requires a new corrective migration
 
 ### Requirement: Media workflow support
 
