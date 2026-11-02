@@ -10,5 +10,6 @@
 /build/
 /tests/consumer/vendor/
 /experiment/
+/openspec/
 /.ddev/
 /.env

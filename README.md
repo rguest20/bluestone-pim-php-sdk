@@ -226,16 +226,9 @@ Use `php bin/console bluestone:api:list` to browse API components, or `php bin/c
 
 For production, supply secrets through environment variables, use `APP_ENV=prod` and `APP_DEBUG=0`, retain the tracking database and run `php bin/console cache:clear --env=prod` whenever the migration set changes. This rebuilds the service container so new migration classes are registered. Run the migration command explicitly as part of your release process; the repository does not trigger a deployment or call Bluestone automatically during installation.
 
-## OpenSpec planning
+## API change guide
 
-Development tooling uses Node 22. Run `nvm use` from this directory before running the installed OpenSpec CLI.
-
-The broader connector proposal is tracked in [complete-bluestone-api-connectors](openspec/changes/complete-bluestone-api-connectors/proposal.md), with [implementation tasks](openspec/changes/complete-bluestone-api-connectors/tasks.md), a technical design and four capability specifications. All 547 operation methods are generated. Contract tooling, pagination, job recovery and coverage evidence have offline checks; broader per-operation fixtures, mutation/media workflows and tenant verification remain open. See [implementation evidence](docs/implementation-evidence.md) for the current verification scope.
-
-```sh
-openspec status --change complete-bluestone-api-connectors
-openspec validate complete-bluestone-api-connectors --strict
-```
+Browse all 547 operations by function in the [API changes guide](docs/api-guide/index.md). For migration examples and safe write patterns, see [How to add or change things in Bluestone PIM](docs/making-pim-changes.md). The pages are generated from the pinned OpenAPI revision with `php bin/build-api-change-guide`.
 
 ## API documentation
 

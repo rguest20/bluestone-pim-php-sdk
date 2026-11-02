@@ -1,6 +1,6 @@
 # Live tenant verification prerequisites
 
-The default test suite is offline and must not call a Bluestone tenant. The selected OpenSpec change records live verification as blocked until a dedicated test tenant, credentials and disposable fixtures are available. The date in that record is a planning note; it does not enable tests automatically.
+The default test suite is offline and must not call a Bluestone tenant. Live verification remains blocked until a dedicated test tenant, credentials and disposable fixtures are available. This is a prerequisite, not evidence that tests have run or an automatic opt-in.
 
 `resources/bluestone/live-fixture-policy.json` is the reviewed fixture policy. Its `default_groups` list is empty. Every group requires an explicit selection and declares its expected effect, prerequisites and cleanup behavior. Policy tests verify that read, media, webhook and IDP groups are not implicitly selected. This policy is preparation only: it does not claim that any group has been run or remotely verified.
 

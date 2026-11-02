@@ -26,7 +26,6 @@ Recorded on 2026-10-31 for OpenAPI revision `2c19c082ed473e21`.
 - `composer dump-autoload --optimize --strict-psr` passed with no class mapping warnings.
 - `APP_ENV=prod APP_DEBUG=0 php bin/console lint:container` passed.
 - `php bin/verify-generated-contracts` parsed **2,756 PHP files using PHP 8.2 syntax**, reconciled all named methods, recompiled the routing catalogs from the stored source documents, and checked the model/normalizer sets and absence of independent generated HTTP clients.
-- `openspec validate complete-bluestone-api-connectors --strict` passed under Node **22.23.2**.
 - `php bin/update-api-catalog --source-dir=resources/bluestone/revisions/2c19c082ed473e21/openapi` passed using local inputs and retained the same active revision.
 - UI settings, Bulk Operations, Labels, Global Settings, Metadata, Completeness Score, History, Tasks, Search, Query Builder and PIM fixture documents contain valid/invalid request and response examples for every operation in those components. PIM's complete 224-operation fixture document is generated from the pinned OpenAPI schemas, then verified with valid request/response, invalid request/response and remote-error tests. Fixture document hashes and named test providers are recorded per operation in `resources/bluestone/contract-evidence.json`.
 - `php bin/console bluestone:api:async-inventory --json` classified all 58 specification-signal candidates: two map to the implemented component-specific pollers and 56 have explicit protocol-review gaps. It makes no live calls and does not infer polling from HTTP 202 alone.
@@ -53,6 +52,6 @@ Tests ran on **PHP 8.5.5**. Dependencies are resolved for the Composer PHP 8.2 p
 
 ## Remaining evidence and implementation
 
-The unchecked OpenSpec tasks remain authoritative. PIM has complete offline fixture coverage for all 224 pinned operations. The explicit live fixture executor and isolated cleanup suite are not complete. The reviewed selection policy has no default live groups and keeps IDP administrative writes separately scoped. Live verification remains blocked at the user's request until a dedicated tenant, credentials and disposable fixtures are configured.
+PIM has complete offline fixture coverage for all 224 pinned operations. The explicit live fixture executor and isolated cleanup suite are not complete. The reviewed selection policy has no default live groups and keeps IDP administrative writes separately scoped. Live verification remains blocked at the user's request until a dedicated tenant, credentials and disposable fixtures are configured.
 
 No live API reads or writes, remote Git actions, deployments or Git staging were performed during these checks.
