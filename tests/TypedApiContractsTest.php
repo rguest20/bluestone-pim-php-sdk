@@ -138,17 +138,15 @@ final class TypedApiContractsTest extends TestCase
         self::assertStringContainsString('/bulk-operations/', $factory->forComponent('bulk-operations')->getJobStatus('job')->getInfo('url'));
     }
 
-    public function testGeneratedFacadeRetainsLockRequirement(): void
+    public function testGeneratedFacadeWorksWithoutAMigrationLock(): void
     {
-        $http = new MockHttpClient();
+        $http = new MockHttpClient([
+            new MockResponse('{"access_token":"test"}'),
+            new MockResponse('{"status":"COMPLETED"}', ['response_headers' => ['Content-Type: application/json']]),
+        ]);
         $this->lock->release();
-        try {
-            $this->factory($http)->forComponent('pim')->getJobStatus('task');
-            self::fail('The lock must be active.');
-        } catch (\RuntimeException $error) {
-            self::assertStringContainsString('active migration', $error->getMessage());
-            self::assertSame(0, $http->getRequestsCount());
-        }
+        $this->factory($http)->forComponent('pim')->getJobStatus('task');
+        self::assertSame(2, $http->getRequestsCount());
     }
 
     public function testPublicGeneratedCallsUseApiKeyIndependentlyOfOauthAndHealthUsesNeither(): void

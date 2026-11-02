@@ -44,6 +44,12 @@ final class MigrationLock
         $this->lock->refresh();
     }
 
+    /** Refresh the migration lease when one exists; standalone SDK requests have no lease. */
+    public function refreshIfHeld(): void
+    {
+        $this->lock?->refresh();
+    }
+
     public function release(): void
     {
         $this->lock?->release();

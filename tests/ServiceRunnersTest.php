@@ -69,12 +69,11 @@ final class ServiceRunnersTest extends TestCase
         (new PimJobRunner($this->pim($http)))->waitForCompletion('task-id', 5, 1);
     }
 
-    public function testApiRunnerRequiresAnActiveMigrationLock(): void
+    public function testApiRunnerWorksWithoutAMigrationLock(): void
     {
-        $http = new MockHttpClient();
+        $http = new MockHttpClient([new MockResponse('{"access_token":"test"}'), new MockResponse('{}')]);
         $this->lock->release();
-        $this->expectExceptionMessage('inside an active migration run');
-        $this->api($http)->run('GET', '/pim/example');
+        self::assertSame(200, $this->api($http)->run('GET', '/pim/example')->getStatusCode());
     }
 
     private function api(MockHttpClient $http): ApiOperationRunner
