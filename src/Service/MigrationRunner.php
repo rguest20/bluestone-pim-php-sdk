@@ -1,0 +1,106 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Service;
+
+use App\Api\BluestoneApiException;
+use App\Migration\MigrationContext;
+use App\Migration\MigrationLock;
+use App\Migration\MigrationRegistry;
+use App\Migration\MigrationStorage;
+use App\Api\ApiRevisionContext;
+use App\Api\OperationCatalog;
+
+final class MigrationRunner
+{
+    public function __construct(
+        private readonly MigrationRegistry $registry,
+        private readonly MigrationStorage $storage,
+        private readonly MigrationLock $lock,
+        private readonly ?OperationCatalog $catalog = null,
+        private readonly ?ApiRevisionContext $revisionContext = null,
+    ) {
+    }
+
+    /** Reads the plan without initializing tables or contacting Bluestone. */
+    public function plan(): array
+    {
+        $this->storage->assertTarget();
+        $history = $this->storage->history();
+        $definitions = $this->registry->all();
+        foreach ($history as $version => $row) {
+            if (!isset($definitions[$version])) {
+                throw new \RuntimeException(sprintf('Previously started migration %s is missing from the repository.', $version));
+            }
+            if ($row['status'] === 'applied' && !hash_equals($row['checksum'], $definitions[$version]->checksum)) {
+                throw new \RuntimeException(sprintf('Migration %s has changed after it was applied. Restore the original and create a new migration.', $version));
+            }
+        }
+        $lastApplied = '';
+        foreach ($history as $version => $row) {
+            if ($row['status'] === 'applied') {
+                $lastApplied = max($lastApplied, (string) $version);
+            }
+        }
+        $plan = [];
+        foreach ($definitions as $definition) {
+            $row = $history[$definition->version] ?? null;
+            if (($row['status'] ?? 'pending') !== 'applied' && strcmp($definition->version, $lastApplied) < 0) {
+                throw new \RuntimeException('New migrations must have versions later than the last applied migration: '.$lastApplied);
+            }
+            $plan[] = ['version' => $definition->version, 'description' => $definition->migration->description(),
+                'status' => $row['status'] ?? 'pending', 'attempts' => $row['attempts'] ?? 0,
+                'steps' => $row === null ? 0 : $this->storage->completedStepCount($definition->version),
+                'contract_revision' => $row['contract_revision'] ?? null,
+                'applied_at' => $row['applied_at'] ?? '', 'error' => $row['error'] ?? ''];
+        }
+
+        return $plan;
+    }
+
+    /** @param callable(string): void $report */
+    public function run(bool $retry, callable $report): int
+    {
+        $this->lock->acquire();
+        try {
+            $this->storage->initialize();
+            $plan = $this->plan();
+            $this->storage->assertTarget(true);
+            $count = 0;
+            foreach ($plan as $row) {
+                if ($row['status'] === 'applied') {
+                    continue;
+                }
+                $version = $row['version'];
+                if ($row['status'] !== 'pending' && !$retry) {
+                    throw new \RuntimeException(sprintf('Migration %s is %s. Reconcile any incomplete API operation, then use --retry to resume.', $version, $row['status']));
+                }
+                $definition = $this->registry->all()[$version];
+                $this->lock->refresh();
+                $report('Running '.$version.': '.$row['description']);
+                $revision = $this->storage->start($definition, $this->catalog?->activeRevision());
+                $this->revisionContext?->select($revision, $version);
+                try {
+                    $definition->migration->up(new MigrationContext($version, $this->storage, $this->lock, $this->revisionContext));
+                    $this->lock->refresh();
+                    $this->storage->applied($version);
+                } catch (\Throwable $error) {
+                    // A runner that lost its lease must not overwrite the new owner's state.
+                    $this->lock->refresh();
+                    $this->storage->failed($version, $error);
+                    $detail = $error instanceof BluestoneApiException ? $error->getMessage() : $error::class;
+                    throw new \RuntimeException(sprintf('Migration %s failed (%s). Later migrations were not run. Reconcile and use --retry.', $version, $detail));
+                } finally {
+                    $this->revisionContext?->select(null);
+                }
+                ++$count;
+                $report('Applied '.$version);
+            }
+
+            return $count;
+        } finally {
+            $this->lock->release();
+        }
+    }
+}

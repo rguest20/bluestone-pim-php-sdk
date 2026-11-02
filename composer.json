@@ -1,0 +1,60 @@
+{
+    "name": "youwe/bluestone-api-migrations",
+    "description": "Symfony service-based migrations for the Bluestone PIM Management API",
+    "type": "project",
+    "license": "proprietary",
+    "require": {
+        "php": ">=8.2",
+        "ext-pdo": "*",
+        "ext-sodium": "*",
+        "doctrine/dbal": "^4.3",
+        "jane-php/open-api-runtime": "^7.14.4",
+        "league/openapi-psr7-validator": "^0.24",
+        "nyholm/psr7": "^1.8",
+        "symfony/console": "7.4.*",
+        "symfony/dotenv": "7.4.*",
+        "symfony/framework-bundle": "7.4.*",
+        "symfony/http-client": "7.4.*",
+        "symfony/lock": "7.4.*",
+        "symfony/runtime": "7.4.*",
+        "symfony/serializer": "7.4.*",
+        "symfony/validator": "7.4.*",
+        "symfony/yaml": "7.4.*"
+    },
+    "require-dev": {
+        "jane-php/open-api-3": "7.14.4",
+        "phpunit/phpunit": "^11.5"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/",
+            "App\\Generated\\": "generated/",
+            "BluestoneMigrations\\": "migrations/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "App\\Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "symfony/runtime": true
+        },
+        "sort-packages": true,
+        "platform": {
+            "php": "8.2.0"
+        }
+    },
+    "scripts": {
+        "test": "phpunit",
+        "build:contracts": "@php bin/build-api-contracts",
+        "check:databases": "@php bin/check-database-matrix",
+        "check": [
+            "@composer validate --strict",
+            "@php bin/console lint:container",
+            "@php bin/verify-generated-contracts",
+            "@test"
+        ]
+    }
+}

@@ -1,0 +1,69 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    _instanceof:
+        App\Migration\MigrationInterface:
+            tags: ['app.bluestone_migration']
+        App\Api\Connector\AbstractConnector:
+            tags: ['app.bluestone_api_connector']
+
+    App\:
+        resource: '../src/'
+        exclude:
+            - '../src/Kernel.php'
+            - '../src/Migration/MigrationDefinition.php'
+            - '../src/Migration/MigrationContext.php'
+            - '../src/Api/BluestoneApiException.php'
+
+    BluestoneMigrations\:
+        resource: '../migrations/'
+
+    Doctrine\DBAL\Connection:
+        factory: ['App\Database\ConnectionFactory', 'create']
+        arguments: ['%env(resolve:DATABASE_URL)%']
+
+    App\Api\BluestoneClient:
+        arguments:
+            $baseUrl: '%env(BLUESTONE_API_BASE_URL)%'
+            $tokenUrl: '%env(BLUESTONE_TOKEN_URL)%'
+            $clientId: '%env(BLUESTONE_CLIENT_ID)%'
+            $clientSecret: '%env(BLUESTONE_CLIENT_SECRET)%'
+            $publicApiKey: '%env(BLUESTONE_PUBLIC_API_KEY)%'
+
+    App\Service\MediaUploadRunner:
+        arguments:
+            $transferEncryptionKey: '%env(BLUESTONE_MEDIA_TRANSFER_KEY)%'
+            $allowedTransferHosts: '%env(BLUESTONE_MEDIA_UPLOAD_HOSTS)%'
+
+    App\Api\OperationCatalog:
+        arguments:
+            $directory: '%kernel.project_dir%/resources/bluestone'
+
+    App\Api\RevisionActivation:
+        arguments:
+            $directory: '%kernel.project_dir%/resources/bluestone'
+
+    App\Api\LiveFixtureSelection:
+        arguments:
+            $policyFile: '%kernel.project_dir%/resources/bluestone/live-fixture-policy.json'
+            $statusFile: '%kernel.project_dir%/resources/bluestone/live-verification-status.json'
+
+    App\Migration\MigrationRegistry:
+        arguments:
+            $migrations: !tagged_iterator app.bluestone_migration
+
+    App\Api\TypedApiAdapterFactory:
+        arguments:
+            $connectors: !tagged_iterator app.bluestone_api_connector
+            $projectDir: '%kernel.project_dir%'
+
+    App\Migration\MigrationStorage:
+        arguments:
+            $target: '%env(BLUESTONE_TARGET)%'
+            $baseUrl: '%env(BLUESTONE_API_BASE_URL)%'
+
+    App\Command\MakeMigrationCommand:
+        arguments:
+            $projectDir: '%kernel.project_dir%'

@@ -1,0 +1,10 @@
+/vendor/
+/var/
+/.env.local
+/.env.*.local
+/.phpunit.cache/
+/.phpunit.result.cache
+/.idea/
+/.DS_Store
+/config/reference.php
+/generated/
