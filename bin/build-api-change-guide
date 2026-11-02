@@ -1,0 +1,223 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+$root = dirname(__DIR__);
+$resources = $root.'/resources/bluestone';
+$pointer = json_decode(file_get_contents($resources.'/current.json'), true, 512, JSON_THROW_ON_ERROR);
+$revision = $pointer['revision'] ?? throw new RuntimeException('No active API revision is configured.');
+$revisionRoot = $resources.'/revisions/'.$revision;
+$manifest = json_decode(file_get_contents($revisionRoot.'/manifest.json'), true, 512, JSON_THROW_ON_ERROR);
+$catalogRoot = $revisionRoot.'/catalog';
+$openApiRoot = $revisionRoot.'/openapi';
+
+$pages = [
+    'catalogs-and-categories' => ['title' => 'Catalogs and categories', 'operations' => []],
+    'products-and-variants' => ['title' => 'Products and variants', 'operations' => []],
+    'attributes' => ['title' => 'Attributes', 'operations' => []],
+    'media-and-assets' => ['title' => 'Media and assets', 'operations' => []],
+    'settings-and-data-quality' => ['title' => 'Settings and data quality', 'operations' => []],
+    'users-and-permissions' => ['title' => 'Users and permissions', 'operations' => []],
+    'integrations-and-workflows' => ['title' => 'Integrations and workflows', 'operations' => []],
+    'public-api' => ['title' => 'Public API', 'operations' => []],
+    'other-functions' => ['title' => 'Other functions', 'operations' => []],
+];
+
+$pimTags = [
+    'Catalogs' => 'catalogs-and-categories',
+    'Catalog nodes' => 'catalogs-and-categories',
+    'Category attributes' => 'catalogs-and-categories',
+    'Category level attributes' => 'catalogs-and-categories',
+    'Category policy' => 'catalogs-and-categories',
+    'Products' => 'products-and-variants',
+    'Product groups' => 'products-and-variants',
+    'Products bundles' => 'products-and-variants',
+    'Product variants' => 'products-and-variants',
+    'Products categories' => 'products-and-variants',
+    'Products relations' => 'products-and-variants',
+    'Relations' => 'products-and-variants',
+    'Product policy' => 'products-and-variants',
+    'Relation policy' => 'products-and-variants',
+    'Products templates' => 'products-and-variants',
+    'Products labels' => 'products-and-variants',
+    'Products attributes' => 'attributes',
+    'Attribute definitions' => 'attributes',
+    'Attribute groups' => 'attributes',
+    'Attribute definition policies' => 'attributes',
+    'Compound attribute definitions' => 'attributes',
+    'Catalog node assets' => 'media-and-assets',
+    'Products assets' => 'media-and-assets',
+    'Validation' => 'settings-and-data-quality',
+    'Bulk' => 'products-and-variants',
+    'Technical' => 'other-functions',
+];
+
+$componentPages = [
+    'media-bank' => 'media-and-assets',
+    'global-settings' => 'settings-and-data-quality',
+    'completeness-score' => 'settings-and-data-quality',
+    'metadata' => 'settings-and-data-quality',
+    'ui-settings' => 'settings-and-data-quality',
+    'query-builder' => 'settings-and-data-quality',
+    'idp' => 'users-and-permissions',
+    'external-notifications' => 'integrations-and-workflows',
+    'tasks' => 'integrations-and-workflows',
+    'public-api-sync' => 'integrations-and-workflows',
+    'bulk-operations' => 'integrations-and-workflows',
+    'public-api' => 'public-api',
+    'history' => 'other-functions',
+    'labels' => 'other-functions',
+    'search' => 'other-functions',
+];
+
+$operationCount = 0;
+$unmapped = [];
+foreach (($manifest['components'] ?? []) as $component => $entry) {
+    $catalog = json_decode(file_get_contents($catalogRoot.'/'.$component.'.json'), true, 512, JSON_THROW_ON_ERROR);
+    $openApiFile = $entry['openapi_file'] ?? ($component.'.json');
+    $spec = json_decode(file_get_contents($openApiRoot.'/'.$openApiFile), true, 512, JSON_THROW_ON_ERROR);
+    $specOperations = [];
+    foreach (($spec['paths'] ?? []) as $path => $methods) {
+        foreach ($methods as $method => $operation) {
+            if (isset($operation['operationId'])) {
+                $specOperations[$operation['operationId']] = $operation;
+            }
+        }
+    }
+
+    foreach (($catalog['operations'] ?? []) as $operationId => $route) {
+        $method = strtoupper($route['method']);
+        ++$operationCount;
+        if ($component === 'pim') {
+            $tag = $route['tags'][0] ?? 'Other';
+            $page = $pimTags[$tag] ?? 'other-functions';
+            if (!isset($pimTags[$tag])) {
+                $unmapped[] = 'pim:'.$operationId.' (tag '.$tag.')';
+            }
+        } else {
+            $page = $componentPages[$component] ?? 'other-functions';
+            if (!isset($componentPages[$component])) {
+                $unmapped[] = $component.':'.$operationId;
+            }
+        }
+
+        $operation = $specOperations[$operationId] ?? [];
+        $summary = trim((string) ($operation['summary'] ?? ''));
+        if ($summary === '') {
+            $summary = preg_split('/\n\s*\n/', trim((string) ($operation['description'] ?? '')), 2)[0] ?? '';
+            $summary = trim(preg_replace('/\s+/', ' ', strip_tags($summary)));
+        }
+        if ($summary === '') {
+            $summary = ucfirst(trim(preg_replace('/(?<!^)[A-Z]/', ' $0', $operationId)));
+        }
+        $parameters = [];
+        foreach (($route['parameters'] ?? []) as $parameter) {
+            if ($parameter['required'] ?? false) {
+                $parameters[] = $parameter['in'].': `'.$parameter['name'].'`';
+            }
+        }
+        $body = 'none';
+        foreach (($operation['requestBody']['content'] ?? []) as $contentType => $content) {
+            $schema = $content['schema'] ?? [];
+            $schemaName = isset($schema['$ref']) ? basename($schema['$ref']) : null;
+            $details = [];
+            if ($schemaName !== null) {
+                $model = $spec['components']['schemas'][$schemaName] ?? [];
+                $required = $model['required'] ?? [];
+                $properties = array_keys($model['properties'] ?? []);
+                if ($required !== []) {
+                    $details[] = 'required: '.implode(', ', array_map(static fn (string $name): string => '`'.$name.'`', $required));
+                }
+                if ($properties !== []) {
+                    $details[] = 'fields: '.implode(', ', array_map(static fn (string $name): string => '`'.$name.'`', $properties));
+                }
+                $body = '`'.$schemaName.'` ('.$contentType.($details === [] ? '' : '; '.implode('; ', $details)).')';
+            } elseif ($route['body_required'] ?? false) {
+                $body = $contentType;
+            }
+        }
+        if (($route['body_required'] ?? false) && $body === 'none') {
+            $body = 'required; schema not available in this operation';
+        }
+        $responses = implode(', ', array_keys($operation['responses'] ?? []));
+        $tags = $route['tags'] ?? ['Other'];
+        $pages[$page]['operations'][] = [
+            'component' => $component,
+            'openApiFile' => $openApiFile,
+            'tag' => $tags[0],
+            'operationId' => $operationId,
+            'method' => $method,
+            'path' => $route['path'],
+            'summary' => $summary,
+            'parameters' => $parameters === [] ? 'none' : implode(', ', $parameters),
+            'body' => $body,
+            'responses' => $responses === '' ? 'see OpenAPI' : $responses,
+            'deprecated' => $route['deprecated'] ?? false,
+        ];
+    }
+}
+
+if ($unmapped !== []) {
+    fwrite(STDERR, "Unmapped operation groups:\n - ".implode("\n - ", $unmapped)."\n");
+    exit(1);
+}
+
+$output = $root.'/docs/api-guide';
+if (!is_dir($output) && !mkdir($output, 0775, true) && !is_dir($output)) {
+    throw new RuntimeException('Could not create docs/api-guide.');
+}
+
+$totalByPage = [];
+foreach ($pages as $slug => $page) {
+    $totalByPage[$slug] = count($page['operations']);
+    usort($pages[$slug]['operations'], static fn (array $a, array $b): int => [$a['tag'], $a['operationId']] <=> [$b['tag'], $b['operationId']]);
+    $content = '# '.$page['title']."\n\n";
+    $content .= "This page lists every `".$revision."` API operation in this function group (".count($pages[$slug]['operations'])." operations). It is generated from the pinned OpenAPI specification; regenerate it after changing the active API revision with `php bin/build-api-change-guide`.\n\n";
+    $content .= "For a step-by-step migration, use [How to add or change things in Bluestone PIM](../making-pim-changes.md) and its worked examples. Each row shows what the operation does, its exact SDK operation ID and route, required inputs, request schema fields and success/error response codes. `GET` reads data; `POST` may create, update, validate, search or submit work, so follow the summary and schema to see its purpose.\n\n";
+    $specifications = [];
+    foreach ($pages[$slug]['operations'] as $operation) {
+        $specifications[$operation['component']] = $operation['openApiFile'];
+    }
+    $content .= 'Pinned request schemas: ';
+    $specLinks = [];
+    foreach ($specifications as $component => $openApiFile) {
+        $specLinks[] = '['.$component.'](../../resources/bluestone/revisions/'.$revision.'/openapi/'.$openApiFile.')';
+    }
+    $content .= implode(' · ', $specLinks).".\n\n";
+    $lastGroup = null;
+    foreach ($pages[$slug]['operations'] as $operation) {
+        $group = $operation['component'].' / '.$operation['tag'];
+        if ($group !== $lastGroup) {
+            $content .= '## '.$group."\n\n";
+            $content .= "Call these with the `".$operation['component']."` connector. For SDK migration examples and safe retry patterns, see the [cookbook](../making-pim-changes.md).\n\n";
+            $content .= "| What you can do | Method and path | Operation ID | Required inputs | Request body | Responses |\n| --- | --- | --- | --- | --- | --- |\n";
+            $lastGroup = $group;
+        }
+        $summary = str_replace('|', '\\|', $operation['summary']);
+        $deprecated = $operation['deprecated'] ? ' (deprecated)' : '';
+        $body = $operation['body'];
+        if (preg_match('/^`([^`]+)` \((.*)$/', $body, $matches)) {
+            $schemaLink = '['.$matches[1].'](../../resources/bluestone/revisions/'.$revision.'/openapi/'.$operation['openApiFile'].'#components.schemas.'.rawurlencode($matches[1]).')';
+            $body = $schemaLink.' ('.$matches[2];
+        }
+        $content .= '| '.$summary.$deprecated.' | `'.$operation['method'].' '.$operation['path'].'` | `'.$operation['operationId'].'` | '
+            .$operation['parameters'].' | '.$body.' | `'.$operation['responses'].'` |'."\n";
+    }
+    file_put_contents($output.'/'.$slug.'.md', $content);
+}
+
+$index = "# Bluestone API changes by function\n\n";
+$index .= "New to the API? Start with [How to add or change things in Bluestone PIM](../making-pim-changes.md): it explains migrations, stable write names, tenant IDs and the safe request pattern. Then choose the kind of thing you want to change below.\n\n";
+$index .= "These pages cover all ".$operationCount." operations in pinned API revision `".$revision."` across ".count($manifest['components'])." components. They are grouped by task, not by endpoint knowledge. Each row gives the operation ID to call, an OpenAPI summary, exact path, inputs and body shape. An operation ID is used with the corresponding connector, for example `\$this->pim->executeTyped('createProduct', [], ['json' => \$request])`.\n\n";
+$index .= "`GET` reads data; `POST`, `PUT`, `PATCH` and `DELETE` change data or perform actions. A `POST` may also validate, search or submit background work, so read its summary. The operation's full body constraints and nested fields are in the pinned OpenAPI schema.\n\n";
+$index .= "| I want to change... | Operations |\n| --- | ---: |\n";
+foreach ($pages as $slug => $page) {
+    $index .= '| ['.$page['title'].']('.$slug.'.md) | '.$totalByPage[$slug]." |\n";
+}
+$index .= "\n## How to use a page\n\n";
+$index .= "1. Find the operation by its plain-language summary.\n2. Use its operation ID and path parameters with the connector named by the component section. For example, component `pim` uses `PimConnector`; `media-bank` uses `MediaBankConnector`.\n3. Build the body using the listed schema fields. The complete constraints and nested fields are in `resources/bluestone/revisions/".$revision."/openapi/<component>.json` under `components.schemas.<schema>`.\n4. Copy the SDK calling pattern from the [cookbook](../making-pim-changes.md). For background operations, save the returned task ID and poll with the matching job runner.\n\n";
+$index .= "Operation lists are generated with `php bin/build-api-change-guide`. The generator fails if a component or PIM function tag has no page mapping, so a refreshed API revision cannot silently drop a group.\n";
+file_put_contents($output.'/index.md', $index);
+
+fwrite(STDOUT, sprintf("Generated %d API operations into %d function pages for revision %s.\n", $operationCount, count($pages), $revision));

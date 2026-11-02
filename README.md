@@ -4,7 +4,7 @@ A Symfony 7.4 / PHP 8.2+ console application for versioned changes to Bluestone 
 
 This repository is also the source for the company Symfony bundle `youwe/bluestone-pim-sdk`. The reusable API, generated contracts, migration runner, workflow services and console commands use the `Youwe\BluestonePim\` namespace; the console kernel is the reference host. See [company SDK installation and release guidance](docs/company-sdk.md).
 
-Dedicated Symfony connectors cover all 16 API components in Bluestone's published specifications, with a local routing catalog for 547 documented operations. They support operation IDs, path/query parameters, JSON, raw/form/multipart bodies and endpoint-specific headers. The shared API runner also accepts complete Management API paths such as `/pim`, `/metadata` and `/media-bank`. Add specialised runner services for reusable business logic. See [API connectors](docs/api-connectors.md) for the component list and migration examples.
+Dedicated Symfony connectors cover all 16 API components in Bluestone's published specifications, with a local routing catalog for 547 documented operations. To browse what can be done by function, start with the [API changes guide](docs/api-guide/index.md); it indexes every operation by catalogs, products, attributes, settings, media, users, integrations and other work. For PHP usage and migration examples, see [API connectors](docs/api-connectors.md).
 
 ## Setup
 
@@ -16,7 +16,7 @@ composer build:contracts
 cp .env.local.example .env.local
 ```
 
-The checked-in `resources/bluestone/revisions/` directory contains the pinned OpenAPI inputs and compiled routing catalogs. `composer build:contracts` uses those local snapshots to regenerate the revision-specific PHP DTOs, normalizers and operation facades under `generated/`. The build does not fetch API documentation. `generated/` is ignored by Git, so build it before running the app locally and include it in the release artifact deployed to production.
+The checked-in `resources/bluestone/revisions/` directory contains the pinned OpenAPI inputs and compiled routing catalogs. `composer build:contracts` uses those local snapshots to regenerate the revision-specific PHP DTOs, normalizers and operation facades under `generated/`. The build does not fetch API documentation. `generated/` is committed so the package works when installed directly from Git; rebuild and commit it whenever the pinned revision changes.
 
 ### Bootstrap or refresh the API contracts
 
@@ -115,6 +115,8 @@ Use the domain mutation runners for writes that may be repeated by migration ret
 
 For an end-to-end starter PIM setup and copyable migration examples, see the [initial PIM setup guide](docs/initial-pim-setup.md). The samples are kept outside `migrations/` so they are not auto-discovered or executed.
 
+To add or change attributes, categories, products and variants, follow the recipes in [How to add or change things in Bluestone PIM](docs/making-pim-changes.md). The [function guide](docs/api-guide/index.md) covers all API operations and links to pages grouped by task.
+
 ## Migrations and service runners
 
 The application has two levels of runners:
@@ -206,7 +208,7 @@ There is no atomic transaction spanning Bluestone and the tracking database. If 
 
 Checkpoint names must be stable and unique within their migration. Return only small, non-sensitive JSON values such as resource IDs or task IDs; those values are persisted in the database. The runner stores exception types, rather than potentially sensitive remote response bodies. Exceptions deliberately report limited detail; diagnose API failures using a controlled reproduction and the endpoint documentation.
 
-HTTP requests have a 60-second maximum duration and there are no automatic write retries, including on 401, 429 or 5xx responses. Access tokens are cached in memory and renewed before expiry. The database lock expires after 300 seconds if a process crashes and is refreshed around requests and checkpoints. Long-running loops, custom HTTP work or waits must call `$context->heartbeat()` at least every 60 seconds. All processes for the same target must use the same tracking database; separate ledgers cannot coordinate locks.
+HTTP requests have a 60-second maximum duration. HTTP 429 responses are retried up to three attempts, and 502/503/504 only for `GET` and `PUT`; other errors, including 401, are not retried. Access tokens are cached in memory and renewed before expiry. The database lock expires after 300 seconds if a process crashes and is refreshed around requests and checkpoints. Long-running loops, custom HTTP work or waits must call `$context->heartbeat()` at least every 60 seconds. All processes for the same target must use the same tracking database; separate ledgers cannot coordinate locks.
 
 The runner is forward-only. Undo a PIM change through a new corrective migration. A database rollback cannot undo an HTTP request. Changes to injected runner implementations can affect older migrations and retries, so preserve their historical behavior or version the runner logic where necessary. `bluestone:api:migration-compatibility` compares operation records for unfinished migrations with the active OpenAPI revision; it excludes applied migrations and never changes migration state.
 

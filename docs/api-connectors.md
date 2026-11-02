@@ -2,7 +2,7 @@
 
 Each component in Bluestone's [published OpenAPI specifications](https://docs.api.bluestonepim.com/docs/generate-sdks-and-client-code-from-openapi) has an autowired service under `Youwe\BluestonePim\Api\Connector`. The checked-in routing catalog contains 547 operation IDs across 16 components.
 
-For an end-to-end starter PIM catalog/product setup, prerequisite planning and copyable migration examples, see [Initial PIM setup](initial-pim-setup.md).
+For a complete operation index grouped by user-facing function, see the [API changes guide](api-guide/index.md). For step-by-step PIM recipes and a starter catalog/product migration, see [How to add or change things in Bluestone PIM](making-pim-changes.md) and [Initial PIM setup](initial-pim-setup.md).
 
 | Component | Connector | Operations | Service prefix |
 | --- | --- | ---: | --- |

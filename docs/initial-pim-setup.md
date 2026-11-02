@@ -72,6 +72,10 @@ Review and replace the example catalog, category, attribute and product numbers,
 
 These two samples are deliberately small. For product batches, cursor/page traversal, asynchronous jobs and media, use the corresponding runners described in [API connectors](api-connectors.md). Keep each checkpoint name and mutation input stable across retries.
 
+### More changes
+
+[How to add or change things in Bluestone PIM](making-pim-changes.md) has a recipe for each common change: attribute definitions and select values, attribute groups, category level attributes, product values and categories, variant groups and variant level attributes. Its worked example, also in [`Version20261102110000_AddMandatoryVariantAttribute.php.example`](../examples/migrations/Version20261102110000_AddMandatoryVariantAttribute.php.example), adds an attribute that every variant in a group inherits and must fill in.
+
 ## 4. Review and apply the migrations
 
 Run the local checks before any tenant request:

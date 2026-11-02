@@ -55,11 +55,11 @@ During package development, a local checkout can be used as a Composer path repo
 
 `vendor/bin/bluestone` provides migration creation, tracking setup, status, dry-run, retry and local API inspection commands. For a regular Symfony console, the app can also register `BluestonePimBundle` in `config/bundles.php` and run the same commands through `bin/console`. That optional integration can be added manually or through a company Flex recipe; it is not needed by the package executable.
 
-See [initial PIM setup examples](initial-pim-setup.md) for complete migrations.
+See [initial PIM setup examples](initial-pim-setup.md) for complete migrations and the [API changes guide](api-guide/index.md) for all operations organized by function.
 
 ## Build and publish a release
 
-The generated PHP directory is intentionally ignored by Git. Build and verify the complete SDK package from the checked-in, pinned OpenAPI revision:
+Generated PHP classes are committed so direct Composer installs from Git include the typed models and operation facades. After changing the pinned OpenAPI revision, regenerate and commit them, then build and verify the package:
 
 ```sh
 composer install
