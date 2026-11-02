@@ -11,7 +11,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-#[AsCommand(name: 'app:api:live-plan', description: 'Validate an explicit live-test scope without contacting Bluestone.')]
+#[AsCommand(name: 'bluestone:api:live-plan', description: 'Validate an explicit live-test scope without contacting Bluestone.')]
 final class LiveIntegrationPlanCommand extends Command
 {
     public function __construct(private readonly LiveFixtureSelection $selection)

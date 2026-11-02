@@ -11,7 +11,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-#[AsCommand(name: 'app:migrations:make', description: 'Generate an autowired Bluestone API migration service.')]
+#[AsCommand(name: 'bluestone:migrations:make', description: 'Generate an autowired Bluestone API migration service.')]
 final class MakeMigrationCommand extends Command
 {
     public function __construct(

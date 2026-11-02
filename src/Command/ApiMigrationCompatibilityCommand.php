@@ -13,7 +13,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-#[AsCommand(name: 'app:api:migration-compatibility', description: 'Find unfinished migrations that used operations removed from the active API spec.')]
+#[AsCommand(name: 'bluestone:api:migration-compatibility', description: 'Find unfinished migrations that used operations removed from the active API spec.')]
 final class ApiMigrationCompatibilityCommand extends Command
 {
     public function __construct(private readonly MigrationStorage $storage, private readonly OperationCatalog $catalog)

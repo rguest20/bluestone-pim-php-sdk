@@ -13,7 +13,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-#[AsCommand(name: 'app:api:coverage', description: 'Report routing, typed-contract, workflow and live verification status.')]
+#[AsCommand(name: 'bluestone:api:coverage', description: 'Report routing, typed-contract, workflow and live verification status.')]
 final class ApiCoverageCommand extends Command
 {
     public function __construct(private readonly OperationCatalog $catalog)

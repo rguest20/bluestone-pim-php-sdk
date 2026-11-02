@@ -148,7 +148,7 @@ final class OperationCatalog
     public function operation(string $component, string $operationId, ?string $revision = null): array
     {
         return $this->component($component, $revision)['operations'][$operationId]
-            ?? throw new \InvalidArgumentException(sprintf('Unknown %s operation: %s. Use app:api:list %s to inspect available IDs.', $component, $operationId, $component));
+            ?? throw new \InvalidArgumentException(sprintf('Unknown %s operation: %s. Use bluestone:api:list %s to inspect available IDs.', $component, $operationId, $component));
     }
 
     public function openApiPath(string $component, ?string $revision = null): string

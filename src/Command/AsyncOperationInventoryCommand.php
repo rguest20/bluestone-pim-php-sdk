@@ -13,7 +13,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-#[AsCommand(name: 'app:api:async-inventory', description: 'Find API operations that may use asynchronous workflows.')]
+#[AsCommand(name: 'bluestone:api:async-inventory', description: 'Find API operations that may use asynchronous workflows.')]
 final class AsyncOperationInventoryCommand extends Command
 {
     public function __construct(private readonly OperationCatalog $catalog, private readonly AsyncOperationInventory $inventory)

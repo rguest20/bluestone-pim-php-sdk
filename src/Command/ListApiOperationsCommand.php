@@ -13,7 +13,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-#[AsCommand(name: 'app:api:list', description: 'List locally documented Bluestone components or their operation IDs; no API calls.')]
+#[AsCommand(name: 'bluestone:api:list', description: 'List locally documented Bluestone components or their operation IDs; no API calls.')]
 final class ListApiOperationsCommand extends Command
 {
     public function __construct(private readonly OperationCatalog $catalog)

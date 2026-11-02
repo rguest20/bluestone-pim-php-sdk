@@ -11,7 +11,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-#[AsCommand(name: 'app:migrations:status', description: 'Show database-backed Bluestone migration progress.')]
+#[AsCommand(name: 'bluestone:migrations:status', description: 'Show database-backed Bluestone migration progress.')]
 final class StatusCommand extends Command
 {
     public function __construct(private readonly MigrationRunner $runner)
@@ -25,7 +25,7 @@ final class StatusCommand extends Command
         $rows = array_map(static fn (array $row): array => [$row['version'], $row['status'], $row['attempts'], $row['steps'], $row['contract_revision'] ?? 'legacy', $row['applied_at'], $row['description'], $row['error']], $this->runner->plan());
         $io->table(['Version', 'Status', 'Attempts', 'Completed steps', 'API spec revision', 'Applied (UTC)', 'Description', 'Last error type'], $rows);
         if ($rows === []) {
-            $io->note('No migrations registered. Generate one with app:migrations:make.');
+            $io->note('No migrations registered. Generate one with bluestone:migrations:make.');
         }
 
         return Command::SUCCESS;

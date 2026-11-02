@@ -12,7 +12,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Youwe\BluestonePim\Migration\MigrationLock;
 use Youwe\BluestonePim\Migration\MigrationStorage;
 
-#[AsCommand(name: 'app:migrations:install', description: 'Create the database tables that track Bluestone migration deployments.')]
+#[AsCommand(name: 'bluestone:migrations:install', description: 'Create the database tables that track Bluestone migration deployments.')]
 final class InstallTrackingCommand extends Command
 {
     public function __construct(private readonly MigrationStorage $storage, private readonly MigrationLock $lock)

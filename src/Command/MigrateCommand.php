@@ -12,7 +12,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-#[AsCommand(name: 'app:migrations:migrate', description: 'Run pending Bluestone API migrations in version order.')]
+#[AsCommand(name: 'bluestone:migrations:migrate', description: 'Run pending Bluestone API migrations in version order.')]
 final class MigrateCommand extends Command
 {
     public function __construct(private readonly MigrationRunner $runner)
