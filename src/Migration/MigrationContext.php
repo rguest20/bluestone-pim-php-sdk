@@ -5,10 +5,12 @@ declare(strict_types=1);
 namespace Youwe\BluestonePim\Migration;
 
 use Youwe\BluestonePim\Api\ApiRevisionContext;
+use Youwe\BluestonePim\Api\BluestoneClient;
 
 final readonly class MigrationContext
 {
-    public function __construct(private string $version, private MigrationStorage $storage, private MigrationLock $lock, private ?ApiRevisionContext $revisionContext = null)
+    public function __construct(private string $version, private MigrationStorage $storage, private MigrationLock $lock,
+        private ?ApiRevisionContext $revisionContext = null, private ?BluestoneClient $client = null)
     {
     }
 
@@ -54,15 +56,21 @@ final readonly class MigrationContext
         $stored = $this->storage->beginMutation($this->version, $name, $component, $operationId, $this->apiRevision() ?? 'legacy', $requestHash);
         if ($stored !== false) return $stored['result'];
 
+        $dispatchedBefore = $this->client?->dispatchedRequests();
         try {
             $result = $operation();
             $this->heartbeat();
             $this->storage->completeMutation($this->version, $name, $result);
 
             return $result;
-        } catch (\Throwable) {
+        } catch (\Throwable $error) {
+            // Without a client to observe dispatches, an unconfirmed outcome must be treated as uncertain.
+            if ($dispatchedBefore !== null && $this->client?->dispatchedRequests() === $dispatchedBefore) {
+                $this->storage->markMutationNotSent($this->version, $name);
+                throw $error;
+            }
             $this->storage->markMutationUncertain($this->version, $name);
-            throw new MutationInDoubtException($name, $component, $operationId);
+            throw new MutationInDoubtException($name, $component, $operationId, $error);
         }
     }
 

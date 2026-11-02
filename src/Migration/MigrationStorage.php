@@ -161,6 +161,13 @@ final class MigrationStorage
                 if ($existing['status'] === 'completed') {
                     return ['result' => json_decode($existing['result'], true, 512, JSON_THROW_ON_ERROR)];
                 }
+                if ($existing['status'] === 'not_sent') {
+                    $this->connection->update('pim_migration_mutation', ['status' => 'pending', 'updated_at' => $this->now()], [
+                        'version' => $version, 'name' => $name, 'status' => 'not_sent',
+                    ]);
+
+                    return false;
+                }
 
                 throw new MutationInDoubtException($name, $component, $operationId);
             }
@@ -186,6 +193,14 @@ final class MigrationStorage
     {
         $this->connection->update('pim_migration_mutation', ['status' => 'uncertain', 'updated_at' => $this->now()],
             ['version' => $version, 'name' => $name, 'status' => 'pending']);
+    }
+
+    /** Mark a validation/configuration failure known to have occurred before API dispatch. */
+    public function markMutationNotSent(string $version, string $name): void
+    {
+        $changed = $this->connection->update('pim_migration_mutation', ['status' => 'not_sent', 'updated_at' => $this->now()],
+            ['version' => $version, 'name' => $name, 'status' => 'pending']);
+        if ($changed !== 1) throw new \RuntimeException('The undispatched mutation intent could not be marked retryable.');
     }
 
     public function completedStepCount(string $version): int

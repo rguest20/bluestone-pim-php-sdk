@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Youwe\BluestonePim\Service;
 
 use Youwe\BluestonePim\Api\BluestoneApiException;
+use Youwe\BluestonePim\Api\BluestoneClient;
 use Youwe\BluestonePim\Migration\MigrationContext;
 use Youwe\BluestonePim\Migration\MigrationLock;
 use Youwe\BluestonePim\Migration\MigrationRegistry;
@@ -20,6 +21,7 @@ final class MigrationRunner
         private readonly MigrationLock $lock,
         private readonly ?OperationCatalog $catalog = null,
         private readonly ?ApiRevisionContext $revisionContext = null,
+        private readonly ?BluestoneClient $client = null,
     ) {
     }
 
@@ -82,7 +84,7 @@ final class MigrationRunner
                 $revision = $this->storage->start($definition, $this->catalog?->activeRevision());
                 $this->revisionContext?->select($revision, $version);
                 try {
-                    $definition->migration->up(new MigrationContext($version, $this->storage, $this->lock, $this->revisionContext));
+                    $definition->migration->up(new MigrationContext($version, $this->storage, $this->lock, $this->revisionContext, $this->client));
                     $this->lock->refresh();
                     $this->storage->applied($version);
                 } catch (\Throwable $error) {
@@ -90,7 +92,7 @@ final class MigrationRunner
                     $this->lock->refresh();
                     $this->storage->failed($version, $error);
                     $detail = $error instanceof BluestoneApiException ? $error->getMessage() : $error::class;
-                    throw new \RuntimeException(sprintf('Migration %s failed (%s). Later migrations were not run. Reconcile and use --retry.', $version, $detail));
+                    throw new \RuntimeException(sprintf('Migration %s failed (%s). Later migrations were not run. Reconcile and use --retry.', $version, $detail), 0, $error);
                 } finally {
                     $this->revisionContext?->select(null);
                 }

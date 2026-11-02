@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Tests;
 
 use Youwe\BluestonePim\Api\ApiRevisionContext;
+use Youwe\BluestonePim\Api\BluestoneClient;
 use Youwe\BluestonePim\Database\ConnectionFactory;
 use Youwe\BluestonePim\Migration\MigrationContext;
 use Youwe\BluestonePim\Migration\MigrationLock;
@@ -12,6 +13,8 @@ use Youwe\BluestonePim\Migration\MigrationStorage;
 use Youwe\BluestonePim\Migration\MutationInDoubtException;
 use Doctrine\DBAL\Connection;
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\HttpClient\MockHttpClient;
+use Symfony\Component\HttpClient\Response\MockResponse;
 
 final class MutationRecoveryTest extends TestCase
 {
@@ -55,6 +58,39 @@ final class MutationRecoveryTest extends TestCase
         self::assertSame(1, $submissions);
         self::assertSame('completed', $this->storageStatus('create-fixture-product'));
         self::assertSame('2c19c082ed473e21', $this->storageRevision('create-fixture-product'));
+    }
+
+    public function testMutationRejectedBeforeDispatchCanBeRetried(): void
+    {
+        $http = new MockHttpClient([new MockResponse('{"access_token":"test"}'), new MockResponse('', ['http_code' => 201])]);
+        $client = new BluestoneClient($http, 'https://api.test.bluestonepim.com', 'https://idp.test.bluestonepim.com/op/token', 'id', 'secret');
+        $context = new MigrationContext('20261031000001', $this->storage, $this->lock, null, $client);
+        try {
+            $context->mutation('create', 'pim', 'createProduct', [], static fn () => $client->request('POST', 'https://other.example'));
+            self::fail('An invalid path must be rejected locally.');
+        } catch (\InvalidArgumentException) {
+        }
+        self::assertSame('not_sent', $this->storageStatus('create'));
+
+        $result = $context->mutation('create', 'pim', 'createProduct', [], static fn (): array => [$client->request('POST', '/pim/products')->getStatusCode()]);
+        self::assertSame([201], $result);
+        self::assertSame('completed', $this->storageStatus('create'));
+    }
+
+    public function testLocalFailureAfterAnEarlierDispatchIsStillUncertain(): void
+    {
+        $http = new MockHttpClient([new MockResponse('{"access_token":"test"}'), new MockResponse('', ['http_code' => 201])]);
+        $client = new BluestoneClient($http, 'https://api.test.bluestonepim.com', 'https://idp.test.bluestonepim.com/op/token', 'id', 'secret');
+        $context = new MigrationContext('20261031000001', $this->storage, $this->lock, null, $client);
+        $this->expectException(MutationInDoubtException::class);
+        try {
+            $context->mutation('create', 'pim', 'createProduct', [], static function () use ($client): never {
+                $client->request('POST', '/pim/products');
+                $client->request('POST', 'https://other.example');
+            });
+        } finally {
+            self::assertSame('uncertain', $this->storageStatus('create'));
+        }
     }
 
     public function testUncertainMutationIsNeverResubmittedAndDiagnosticsDoNotExposeRemoteData(): void

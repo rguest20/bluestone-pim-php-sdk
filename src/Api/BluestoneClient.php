@@ -11,6 +11,7 @@ final class BluestoneClient
 {
     private ?string $accessToken = null;
     private float $expiresAt = 0;
+    private int $dispatchedRequests = 0;
 
     public function __construct(
         private readonly HttpClientInterface $httpClient,
@@ -47,6 +48,7 @@ final class BluestoneClient
         } elseif ($authentication === ApiAuthentication::ApiKey) {
             $options['headers'][] = 'X-Api-Key: '.$this->publicApiKey;
         }
+        ++$this->dispatchedRequests;
         $response = $this->httpClient->request(strtoupper($method), rtrim($this->baseUrl, '/').$path, array_replace($options, [
             'max_redirects' => 0,
             'timeout' => 30,
@@ -58,13 +60,22 @@ final class BluestoneClient
         // Consume the response now: a migration must not be marked applied before I/O finishes.
         $response->getContent(false);
         if ($status < 200 || $status >= 300) {
-            if ($status === 401) {
+            if ($status === 429) {
+                // A rate-limited request was rejected without being processed.
+                --$this->dispatchedRequests;
+            } elseif ($status === 401) {
                 $this->accessToken = null;
             }
             throw new BluestoneApiException('Bluestone API request', $status, is_string($retryAfter) ? $retryAfter : null);
         }
 
         return $response;
+    }
+
+    /** Number of API requests that may have changed remote state; local rejections and HTTP 429 are excluded. */
+    public function dispatchedRequests(): int
+    {
+        return $this->dispatchedRequests;
     }
 
     private function token(): string

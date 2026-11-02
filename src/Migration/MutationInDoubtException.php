@@ -7,13 +7,13 @@ namespace Youwe\BluestonePim\Migration;
 /** A mutation was started but did not reach a durable completed result. */
 final class MutationInDoubtException extends \RuntimeException
 {
-    public function __construct(string $name, string $component, string $operationId)
+    public function __construct(string $name, string $component, string $operationId, ?\Throwable $previous = null)
     {
         parent::__construct(sprintf(
             'Mutation "%s" for %s.%s has an uncertain outcome. Reconcile remote state using stable identifiers; do not repeat it automatically.',
             $name,
             $component,
             $operationId,
-        ));
+        ), 0, $previous);
     }
 }
