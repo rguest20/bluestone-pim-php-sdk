@@ -1,0 +1,26 @@
+schema: spec-driven
+
+context: |
+  Symfony 7.4 console application, PHP 8.2+, Composer and Doctrine DBAL.
+  Node 22 (.nvmrc) is used for development tooling, including OpenSpec.
+  Migrations are autowired Symfony services with a persistent database ledger,
+  named checkpoints and a shared database lock. SQLite is tested; PostgreSQL
+  and MySQL are configurable but have not been integration-tested here.
+  There are 16 API connectors and 547 operations in the checked-in Bluestone
+  routing snapshot. Generic operation dispatch already exists; full typed
+  payloads, schema validation and per-operation live coverage do not.
+  All connector requests must retain the shared API runner's lock, credentials,
+  host restrictions and explicit retry semantics. Preserve the existing
+  execute(operationId, pathParameters, options) interface for migration authors.
+  Public API uses x-api-key; Management API uses OAuth2 client credentials.
+  No live tenant operations have been verified. Public specification downloads
+  must be distinguished from calls to a Bluestone tenant.
+
+rules:
+  proposal:
+    - Distinguish existing routing coverage from work still to implement.
+  specs:
+    - Include observable acceptance scenarios for failure and recovery behavior.
+  tasks:
+    - Group work by priority and dependency, with concrete verification steps.
+    - Leave implementation tasks unchecked until the work has actually been verified.
