@@ -1,0 +1,94 @@
+<?php
+
+declare(strict_types=1);
+
+namespace BluestoneMigrations;
+
+use App\Api\Connector\PimConnector;
+use App\Migration\MigrationContext;
+use App\Migration\MigrationInterface;
+use App\Service\AttributeDefinitionMutationRunner;
+use App\Service\ProductMutationRunner;
+
+/**
+ * Copy/adapt this example into a newly generated migration after checking
+ * that every business number is unique in the target tenant.
+ */
+final class Version20261102090000_BootstrapStarterPim implements MigrationInterface
+{
+    public function __construct(
+        private readonly PimConnector $pim,
+        private readonly AttributeDefinitionMutationRunner $definitions,
+        private readonly ProductMutationRunner $products,
+    ) {
+    }
+
+    public function description(): string
+    {
+        return 'Create a starter catalog, category, attribute and product';
+    }
+
+    public function up(MigrationContext $context): void
+    {
+        $catalogId = $this->createCategory($context, 'starter-catalog', [
+            'name' => 'Starter catalog',
+            'number' => 'EXAMPLE-CATALOG-001',
+        ]);
+
+        $categoryId = $this->createCategory($context, 'starter-category', [
+            'name' => 'Starter category',
+            'number' => 'EXAMPLE-CATEGORY-001',
+            'parentId' => $catalogId,
+        ]);
+
+        $definitionId = $this->definitions->create(
+            $context,
+            'starter-material-definition',
+            'EXAMPLE-ATTRIBUTE-MATERIAL',
+            [
+                'number' => 'EXAMPLE-ATTRIBUTE-MATERIAL',
+                'name' => 'Material',
+                'dataType' => 'text',
+                'contextAware' => false,
+            ],
+            'en',
+        );
+
+        $this->products->create(
+            $context,
+            'starter-product',
+            'EXAMPLE-PRODUCT-001',
+            [
+                'number' => 'EXAMPLE-PRODUCT-001',
+                'name' => 'Example product',
+                'type' => 'SINGLE',
+                'categories' => [$categoryId],
+                'attributes' => [[
+                    'definitionId' => $definitionId,
+                    'values' => ['Replace with the source value'],
+                ]],
+            ],
+            'en',
+        );
+    }
+
+    /** @param array{name: string, number: string, parentId?: string} $request */
+    private function createCategory(MigrationContext $context, string $mutationName, array $request): string
+    {
+        $result = $context->mutation($mutationName, 'pim', 'createCategory', $request, function () use ($request): array {
+            $response = $this->pim->executeTyped('createCategory', [], [
+                'query' => ['validation' => 'NAME'],
+                'headers' => ['context' => 'en'],
+                'json' => $request,
+            ]);
+            $nodeId = $response->getHeaders(false)['resource-id'][0] ?? null;
+            if (!is_string($nodeId) || $nodeId === '') {
+                throw new \UnexpectedValueException('Bluestone did not return a catalog/category resource ID.');
+            }
+
+            return ['node_id' => $nodeId];
+        });
+
+        return $result['node_id'];
+    }
+}

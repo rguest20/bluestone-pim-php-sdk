@@ -1,0 +1,33 @@
+<?php
+
+declare(strict_types=1);
+
+namespace BluestoneMigrations;
+
+use App\Migration\MigrationContext;
+use App\Migration\MigrationInterface;
+use App\Service\CatalogRunner;
+
+/** Copy/adapt this into a newly generated migration after resolving the tenant's category ID. */
+final class Version20261102100000_RenameStarterCategory implements MigrationInterface
+{
+    public function __construct(private readonly CatalogRunner $catalogs)
+    {
+    }
+
+    public function description(): string
+    {
+        return 'Rename the starter category';
+    }
+
+    public function up(MigrationContext $context): void
+    {
+        $this->catalogs->updateDetailsOnce(
+            $context,
+            'rename-starter-category',
+            'REPLACE-WITH-TARGET-CATEGORY-ID',
+            ['name' => 'New category name'],
+            'en',
+        );
+    }
+}
