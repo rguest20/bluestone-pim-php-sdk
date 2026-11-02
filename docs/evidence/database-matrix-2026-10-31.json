@@ -1,0 +1,34 @@
+{
+    "schema_version": 1,
+    "recorded_at": "2026-10-31T14:14:50+00:00",
+    "php": "8.5.5",
+    "engines": {
+        "sqlite": {
+            "image": null,
+            "image_id": null,
+            "server_version": "3.53.4",
+            "tests": 8,
+            "assertions": 41,
+            "skipped": 0,
+            "status": "verified"
+        },
+        "postgresql": {
+            "image": "postgres:16-alpine",
+            "image_id": "sha256:93d55776e04376e19adb2733e3ccebb4392ee7dd86d8ff238503b30fe719c84f",
+            "server_version": "PostgreSQL 16.13 on aarch64-unknown-linux-musl, compiled by gcc (Alpine 15.2.0) 15.2.0, 64-bit",
+            "tests": 8,
+            "assertions": 41,
+            "skipped": 0,
+            "status": "verified"
+        },
+        "mysql": {
+            "image": "mysql:8.0",
+            "image_id": "sha256:4af1f8815716546f5b12410f7621f37f93db8dd11a184706ef59111930b8c2ff",
+            "server_version": "8.0.45",
+            "tests": 8,
+            "assertions": 41,
+            "skipped": 0,
+            "status": "verified"
+        }
+    }
+}

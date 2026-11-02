@@ -1,0 +1,86 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+use App\Database\ConnectionFactory;
+
+require dirname(__DIR__).'/vendor/autoload.php';
+
+$root = dirname(__DIR__);
+$run = static function (array $command, ?array $environment = null): array {
+    $process = proc_open($command, [0 => ['file', '/dev/null', 'r'], 1 => ['pipe', 'w'], 2 => ['pipe', 'w']], $pipes, dirname(__DIR__), $environment);
+    if (!is_resource($process)) throw new RuntimeException('Could not start an isolated database check process.');
+    $output = stream_get_contents($pipes[1]); fclose($pipes[1]);
+    $error = stream_get_contents($pipes[2]); fclose($pipes[2]);
+    return ['exit' => proc_close($process), 'output' => $output, 'error' => $error];
+};
+$identifier = bin2hex(random_bytes(5));
+$database = 'bluestone_migration_test_'.$identifier;
+$reportDirectory = $root.'/var/verification';
+if (!is_dir($reportDirectory) && !mkdir($reportDirectory, 0775, true)) throw new RuntimeException('Cannot create the database verification report directory.');
+$containers = [];
+$sqlite = sys_get_temp_dir().'/'.$database.'.db';
+$report = ['schema_version' => 1, 'recorded_at' => gmdate('c'), 'php' => PHP_VERSION, 'engines' => []];
+try {
+    foreach ([
+        ['engine' => 'sqlite', 'image' => null, 'port' => null],
+        ['engine' => 'postgresql', 'image' => 'postgres:16-alpine', 'port' => 5432],
+        ['engine' => 'mysql', 'image' => 'mysql:8.0', 'port' => 3306],
+    ] as $configuration) {
+        $engine = $configuration['engine'];
+        $image = $configuration['image'];
+        $url = 'sqlite:///'.$sqlite;
+        if ($image !== null) {
+            $name = 'bluestone-matrix-'.$engine.'-'.$identifier;
+            $password = bin2hex(random_bytes(20));
+            $arguments = ['docker', 'run', '--detach', '--rm', '--pull=never', '--name', $name,
+                '--label', 'bluestone.migration.database-test=true', '--publish', '127.0.0.1::'.$configuration['port']];
+            $variables = $engine === 'postgresql'
+                ? ['POSTGRES_DB' => $database, 'POSTGRES_USER' => 'bluestone_test', 'POSTGRES_PASSWORD' => $password]
+                : ['MYSQL_DATABASE' => $database, 'MYSQL_USER' => 'bluestone_test', 'MYSQL_PASSWORD' => $password, 'MYSQL_ROOT_PASSWORD' => bin2hex(random_bytes(20))];
+            foreach ($variables as $key => $value) { $arguments[] = '--env'; $arguments[] = $key.'='.$value; }
+            $arguments[] = $image;
+            $started = $run($arguments);
+            if ($started['exit'] !== 0) throw new RuntimeException('Could not start the disposable '.$engine.' container. Ensure '.$image.' is cached locally.');
+            $containers[] = $name;
+            $published = $run(['docker', 'port', $name, $configuration['port'].'/tcp']);
+            if ($published['exit'] !== 0 || !preg_match('/127\.0\.0\.1:(\d+)/', $published['output'], $matches)) throw new RuntimeException('Could not identify the isolated database port.');
+            $url = $engine.'://bluestone_test:'.$password.'@127.0.0.1:'.$matches[1].'/'.$database;
+        }
+        printf("Preparing isolated %s database checks%s.\n", $engine, $image === null ? '' : ' ('.$image.')');
+        $deadline = microtime(true) + 90;
+        do {
+            try {
+                $connection = ConnectionFactory::create($url);
+                $connection->fetchOne('SELECT 1');
+                break;
+            } catch (Throwable) {
+                if (microtime(true) >= $deadline) throw new RuntimeException('The disposable '.$engine.' database did not become ready.');
+                usleep(250000);
+            }
+        } while (true);
+        $version = $engine === 'sqlite' ? $connection->fetchOne('SELECT sqlite_version()') : $connection->fetchOne('SELECT VERSION()');
+        $connection->close();
+        $environment = getenv();
+        $environment['DATABASE_TEST_URL'] = $url;
+        $junit = $reportDirectory.'/database-'.$engine.'.xml';
+        $result = $run([PHP_BINARY, $root.'/vendor/bin/phpunit', '--configuration', $root.'/phpunit.database.xml.dist', '--no-progress', '--log-junit', $junit], $environment);
+        echo $result['output'];
+        if ($result['error'] !== '') fwrite(STDERR, $result['error']);
+        $xml = is_file($junit) ? simplexml_load_file($junit) : false;
+        $suite = $xml === false ? null : $xml->testsuite[0];
+        $tests = $suite === null ? 0 : (int) $suite['tests'];
+        $skipped = $suite === null ? 0 : (int) $suite['skipped'];
+        $verified = $result['exit'] === 0 && $tests > 0 && $skipped === 0;
+        $imageId = $image === null ? null : trim($run(['docker', 'image', 'inspect', '--format', '{{.Id}}', $image])['output']);
+        $report['engines'][$engine] = ['image' => $image, 'image_id' => $imageId, 'server_version' => $version,
+            'tests' => $tests, 'assertions' => $suite === null ? 0 : (int) $suite['assertions'], 'skipped' => $skipped,
+            'status' => $verified ? 'verified' : 'failed'];
+        if (!$verified) throw new RuntimeException('The isolated '.$engine.' database checks failed or did not run every selected case.');
+    }
+} finally {
+    foreach (array_reverse($containers) as $name) $run(['docker', 'stop', '--time', '2', $name]);
+    foreach ([$sqlite, $sqlite.'-wal', $sqlite.'-shm'] as $file) if (is_file($file)) unlink($file);
+    file_put_contents($reportDirectory.'/database-matrix.json', json_encode($report, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR)."\n");
+}
